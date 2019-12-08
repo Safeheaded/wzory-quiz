@@ -3,8 +3,22 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import { purple } from '@material-ui/core/colors';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+const theme = createMuiTheme({
+    palette: {
+        primary: purple
+    }
+});
+
+const app = (
+    <ThemeProvider theme={theme}>
+        <App></App>
+    </ThemeProvider>
+);
+
+ReactDOM.render(app, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
