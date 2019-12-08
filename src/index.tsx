@@ -5,6 +5,9 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { purple } from '@material-ui/core/colors';
+import initializeFirebase from './firebaseConfig';
+
+initializeFirebase();
 
 const theme = createMuiTheme({
     palette: {
@@ -14,7 +17,7 @@ const theme = createMuiTheme({
 
 const app = (
     <ThemeProvider theme={theme}>
-        <App></App>
+        <App />
     </ThemeProvider>
 );
 
