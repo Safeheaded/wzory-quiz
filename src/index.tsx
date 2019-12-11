@@ -5,14 +5,12 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { purple } from '@material-ui/core/colors';
-import initializeFirebase from './firebaseConfig';
-import { createStore, applyMiddleware, combineReducers } from 'redux';
+import './firebaseConfig';
+import { createStore, applyMiddleware, combineReducers, compose } from 'redux';
 import AuthorizationReducer from './store/reducers/Authorization';
-import { Provider } from 'react-redux'; 
+import { Provider } from 'react-redux';
 import createSagaMiddleware from 'redux-saga';
 import { AuthenticationSaga } from './store/sagas/Authorization';
-
-initializeFirebase();
 
 const theme = createMuiTheme({
     palette: {
@@ -20,11 +18,15 @@ const theme = createMuiTheme({
     }
 });
 
-const rootReducer = combineReducers({authReducer: AuthorizationReducer});
+const rootReducer = combineReducers({ authReducer: AuthorizationReducer });
 
 const sagaMiddleware = createSagaMiddleware();
 
-const store = createStore(rootReducer, undefined, applyMiddleware(sagaMiddleware));
+const store = createStore(
+    rootReducer,
+    undefined,
+    applyMiddleware(sagaMiddleware)
+);
 
 sagaMiddleware.run(AuthenticationSaga);
 

@@ -1,5 +1,7 @@
+import ReduxSagaFirebase from 'redux-saga-firebase';
 import * as firebase from 'firebase/app';
 import 'firebase/firestore';
+import 'firebase/auth';
 
 const firebaseConfig = {
     apiKey: process.env.REACT_APP_apiKey,
@@ -12,6 +14,19 @@ const firebaseConfig = {
     measurementId: process.env.REACT_APP_measurementId
 };
 
-export default function initializeFirebase(){
-    return firebase.initializeApp(firebaseConfig);
+class FirebaseHandler {
+
+    private RSF: ReduxSagaFirebase;
+
+    constructor(config: object){
+        const firebaseApp = firebase.initializeApp(config);
+        this.RSF = new ReduxSagaFirebase(firebaseApp);
+    }
+
+    public getRSF(): ReduxSagaFirebase{
+        return this.RSF;
+    }
 }
+
+export const firebaseHandler = new FirebaseHandler(firebaseConfig);
+

@@ -1,9 +1,9 @@
-import { LOG_IN, LOG_OUT } from "../constants/Authorization";
+import { LOG_IN, LOG_OUT } from '../constants/Authorization';
 
 export interface AuthState {
     token?: string;
     isLoggedIn: boolean;
-};
+}
 
 export interface LogInCredentials {
     email: string;
