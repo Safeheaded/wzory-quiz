@@ -1,24 +1,39 @@
-import { call, put, takeLatest } from 'redux-saga/effects';
-import { LoginActionType } from '../types/Authorization';
-import { LOG_IN } from '../constants/Authorization';
-import firebase from 'firebase';
+import { call, put, takeLatest, all } from 'redux-saga/effects';
+import { LoginActionType, LogoutActionType } from '../types/Authorization';
+import { LOG_IN, LOG_OUT } from '../constants/Authorization';
 import 'firebase/auth';
 import { firebaseHandler } from '../../firebaseConfig';
+import {
+    loginSuccess,
+    loginError,
+    logoutSuccess,
+    logoutError
+} from '../actions/Authorization';
 
 const rsf = firebaseHandler.getRSF();
 
 function* login(action: LoginActionType) {
     try {
-        yield call(
+        const user = yield call(
             rsf.auth.signInWithEmailAndPassword,
             action.payload.email,
             action.payload.password
         );
+        yield put(loginSuccess(user.email));
     } catch (error) {
-        console.log(`Logging in error: ${error}`);
+        yield put(loginError(error));
+    }
+}
+
+function* logout(action: LogoutActionType) {
+    try {
+        yield call(rsf.auth.signOut);
+        yield put(logoutSuccess());
+    } catch (error) {
+        yield put(logoutError(error));
     }
 }
 
 export function* AuthenticationSaga() {
-    yield takeLatest(LOG_IN, login);
+    yield all([takeLatest(LOG_IN, login), takeLatest(LOG_OUT, logout)]);
 }

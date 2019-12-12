@@ -15,18 +15,16 @@ const firebaseConfig = {
 };
 
 class FirebaseHandler {
-
     private RSF: ReduxSagaFirebase;
 
-    constructor(config: object){
+    constructor(config: object) {
         const firebaseApp = firebase.initializeApp(config);
         this.RSF = new ReduxSagaFirebase(firebaseApp);
     }
 
-    public getRSF(): ReduxSagaFirebase{
+    public getRSF(): ReduxSagaFirebase {
         return this.RSF;
     }
 }
 
 export const firebaseHandler = new FirebaseHandler(firebaseConfig);
-

@@ -3,11 +3,16 @@ import { TextField, Button } from '@material-ui/core';
 import styles from './LoginForm.module.sass';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
-import { login } from '../../store/actions/Authorization';
-import { LoginActionType } from '../../store/types/Authorization';
+import { login, logout } from '../../store/actions/Authorization';
+import {
+    LoginActionType,
+    LogoutActionType
+} from '../../store/types/Authorization';
+import firebase from 'firebase';
 
 interface Props {
     login: (email: string, password: string) => LoginActionType;
+    logout: () => LogoutActionType;
 }
 
 interface State {
@@ -32,6 +37,10 @@ class LoginForm extends Component<Props, State> {
         this.setState({ [toChange as 'email']: target.value });
     };
 
+    onLogout = () => {
+        this.props.logout();
+    };
+
     render() {
         return (
             <form className={styles.Form}>
@@ -48,13 +57,17 @@ class LoginForm extends Component<Props, State> {
                     label="Password"
                 />
                 <Button onClick={this.onLogin}>LogIn</Button>
+
+                <Button onClick={this.onLogout}>Logout</Button>
             </form>
         );
     }
 }
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-    login: (email: string, password: string) => dispatch(login(email, password))
+    login: (email: string, password: string) =>
+        dispatch(login(email, password)),
+    logout: () => dispatch(logout())
 });
 
 export default connect(null, mapDispatchToProps)(LoginForm);
