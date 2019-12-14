@@ -3,7 +3,7 @@ import { TextField, Button } from '@material-ui/core';
 import styles from './LoginForm.module.sass';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
-import { login, logout } from '../../store/actions/Authorization';
+import { login, logout } from '../../store/actions/Authentication';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import {
     LoginActionType,
@@ -49,7 +49,7 @@ class LoginForm extends Component<Props, State> {
     render() {
         return (
             <form className={styles.Form}>
-                {this.props.isLoggedIn ? <Redirect to="/admin" /> : null}
+                {/* this.props.isLoggedIn ? <Redirect to="/admin" /> : null */}
                 <TextField
                     label="E-Mail"
                     type="email"

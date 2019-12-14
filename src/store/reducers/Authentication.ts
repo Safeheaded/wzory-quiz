@@ -4,7 +4,7 @@ import {
     LOG_OUT,
     LOG_OUT_SUCCESS,
     LOG_IN_SUCCESS
-} from '../constants/Authorization';
+} from '../constants/Authentication';
 
 const initState = { isLoggedIn: false };
 

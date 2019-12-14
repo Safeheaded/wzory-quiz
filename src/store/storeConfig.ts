@@ -1,8 +1,8 @@
 import { combineReducers, createStore, applyMiddleware } from 'redux';
-import AuthorizationReducer from './reducers/Authorization';
+import AuthorizationReducer from './reducers/Authentication';
 import createSagaMiddleware from 'redux-saga';
 import { composeWithDevTools } from 'redux-devtools-extension';
-import { AuthenticationSaga } from './sagas/Authorization';
+import { AuthenticationSaga } from './sagas/Authentication';
 
 export default function configureStore() {
     const rootReducer = combineReducers({ authReducer: AuthorizationReducer });

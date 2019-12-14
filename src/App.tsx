@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styles from './App.module.sass';
 import { Container } from '@material-ui/core';
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import { Switch, Route, Link } from 'react-router-dom';
 import LoginForm from './Components/LoginForm/LoginForm';
 import AdminPanel from './Components/AdminPanel/AdminPanel';
 import Home from './Components/Home/Home';
@@ -21,27 +21,25 @@ class App extends Component<Props, State> {
     render() {
         return (
             <Container className={styles.Container}>
-                <Router>
-                    <Link to="/admin">Admin Panel</Link>
-                    <Link to="/login">Login Panel</Link>
-                    <Switch>
-                        <Route path="/" exact component={Home} />
-                        <GuardedRoute
-                            component={AdminPanel}
-                            path="/admin"
-                            redirectTo="/login"
-                            flow={GuardMode.authenticated}
-                        />
-                        <GuardedRoute
-                            component={LoginForm}
-                            path="/login"
-                            redirectTo="/admin"
-                            flow={GuardMode.unauthenticated}
-                        />
+                <Link to="/admin">Admin Panel</Link>
+                <Link to="/login">Login Panel</Link>
+                <Switch>
+                    <Route path="/" exact component={Home} />
+                    <GuardedRoute
+                        component={AdminPanel}
+                        path="/admin"
+                        redirectTo="/login"
+                        flow={GuardMode.authenticated}
+                    />
+                    <GuardedRoute
+                        component={LoginForm}
+                        path="/login"
+                        redirectTo="/admin"
+                        flow={GuardMode.unauthenticated}
+                    />
 
-                        <Route component={NotFoundPage} />
-                    </Switch>
-                </Router>
+                    <Route component={NotFoundPage} />
+                </Switch>
             </Container>
         );
     }

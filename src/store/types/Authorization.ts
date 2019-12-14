@@ -5,7 +5,7 @@ import {
     LOG_IN_ERROR,
     LOG_OUT_SUCCESS,
     LOG_OUT_ERROR
-} from '../constants/Authorization';
+} from '../constants/Authentication';
 
 export interface AuthState {
     isLoggedIn: boolean;

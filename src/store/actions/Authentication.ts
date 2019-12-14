@@ -13,7 +13,7 @@ import {
     LOG_IN_ERROR,
     LOG_OUT_SUCCESS,
     LOG_OUT_ERROR
-} from '../constants/Authorization';
+} from '../constants/Authentication';
 
 export function login(email: string, password: string): LoginActionType {
     return { type: LOG_IN, payload: { email, password } };

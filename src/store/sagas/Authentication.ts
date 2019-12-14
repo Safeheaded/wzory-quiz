@@ -1,6 +1,6 @@
 import { call, put, takeLatest, all } from 'redux-saga/effects';
 import { LoginActionType, LogoutActionType } from '../types/Authorization';
-import { LOG_IN, LOG_OUT } from '../constants/Authorization';
+import { LOG_IN, LOG_OUT } from '../constants/Authentication';
 import 'firebase/auth';
 import { firebaseHandler } from '../../firebaseConfig';
 import {
@@ -8,7 +8,8 @@ import {
     loginError,
     logoutSuccess,
     logoutError
-} from '../actions/Authorization';
+} from '../actions/Authentication';
+import { createBrowserHistory } from 'history';
 
 const rsf = firebaseHandler.getRSF();
 
@@ -19,6 +20,7 @@ function* login(action: LoginActionType) {
             action.payload.email,
             action.payload.password
         );
+        yield createBrowserHistory().push('/login');
         yield put(loginSuccess(user.email));
     } catch (error) {
         yield put(loginError(error));
