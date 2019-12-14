@@ -1,10 +1,11 @@
 import React, { Fragment } from 'react';
 import { Button } from '@material-ui/core';
-import { Route, Redirect } from 'react-router';
+import { Route, Redirect, Switch } from 'react-router';
 import { Dispatch } from 'redux';
 import { logout } from '../../store/actions/Authorization';
 import { LogoutActionType, AuthState } from '../../store/types/Authorization';
 import { connect } from 'react-redux';
+import MainPage from './MainPage/MainPage';
 
 interface Props {
     logout: () => LogoutActionType;
@@ -17,9 +18,9 @@ const adminPanel = (props: Props) => {
     };
 
     return (
-        <Fragment>
-            <Button onClick={onLogout}>Logout</Button>
-        </Fragment>
+        <Switch>
+            <Route path="/" component={MainPage} />
+        </Switch>
     );
 };
 

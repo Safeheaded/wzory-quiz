@@ -1,21 +1,12 @@
 import React, { Component } from 'react';
 import styles from './App.module.sass';
-import { Button, Container } from '@material-ui/core';
-import MathJax from 'react-mathjax2';
-import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-    Redirect,
-    Link
-} from 'react-router-dom';
+import { Container } from '@material-ui/core';
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import LoginForm from './Components/LoginForm/LoginForm';
-import firebase from 'firebase/app';
 import AdminPanel from './Components/AdminPanel/AdminPanel';
 import Home from './Components/Home/Home';
 import NotFoundPage from './Components/NotFoundPage/NotFoundPage';
 import GuardedRoute, { GuardMode } from './HOCs/GuardedRoute/GuardedRoute';
-import Test from './Components/test/test';
 
 interface Props {}
 
@@ -26,15 +17,6 @@ class App extends Component<Props, State> {
     state = {
         isLoggedin: false
     };
-
-    constructor(props: Props) {
-        super(props);
-        firebase
-            .auth()
-            .onAuthStateChanged(user =>
-                this.setState({ isLoggedin: user ? true : false })
-            );
-    }
 
     render() {
         return (
@@ -48,15 +30,14 @@ class App extends Component<Props, State> {
                             component={AdminPanel}
                             path="/admin"
                             redirectTo="/login"
-                            mode={GuardMode.logged}
+                            flow={GuardMode.authenticated}
                         />
                         <GuardedRoute
                             component={LoginForm}
                             path="/login"
                             redirectTo="/admin"
-                            mode={GuardMode.unlogged}
+                            flow={GuardMode.unauthenticated}
                         />
-                        {/* <Route path="/admin" component={AdminPanel} /> */}
 
                         <Route component={NotFoundPage} />
                     </Switch>

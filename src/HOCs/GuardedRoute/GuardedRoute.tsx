@@ -9,17 +9,17 @@ interface Props {
     component: React.ComponentType;
     path: string;
     redirectTo: string;
-    mode: GuardMode;
+    flow: GuardMode;
 }
 
 export enum GuardMode {
-    logged,
-    unlogged
+    authenticated,
+    unauthenticated
 }
 
-const GuardedRoute: React.FC<Props> = props => {
+const GuardedRoute: React.SFC<Props> = (props: Props) => {
     const Component = props.component;
-    const guardingFlow = props.mode === GuardMode.logged ? true : false;
+    const guardingFlow = props.flow === GuardMode.authenticated ? true : false;
 
     return (
         <Route
