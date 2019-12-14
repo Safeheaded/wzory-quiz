@@ -1,8 +1,17 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment, FormEvent } from 'react';
+import SearchForm from './SearchForm/SearchForm';
 
-class Home extends Component {
+interface State {}
+
+interface Props {}
+
+class Home extends Component<Props, State> {
     render() {
-        return <div>Home</div>;
+        return (
+            <Fragment>
+                <SearchForm />
+            </Fragment>
+        );
     }
 }
 
