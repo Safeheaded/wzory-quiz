@@ -6,12 +6,16 @@ import {
     BrowserRouter as Router,
     Switch,
     Route,
-    Redirect
+    Redirect,
+    Link
 } from 'react-router-dom';
 import LoginForm from './Components/LoginForm/LoginForm';
 import firebase from 'firebase/app';
 import AdminPanel from './Components/AdminPanel/AdminPanel';
 import Home from './Components/Home/Home';
+import NotFoundPage from './Components/NotFoundPage/NotFoundPage';
+import GuardedRoute, { GuardMode } from './HOCs/GuardedRoute/GuardedRoute';
+import Test from './Components/test/test';
 
 interface Props {}
 
@@ -33,26 +37,28 @@ class App extends Component<Props, State> {
     }
 
     render() {
-        const adminRoute = this.state.isLoggedin ? (
-            <Route component={AdminPanel} path="/admin" />
-        ) : (
-            <Redirect to="/login" />
-        );
-
-        const loginRoute = !this.state.isLoggedin ? (
-            <Route path="/login" component={LoginForm} />
-        ) : (
-            <Redirect to="/admin" />
-        );
-
         return (
             <Container className={styles.Container}>
                 <Router>
+                    <Link to="/admin">Admin Panel</Link>
+                    <Link to="/login">Login Panel</Link>
                     <Switch>
                         <Route path="/" exact component={Home} />
+                        <GuardedRoute
+                            component={AdminPanel}
+                            path="/admin"
+                            redirectTo="/login"
+                            mode={GuardMode.logged}
+                        />
+                        <GuardedRoute
+                            component={LoginForm}
+                            path="/login"
+                            redirectTo="/admin"
+                            mode={GuardMode.unlogged}
+                        />
+                        {/* <Route path="/admin" component={AdminPanel} /> */}
 
-                        {loginRoute}
-                        {adminRoute}
+                        <Route component={NotFoundPage} />
                     </Switch>
                 </Router>
             </Container>

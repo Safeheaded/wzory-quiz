@@ -4,15 +4,20 @@ import styles from './LoginForm.module.sass';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { login, logout } from '../../store/actions/Authorization';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
 import {
     LoginActionType,
-    LogoutActionType
+    LogoutActionType,
+    AuthState
 } from '../../store/types/Authorization';
 import firebase from 'firebase';
+import { RootReducer } from '../../store/types/main';
+import { Redirect } from 'react-router';
 
-interface Props {
+interface Props extends RouteComponentProps {
     login: (email: string, password: string) => LoginActionType;
     logout: () => LogoutActionType;
+    isLoggedIn: boolean;
 }
 
 interface State {
@@ -44,6 +49,7 @@ class LoginForm extends Component<Props, State> {
     render() {
         return (
             <form className={styles.Form}>
+                {this.props.isLoggedIn ? <Redirect to="/admin" /> : null}
                 <TextField
                     label="E-Mail"
                     type="email"
@@ -58,11 +64,15 @@ class LoginForm extends Component<Props, State> {
                 />
                 <Button onClick={this.onLogin}>LogIn</Button>
 
-                <Button onClick={this.onLogout}>Logout</Button>
+                {/* <Button onClick={this.onLogout}>Logout</Button> */}
             </form>
         );
     }
 }
+
+const mapStateToProps = ({ authReducer }: { authReducer: AuthState }) => ({
+    isLoggedIn: authReducer.isLoggedIn
+});
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
     login: (email: string, password: string) =>
@@ -70,4 +80,6 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     logout: () => dispatch(logout())
 });
 
-export default connect(null, mapDispatchToProps)(LoginForm);
+export default withRouter(
+    connect(mapStateToProps, mapDispatchToProps)(LoginForm)
+);

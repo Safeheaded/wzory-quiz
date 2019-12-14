@@ -8,7 +8,6 @@ import {
 } from '../constants/Authorization';
 
 export interface AuthState {
-    token?: string;
     isLoggedIn: boolean;
 }
 
