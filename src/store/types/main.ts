@@ -1,4 +1,4 @@
-import { AuthState } from './Authorization';
+import { AuthState } from './Authentication';
 
 export interface RootReducer {
     authReducer: AuthState;

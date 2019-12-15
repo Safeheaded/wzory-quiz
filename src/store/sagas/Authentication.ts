@@ -1,5 +1,5 @@
 import { call, put, takeLatest, all } from 'redux-saga/effects';
-import { LoginActionType, LogoutActionType } from '../types/Authorization';
+import { LoginActionType, LogoutActionType } from '../types/Authentication';
 import { LOG_IN, LOG_OUT } from '../constants/Authentication';
 import 'firebase/auth';
 import { firebaseHandler } from '../../firebaseConfig';
@@ -10,6 +10,7 @@ import {
     logoutError
 } from '../actions/Authentication';
 import { createBrowserHistory } from 'history';
+import { ADD_EQUATION } from '../constants/Equations';
 
 const rsf = firebaseHandler.getRSF();
 

@@ -5,7 +5,7 @@ import {
     LoginErrorActionType,
     LogoutSuccessActionType,
     LogoutErrorActionType
-} from '../types/Authorization';
+} from '../types/Authentication';
 import {
     LOG_IN,
     LOG_OUT,

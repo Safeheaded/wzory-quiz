@@ -1,4 +1,4 @@
-import { AuthState, AuthActionTypes } from '../types/Authorization';
+import { AuthState, AuthActionTypes } from '../types/Authentication';
 import {
     LOG_IN,
     LOG_OUT,

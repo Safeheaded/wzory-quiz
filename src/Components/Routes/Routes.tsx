@@ -14,7 +14,7 @@ const Routes: React.SFC = () => {
                 component={AdminPanel}
                 path="/admin"
                 redirectTo="/login"
-                flow={GuardMode.authenticated}
+                flow={GuardMode.unauthenticated}
             />
             <GuardedRoute
                 component={LoginForm}

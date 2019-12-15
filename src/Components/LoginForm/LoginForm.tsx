@@ -9,7 +9,7 @@ import {
     LoginActionType,
     LogoutActionType,
     AuthState
-} from '../../store/types/Authorization';
+} from '../../store/types/Authentication';
 import firebase from 'firebase';
 import { RootReducer } from '../../store/types/main';
 import { Redirect } from 'react-router';
