@@ -15,7 +15,7 @@ function* addEquation(action: AddEquationActionType) {
     try {
         const data: firebase.firestore.DocumentReference = yield call(
             rsf.firestore.addDocument,
-            ` equations/${action.payload.subjectRef}`,
+            `Equations/`,
             action.payload
         );
         const newEquation: EquationWithId = {

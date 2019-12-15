@@ -21,8 +21,8 @@ const MainPage: React.SFC<Props> = (props: Props) => {
         const equation: ExtendedEquation = {
             equation: data.get('equation') as string,
             explanation: data.get('explanation') as string,
-            subjectRef: '',
-            topicRef: ''
+            subjectRef: 'subRef',
+            topicRef: 'topicRef'
         };
         props.addEquation(equation);
     };
