@@ -1,6 +1,17 @@
 import React from 'react';
 import MathInput from '../MathInput/MathInput';
-import { Button, TextField } from '@material-ui/core';
+import {
+    Button,
+    TextField,
+    Select,
+    MenuItem,
+    InputLabel,
+    FormControl,
+    FormGroup,
+    Divider,
+    FormHelperText,
+    FormLabel
+} from '@material-ui/core';
 import { Dispatch } from 'redux';
 import {
     Equation,
@@ -9,6 +20,7 @@ import {
 } from '../../../store/types/Equations';
 import { addEquation } from '../../../store/actions/Equations';
 import { connect } from 'react-redux';
+import styles from './MainPage.module.sass';
 
 interface Props {
     addEquation: (equation: ExtendedEquation) => AddEquationActionType;
@@ -28,16 +40,36 @@ const MainPage: React.SFC<Props> = (props: Props) => {
     };
 
     return (
-        <form onSubmit={e => onSubmitHandler(e)}>
-            <MathInput />
-            <TextField
-                label="Znaczenie równania"
-                rows="5"
-                fullWidth
-                multiline
-                name="explanation"
-            />
-            <Button type="submit">Wyślij</Button>
+        <form className={styles.Form} onSubmit={e => onSubmitHandler(e)}>
+            <FormControl>
+                <MathInput />
+            </FormControl>
+            <FormControl>
+                <TextField
+                    label="Znaczenie równania"
+                    rows="5"
+                    fullWidth
+                    multiline
+                    name="explanation"
+                />
+            </FormControl>
+            <FormControl>
+                <InputLabel id="subject-label">Przedmiot</InputLabel>
+                <Select labelId="subject-label" id="subject">
+                    <MenuItem value="Test">Test</MenuItem>
+                </Select>
+            </FormControl>
+            <FormControl>
+                <InputLabel id="topic-label">Temat</InputLabel>
+                <Select labelId="topic-label" id="topic">
+                    <MenuItem value="Test">Test</MenuItem>
+                </Select>
+            </FormControl>
+            <FormControl>
+                <Button variant="contained" color="primary" type="submit">
+                    Wyślij
+                </Button>
+            </FormControl>
         </form>
     );
 };

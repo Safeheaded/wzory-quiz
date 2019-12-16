@@ -1,6 +1,6 @@
 import React, { FormEvent } from 'react';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
-import { TextField, Button } from '@material-ui/core';
+import { TextField, Button, IconButton } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import styles from './SearchForm.module.sass';
 
@@ -19,9 +19,9 @@ const SearchForm: React.SFC<Props> = (props: Props) => {
     return (
         <form onSubmit={e => submitHandler(e)} className={styles.Form}>
             <TextField name="search-text" variant="outlined" label="Wyszukaj" />
-            <Button type="submit">
+            <IconButton type="submit" aria-label="search">
                 <SearchIcon />
-            </Button>
+            </IconButton>
         </form>
     );
 };
