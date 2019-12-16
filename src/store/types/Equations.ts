@@ -1,11 +1,15 @@
 import {
     ADD_EQUATION,
     ADD_EQUATION_SUCCESS,
-    ADD_EQUATION_ERROR
+    ADD_EQUATION_ERROR,
+    ADD_SUBJECT,
+    ADD_SUBJECT_ERROR,
+    ADD_SUBJECT_SUCCESS
 } from '../constants/Equations';
 
 export interface EquationsState {
-    equations: Array<Equation>;
+    equations: Array<EquationWithId>;
+    subjects: Array<SubjectWithId>;
 }
 
 export interface Equation {
@@ -41,7 +45,33 @@ export interface AddEquationErrorActionType {
     payload: object;
 }
 
+export interface Subject {
+    name: string;
+}
+
+export interface SubjectWithId extends Subject {
+    id: string;
+}
+
+export interface AddSubjectActionType {
+    payload: Subject;
+    type: typeof ADD_SUBJECT;
+}
+
+export interface AddSubjectErrorActionType {
+    type: typeof ADD_SUBJECT_ERROR;
+    payload: object;
+}
+
+export interface AddSubjectSuccessActionType {
+    type: typeof ADD_SUBJECT_SUCCESS;
+    payload: SubjectWithId;
+}
+
 export type EqActionTypes =
     | AddEquationActionType
     | AddEquationErrorActionType
-    | AddEquationSuccessActionType;
+    | AddEquationSuccessActionType
+    | AddSubjectActionType
+    | AddSubjectSuccessActionType
+    | AddSubjectErrorActionType;
