@@ -8,7 +8,10 @@ import {
     ADD_EQUATION,
     ADD_EQUATION_SUCCESS,
     ADD_EQUATION_ERROR,
-    ADD_SUBJECT_SUCCESS
+    ADD_SUBJECT_SUCCESS,
+    FETCH_ALL_EQUATIONS,
+    FETCH_ALL_SUBJECTS,
+    FETCH_ALL_SUBJECTS_SUCCESS
 } from '../constants/Equations';
 
 const initState: EquationsState = { equations: [], subjects: [] };
@@ -24,6 +27,8 @@ const EquationsReducer = (
             console.log(action.payload);
         case ADD_SUBJECT_SUCCESS:
             return addSubjectSuccessHandler(state, action);
+        case FETCH_ALL_SUBJECTS_SUCCESS:
+            return { ...state, subjects: action.payload };
     }
     return state;
 };

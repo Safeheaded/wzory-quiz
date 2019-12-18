@@ -21,6 +21,7 @@ import {
 import { addEquation } from '../../../store/actions/Equations';
 import { connect } from 'react-redux';
 import styles from './MainPage.module.sass';
+import AddIcon from '@material-ui/icons/Add';
 
 interface Props {
     addEquation: (equation: ExtendedEquation) => AddEquationActionType;
@@ -39,6 +40,10 @@ const MainPage: React.SFC<Props> = (props: Props) => {
         props.addEquation(equation);
     };
 
+    const addSubjectHandler = () => {
+        console.log('Subject added');
+    };
+
     return (
         <form className={styles.Form} onSubmit={e => onSubmitHandler(e)}>
             <FormControl>
@@ -55,8 +60,15 @@ const MainPage: React.SFC<Props> = (props: Props) => {
             </FormControl>
             <FormControl>
                 <InputLabel id="subject-label">Przedmiot</InputLabel>
-                <Select labelId="subject-label" id="subject">
-                    <MenuItem value="Test">Test</MenuItem>
+                <Select
+                    name="subjectRef"
+                    value="Test"
+                    labelId="subject-label"
+                    id="subject"
+                >
+                    <MenuItem onClick={addSubjectHandler} value="Test">
+                        Dodaj przedmiot <AddIcon />
+                    </MenuItem>
                 </Select>
             </FormControl>
             <FormControl>

@@ -11,10 +11,16 @@ import {
     addEquationSuccess,
     addEquationError,
     addSubjectSuccess,
-    addSubjectError
+    addSubjectError,
+    fetchAllSubjectsSuccess,
+    fetchAllSubjectsError
 } from '../actions/Equations';
-import { ADD_EQUATION, ADD_SUBJECT } from '../constants/Equations';
-import firebase from 'firebase/app';
+import {
+    ADD_EQUATION,
+    ADD_SUBJECT,
+    FETCH_ALL_SUBJECTS
+} from '../constants/Equations';
+import firebase, { database } from 'firebase/app';
 
 const rsf = firebaseHandler.getRSF();
 
@@ -53,9 +59,30 @@ function* addSubject(action: AddSubjectActionType) {
     }
 }
 
+function* fetchAllSubjects() {
+    try {
+        const data: firebase.firestore.QuerySnapshot = yield call(
+            rsf.firestore.getCollection,
+            'Subjects'
+        );
+        const subjects: Array<SubjectWithId> = [];
+        data.forEach(subject => {
+            const newSubject: SubjectWithId = {
+                id: subject.id,
+                name: subject.get('name')
+            };
+            subjects.push(newSubject);
+        });
+        yield put(fetchAllSubjectsSuccess(subjects));
+    } catch (error) {
+        yield put(fetchAllSubjectsError(error));
+    }
+}
+
 export function* EquationsSaga() {
     yield all([
         takeLatest(ADD_EQUATION, addEquation),
-        takeLatest(ADD_SUBJECT, addSubject)
+        takeLatest(ADD_SUBJECT, addSubject),
+        takeLatest(FETCH_ALL_SUBJECTS, fetchAllSubjects)
     ]);
 }

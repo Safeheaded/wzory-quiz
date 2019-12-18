@@ -9,7 +9,10 @@ import {
     Subject,
     SubjectWithId,
     AddSubjectSuccessActionType,
-    AddSubjectErrorActionType
+    AddSubjectErrorActionType,
+    FetchAllSubjectsActionType,
+    FetchAllSubjectsSuccessActionType,
+    FetchAllSubjectsErrorActionType
 } from '../types/Equations';
 import {
     ADD_EQUATION,
@@ -17,7 +20,10 @@ import {
     ADD_EQUATION_ERROR,
     ADD_SUBJECT,
     ADD_SUBJECT_SUCCESS,
-    ADD_SUBJECT_ERROR
+    ADD_SUBJECT_ERROR,
+    FETCH_ALL_SUBJECTS,
+    FETCH_ALL_SUBJECTS_SUCCESS,
+    FETCH_ALL_SUBJECTS_ERROR
 } from '../constants/Equations';
 
 export function addEquation(equation: ExtendedEquation): AddEquationActionType {
@@ -55,4 +61,23 @@ export function addSubjectSuccess(
 
 export function addSubjectError(error: object): AddSubjectErrorActionType {
     return { type: ADD_SUBJECT_ERROR, payload: error };
+}
+
+export function fetchAllSubjects(): FetchAllSubjectsActionType {
+    return { type: FETCH_ALL_SUBJECTS };
+}
+
+export function fetchAllSubjectsSuccess(
+    subjects: SubjectWithId[]
+): FetchAllSubjectsSuccessActionType {
+    return { type: FETCH_ALL_SUBJECTS_SUCCESS, payload: subjects };
+}
+
+export function fetchAllSubjectsError(
+    error: object
+): FetchAllSubjectsErrorActionType {
+    return {
+        type: FETCH_ALL_SUBJECTS_ERROR,
+        payload: error
+    };
 }

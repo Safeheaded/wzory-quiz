@@ -4,7 +4,10 @@ import {
     ADD_EQUATION_ERROR,
     ADD_SUBJECT,
     ADD_SUBJECT_ERROR,
-    ADD_SUBJECT_SUCCESS
+    ADD_SUBJECT_SUCCESS,
+    FETCH_ALL_SUBJECTS,
+    FETCH_ALL_SUBJECTS_SUCCESS,
+    FETCH_ALL_SUBJECTS_ERROR
 } from '../constants/Equations';
 
 export interface EquationsState {
@@ -68,10 +71,27 @@ export interface AddSubjectSuccessActionType {
     payload: SubjectWithId;
 }
 
+export interface FetchAllSubjectsActionType {
+    type: typeof FETCH_ALL_SUBJECTS;
+}
+
+export interface FetchAllSubjectsSuccessActionType {
+    type: typeof FETCH_ALL_SUBJECTS_SUCCESS;
+    payload: Array<SubjectWithId>;
+}
+
+export interface FetchAllSubjectsErrorActionType {
+    type: typeof FETCH_ALL_SUBJECTS_ERROR;
+    payload: object;
+}
+
 export type EqActionTypes =
     | AddEquationActionType
     | AddEquationErrorActionType
     | AddEquationSuccessActionType
     | AddSubjectActionType
     | AddSubjectSuccessActionType
-    | AddSubjectErrorActionType;
+    | AddSubjectErrorActionType
+    | FetchAllSubjectsActionType
+    | FetchAllSubjectsSuccessActionType
+    | FetchAllSubjectsErrorActionType;
