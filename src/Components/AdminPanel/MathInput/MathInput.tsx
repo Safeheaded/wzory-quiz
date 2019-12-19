@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import MathJax from 'react-mathjax2';
-import { TextField } from '@material-ui/core';
+import { TextField, FormControl } from '@material-ui/core';
 import styles from './MathInput.module.sass';
 
 class MathInput extends Component {
@@ -10,7 +10,7 @@ class MathInput extends Component {
 
     render() {
         return (
-            <Fragment>
+            <FormControl>
                 <TextField
                     label="Równanie"
                     name="equation"
@@ -20,7 +20,7 @@ class MathInput extends Component {
                 <MathJax.Context input="ascii">
                     <MathJax.Node>{this.state.equation}</MathJax.Node>
                 </MathJax.Context>
-            </Fragment>
+            </FormControl>
         );
     }
     onChangeHandler(
