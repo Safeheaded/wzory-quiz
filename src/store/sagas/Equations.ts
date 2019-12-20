@@ -5,7 +5,11 @@ import {
     AddEquationActionType,
     EquationWithId,
     AddSubjectActionType,
-    SubjectWithId
+    SubjectWithId,
+    AddTopicActionType,
+    Topic,
+    FetchAllTopicsActionType,
+    ExtendedTopicWithId
 } from '../types/Equations';
 import {
     addEquationSuccess,
@@ -13,12 +17,16 @@ import {
     addSubjectSuccess,
     addSubjectError,
     fetchAllSubjectsSuccess,
-    fetchAllSubjectsError
+    fetchAllSubjectsError,
+    fetchAllTopicsSuccess,
+    FetchAllTopicsError
 } from '../actions/Equations';
 import {
     ADD_EQUATION,
     ADD_SUBJECT,
-    FETCH_ALL_SUBJECTS
+    FETCH_ALL_SUBJECTS,
+    ADD_TOPIC,
+    FETCH_ALL_TOPICS
 } from '../constants/Equations';
 import firebase, { database } from 'firebase/app';
 
@@ -79,10 +87,42 @@ function* fetchAllSubjects() {
     }
 }
 
+function* addTopic(action: AddTopicActionType) {
+    const topic: Topic = { name: action.payload.name };
+    const data: firebase.firestore.DocumentReference = yield call(
+        rsf.firestore.addDocument,
+        `Subjects/${action.payload.subjectRef}/Topics`,
+        topic
+    );
+}
+
+function* fetchAllTopics(action: FetchAllTopicsActionType) {
+    try {
+        const data: firebase.firestore.QuerySnapshot = yield call(
+            rsf.firestore.getCollection,
+            `Subjects/${action.payload}/Topics`
+        );
+        const topics: ExtendedTopicWithId[] = [];
+        data.forEach(topic => {
+            const newTopic: ExtendedTopicWithId = {
+                id: topic.id,
+                name: topic.get('name'),
+                subjectRef: topic.get('subjectRef')
+            };
+            topics.push(newTopic);
+        });
+        yield put(fetchAllTopicsSuccess(topics));
+    } catch (error) {
+        yield put(FetchAllTopicsError(error));
+    }
+}
+
 export function* EquationsSaga() {
     yield all([
         takeLatest(ADD_EQUATION, addEquation),
         takeLatest(ADD_SUBJECT, addSubject),
-        takeLatest(FETCH_ALL_SUBJECTS, fetchAllSubjects)
+        takeLatest(FETCH_ALL_SUBJECTS, fetchAllSubjects),
+        takeLatest(ADD_TOPIC, addTopic),
+        takeLatest(FETCH_ALL_TOPICS, fetchAllTopics)
     ]);
 }

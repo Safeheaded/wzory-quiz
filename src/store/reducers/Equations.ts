@@ -11,10 +11,11 @@ import {
     ADD_SUBJECT_SUCCESS,
     FETCH_ALL_EQUATIONS,
     FETCH_ALL_SUBJECTS,
-    FETCH_ALL_SUBJECTS_SUCCESS
+    FETCH_ALL_SUBJECTS_SUCCESS,
+    FETCH_ALL_TOPICS_SUCCESS
 } from '../constants/Equations';
 
-const initState: EquationsState = { equations: [], subjects: [] };
+const initState: EquationsState = { equations: [], subjects: [], topics: [] };
 
 const EquationsReducer = (
     state: EquationsState = initState,
@@ -29,6 +30,8 @@ const EquationsReducer = (
             return addSubjectSuccessHandler(state, action);
         case FETCH_ALL_SUBJECTS_SUCCESS:
             return { ...state, subjects: action.payload };
+        case FETCH_ALL_TOPICS_SUCCESS:
+            return { ...state, topics: action.payload };
     }
     return state;
 };

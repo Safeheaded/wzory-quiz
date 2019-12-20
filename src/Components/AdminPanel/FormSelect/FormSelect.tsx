@@ -18,7 +18,6 @@ interface Props {
     id: string;
     label: string;
     onValueChange: Function;
-    stateValue: string;
     disabled?: boolean;
     values: SubjectWithId[];
     value: string;
@@ -39,9 +38,7 @@ const FormSelect: React.SFC<Props> = (props: Props) => {
             <InputLabel id={labelId}>{props.label}</InputLabel>
             <Select
                 value={props.value}
-                onChange={(e: onChangeType) =>
-                    props.onValueChange(e, props.stateValue)
-                }
+                onChange={(e: onChangeType) => props.onValueChange(e)}
                 name={props.name}
                 labelId={labelId}
                 id={props.id}

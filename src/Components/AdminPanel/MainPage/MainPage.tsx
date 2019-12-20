@@ -25,12 +25,15 @@ import {
     FetchAllSubjectsActionType,
     SubjectWithId,
     Subject,
-    AddSubjectActionType
+    AddSubjectActionType,
+    ExtendedTopicWithId,
+    FetchAllTopicsActionType
 } from '../../../store/types/Equations';
 import {
     addEquation,
     fetchAllSubjects,
-    addSubject
+    addSubject,
+    fetchAllTopics
 } from '../../../store/actions/Equations';
 import { connect } from 'react-redux';
 import styles from './MainPage.module.sass';
@@ -45,10 +48,13 @@ interface Props {
     fetchAllSubjects: () => FetchAllSubjectsActionType;
     subjects: SubjectWithId[];
     addSubject: (subject: Subject) => AddSubjectActionType;
+    topics: ExtendedTopicWithId[];
+    fetchAllTopics: (subjectRef: string) => FetchAllTopicsActionType;
 }
 
 interface State {
     subjectDialogState: boolean;
+    topicDialogState: boolean;
     subjectValue: string;
     topicValue: string;
 }
@@ -60,7 +66,8 @@ class MainPage extends Component<Props, State> {
     state: State = {
         subjectDialogState: false,
         subjectValue: '',
-        topicValue: ''
+        topicValue: '',
+        topicDialogState: false
     };
 
     componentDidMount() {
@@ -87,12 +94,27 @@ class MainPage extends Component<Props, State> {
         this.setState({ subjectDialogState: false });
     };
 
-    onChangeHandler = (e: onChangeType, field: inputValuesType) => {
+    onSubjectChange = (e: onChangeType) => {
         const value = (e.target as inputTypes).value;
         if (value === 'add_subject') {
+            this.setState({ topicDialogState: true });
+        } else {
+            const subject: SubjectWithId | undefined = this.props.subjects.find(
+                subject => subject.id === value
+            );
+            if (subject) {
+                this.props.fetchAllTopics(subject.id);
+            }
+            this.setState({ subjectValue: value });
+        }
+    };
+
+    onTopicChange = (e: onChangeType) => {
+        const value = (e.target as inputTypes).value;
+        if (value === 'add_topic') {
             this.setState({ subjectDialogState: true });
         } else {
-            this.setState({ [field as 'subjectValue']: value });
+            this.setState({ topicValue: value });
         }
     };
 
@@ -109,7 +131,7 @@ class MainPage extends Component<Props, State> {
                 Dodaj przedmiot <AddIcon />
             </MenuItem>
         );
-
+        console.log(this.state.topicValue);
         return (
             <Fragment>
                 <form
@@ -130,21 +152,21 @@ class MainPage extends Component<Props, State> {
                         id="subject"
                         lastItem={subjectLastItem}
                         label="Przedmioty"
-                        onValueChange={this.onChangeHandler}
-                        stateValue="subjectValue"
+                        onValueChange={this.onSubjectChange}
                         defaultValue="add_subject"
                         values={this.props.subjects}
                     />
 
-                    {/* <FormSelect
+                    <FormSelect
+                        value={this.state.topicValue}
                         name="topicRef"
                         id="topic"
                         lastItem={<MenuItem value="Test">Test</MenuItem>}
                         label="Tematy"
-                        onValueChange={this.onChangeHandler}
-                        stateValue="topicValue"
-                        disabled
-                    /> */}
+                        onValueChange={this.onTopicChange}
+                        values={this.props.topics}
+                        disabled={this.state.subjectValue === '' ? true : false}
+                    />
 
                     <FormControl>
                         <Button
@@ -185,11 +207,13 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     addEquation: (equation: ExtendedEquation) =>
         dispatch(addEquation(equation)),
     fetchAllSubjects: () => dispatch(fetchAllSubjects()),
-    addSubject: (subject: Subject) => dispatch(addSubject(subject))
+    addSubject: (subject: Subject) => dispatch(addSubject(subject)),
+    fetchAllTopics: (subjectRef: string) => dispatch(fetchAllTopics(subjectRef))
 });
 
 const mapStateToProps = (state: RootReducer) => ({
-    subjects: state.eqReducer.subjects
+    subjects: state.eqReducer.subjects,
+    topics: state.eqReducer.topics
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainPage);
