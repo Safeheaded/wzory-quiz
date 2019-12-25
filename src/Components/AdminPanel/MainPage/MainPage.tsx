@@ -3,14 +3,8 @@ import MathInput from '../MathInput/MathInput';
 import {
     Button,
     TextField,
-    Select,
     MenuItem,
-    InputLabel,
     FormControl,
-    FormGroup,
-    Divider,
-    FormHelperText,
-    FormLabel,
     Dialog,
     DialogTitle,
     DialogContent,
@@ -27,13 +21,16 @@ import {
     Subject,
     AddSubjectActionType,
     ExtendedTopicWithId,
-    FetchAllTopicsActionType
+    FetchAllTopicsActionType,
+    ExtendedTopic,
+    AddTopicActionType
 } from '../../../store/types/Equations';
 import {
     addEquation,
     fetchAllSubjects,
     addSubject,
-    fetchAllTopics
+    fetchAllTopics,
+    addTopic
 } from '../../../store/actions/Equations';
 import { connect } from 'react-redux';
 import styles from './MainPage.module.sass';
@@ -50,6 +47,7 @@ interface Props {
     addSubject: (subject: Subject) => AddSubjectActionType;
     topics: ExtendedTopicWithId[];
     fetchAllTopics: (subjectRef: string) => FetchAllTopicsActionType;
+    addTopic: (topic: ExtendedTopic) => AddTopicActionType;
 }
 
 interface State {
@@ -58,8 +56,6 @@ interface State {
     subjectValue: string;
     topicValue: string;
 }
-
-type inputValuesType = 'subjectValue' | 'topicValue';
 type inputTypes = HTMLSelectElement | HTMLInputElement | HTMLTextAreaElement;
 
 class MainPage extends Component<Props, State> {
@@ -74,14 +70,14 @@ class MainPage extends Component<Props, State> {
         this.props.fetchAllSubjects();
     }
 
-    onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        const data = new FormData(e.target as HTMLFormElement);
+    onSubmitHandler = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        const data = new FormData(event.target as HTMLFormElement);
         const equation: ExtendedEquation = {
             equation: data.get('equation') as string,
             explanation: data.get('explanation') as string,
-            subjectRef: 'subRef',
-            topicRef: 'topicRef'
+            subjectRef: data.get('subjectRef') as string,
+            topicRef: data.get('topicRef') as string
         };
         this.props.addEquation(equation);
     };
@@ -94,10 +90,14 @@ class MainPage extends Component<Props, State> {
         this.setState({ subjectDialogState: false });
     };
 
-    onSubjectChange = (e: onChangeType) => {
-        const value = (e.target as inputTypes).value;
+    onTopicDialogClose = () => {
+        this.setState({ topicDialogState: false });
+    };
+
+    onSubjectChange = (event: onChangeType) => {
+        const value = (event.target as inputTypes).value;
         if (value === 'add_subject') {
-            this.setState({ topicDialogState: true });
+            this.setState({ subjectDialogState: true });
         } else {
             const subject: SubjectWithId | undefined = this.props.subjects.find(
                 subject => subject.id === value
@@ -109,20 +109,34 @@ class MainPage extends Component<Props, State> {
         }
     };
 
-    onTopicChange = (e: onChangeType) => {
-        const value = (e.target as inputTypes).value;
+    onTopicChange = (event: onChangeType) => {
+        const value = (event.target as inputTypes).value;
         if (value === 'add_topic') {
-            this.setState({ subjectDialogState: true });
+            this.setState({ topicDialogState: true });
         } else {
-            this.setState({ topicValue: value });
+            if (value === 'add_topic') {
+                this.setState({ topicDialogState: true });
+            } else {
+                this.setState({ topicValue: value });
+            }
         }
     };
 
-    onAddSubject = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        const data = new FormData(e.target as HTMLFormElement);
+    onAddSubject = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        const data = new FormData(event.target as HTMLFormElement);
         const subject: Subject = { name: data.get('name') as string };
         this.props.addSubject(subject);
+    };
+
+    onAddTopic = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        const data = new FormData(event.target as HTMLFormElement);
+        const topic: ExtendedTopic = {
+            name: data.get('name') as string,
+            subjectRef: this.state.subjectValue
+        };
+        this.props.addTopic(topic);
     };
 
     render() {
@@ -131,7 +145,12 @@ class MainPage extends Component<Props, State> {
                 Dodaj przedmiot <AddIcon />
             </MenuItem>
         );
-        console.log(this.state.topicValue);
+
+        const topicLastItem = (
+            <MenuItem value="add_topic">
+                Dodaj temat <AddIcon />
+            </MenuItem>
+        );
         return (
             <Fragment>
                 <form
@@ -153,7 +172,6 @@ class MainPage extends Component<Props, State> {
                         lastItem={subjectLastItem}
                         label="Przedmioty"
                         onValueChange={this.onSubjectChange}
-                        defaultValue="add_subject"
                         values={this.props.subjects}
                     />
 
@@ -161,7 +179,7 @@ class MainPage extends Component<Props, State> {
                         value={this.state.topicValue}
                         name="topicRef"
                         id="topic"
-                        lastItem={<MenuItem value="Test">Test</MenuItem>}
+                        lastItem={topicLastItem}
                         label="Tematy"
                         onValueChange={this.onTopicChange}
                         values={this.props.topics}
@@ -193,7 +211,40 @@ class MainPage extends Component<Props, State> {
                             />
                         </DialogContent>
                         <DialogActions>
-                            <Button>Anuluj</Button>
+                            <Button
+                                onClick={() =>
+                                    this.setState({ subjectDialogState: false })
+                                }
+                            >
+                                Anuluj
+                            </Button>
+                            <Button type="submit">Dodaj</Button>
+                        </DialogActions>
+                    </form>
+                </Dialog>
+
+                <Dialog
+                    onClose={this.onTopicDialogClose}
+                    open={this.state.topicDialogState}
+                >
+                    <DialogTitle>Dodaj przedmiot</DialogTitle>
+                    <form onSubmit={e => this.onAddTopic(e)}>
+                        <DialogContent>
+                            <TextField
+                                label="Temat"
+                                type="text"
+                                autoFocus
+                                name="name"
+                            />
+                        </DialogContent>
+                        <DialogActions>
+                            <Button
+                                onClick={() =>
+                                    this.setState({ topicDialogState: false })
+                                }
+                            >
+                                Anuluj
+                            </Button>
                             <Button type="submit">Dodaj</Button>
                         </DialogActions>
                     </form>
@@ -208,7 +259,9 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
         dispatch(addEquation(equation)),
     fetchAllSubjects: () => dispatch(fetchAllSubjects()),
     addSubject: (subject: Subject) => dispatch(addSubject(subject)),
-    fetchAllTopics: (subjectRef: string) => dispatch(fetchAllTopics(subjectRef))
+    fetchAllTopics: (subjectRef: string) =>
+        dispatch(fetchAllTopics(subjectRef)),
+    addTopic: (topic: ExtendedTopic) => dispatch(addTopic(topic))
 });
 
 const mapStateToProps = (state: RootReducer) => ({
