@@ -1,19 +1,8 @@
 import React, { Component, Fragment, FormEvent } from 'react';
 import MathInput from '../MathInput/MathInput';
-import {
-    Button,
-    TextField,
-    MenuItem,
-    FormControl,
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogContentText,
-    DialogActions
-} from '@material-ui/core';
+import { Button, MenuItem, FormControl } from '@material-ui/core';
 import { Dispatch } from 'redux';
 import {
-    Equation,
     AddEquationActionType,
     ExtendedEquation,
     FetchAllSubjectsActionType,
@@ -39,6 +28,7 @@ import FormInput from '../FormInput/FormInput';
 import FormSelect from '../FormSelect/FormSelect';
 import { onChangeType } from '../../../types/admin';
 import { RootReducer } from '../../../store/types/main';
+import AddDialog from '../AddDialog/AddDialog';
 
 interface Props {
     addEquation: (equation: ExtendedEquation) => AddEquationActionType;
@@ -86,39 +76,18 @@ class MainPage extends Component<Props, State> {
         this.setState({ subjectDialogState: true });
     };
 
-    onSubjectDialogClose = () => {
-        this.setState({ subjectDialogState: false });
-    };
-
-    onTopicDialogClose = () => {
-        this.setState({ topicDialogState: false });
-    };
-
-    onSubjectChange = (event: onChangeType) => {
+    onSelectChange = (
+        event: onChangeType,
+        {
+            lastItemAction,
+            fieldToUpdate
+        }: { lastItemAction: string; fieldToUpdate: string }
+    ) => {
         const value = (event.target as inputTypes).value;
-        if (value === 'add_subject') {
-            this.setState({ subjectDialogState: true });
+        if (value === lastItemAction) {
+            this.setState({ [fieldToUpdate as 'subjectDialogState']: true });
         } else {
-            const subject: SubjectWithId | undefined = this.props.subjects.find(
-                subject => subject.id === value
-            );
-            if (subject) {
-                this.props.fetchAllTopics(subject.id);
-            }
-            this.setState({ subjectValue: value });
-        }
-    };
-
-    onTopicChange = (event: onChangeType) => {
-        const value = (event.target as inputTypes).value;
-        if (value === 'add_topic') {
-            this.setState({ topicDialogState: true });
-        } else {
-            if (value === 'add_topic') {
-                this.setState({ topicDialogState: true });
-            } else {
-                this.setState({ topicValue: value });
-            }
+            this.setSubjectOrTopic(fieldToUpdate, value);
         }
     };
 
@@ -137,6 +106,43 @@ class MainPage extends Component<Props, State> {
             subjectRef: this.state.subjectValue
         };
         this.props.addTopic(topic);
+    };
+
+    private setSubjectOrTopic(fieldToUpdate: string, value: string) {
+        if (fieldToUpdate === 'subjectDialogState') {
+            this.updateSubject(value);
+        } else {
+            this.updateTopic(value);
+        }
+    }
+
+    private updateTopic(value: string) {
+        if (value === 'add_topic') {
+            this.setState({ topicDialogState: true });
+        } else {
+            this.setState({ topicValue: value });
+        }
+    }
+
+    private updateSubject(value: string) {
+        const subject: SubjectWithId | undefined = this.props.subjects.find(
+            subject => subject.id === value
+        );
+        if (subject) {
+            this.props.fetchAllTopics(subject.id);
+        }
+        this.setState({ subjectValue: value });
+    }
+
+    toggleDialog = (field: string) => {
+        const fieldToUpdate = field as
+            | 'subjectDialogState'
+            | 'topicDialogState';
+        this.setState(prevState => ({
+            [fieldToUpdate as 'subjectDialogState']: !prevState[
+                fieldToUpdate as 'subjectDialogState'
+            ]
+        }));
     };
 
     render() {
@@ -171,7 +177,12 @@ class MainPage extends Component<Props, State> {
                         id="subject"
                         lastItem={subjectLastItem}
                         label="Przedmioty"
-                        onValueChange={this.onSubjectChange}
+                        onValueChange={(e: onChangeType) =>
+                            this.onSelectChange(e, {
+                                lastItemAction: 'add_subject',
+                                fieldToUpdate: 'subjectDialogState'
+                            })
+                        }
                         values={this.props.subjects}
                     />
 
@@ -181,7 +192,12 @@ class MainPage extends Component<Props, State> {
                         id="topic"
                         lastItem={topicLastItem}
                         label="Tematy"
-                        onValueChange={this.onTopicChange}
+                        onValueChange={(e: onChangeType) =>
+                            this.onSelectChange(e, {
+                                lastItemAction: 'add_topic',
+                                fieldToUpdate: 'topicDialogState'
+                            })
+                        }
                         values={this.props.topics}
                         disabled={this.state.subjectValue === '' ? true : false}
                     />
@@ -196,59 +212,22 @@ class MainPage extends Component<Props, State> {
                         </Button>
                     </FormControl>
                 </form>
-                <Dialog
-                    onClose={this.onSubjectDialogClose}
-                    open={this.state.subjectDialogState}
-                >
-                    <DialogTitle>Dodaj przedmiot</DialogTitle>
-                    <form onSubmit={e => this.onAddSubject(e)}>
-                        <DialogContent>
-                            <TextField
-                                label="Przedmiot"
-                                type="text"
-                                autoFocus
-                                name="name"
-                            />
-                        </DialogContent>
-                        <DialogActions>
-                            <Button
-                                onClick={() =>
-                                    this.setState({ subjectDialogState: false })
-                                }
-                            >
-                                Anuluj
-                            </Button>
-                            <Button type="submit">Dodaj</Button>
-                        </DialogActions>
-                    </form>
-                </Dialog>
 
-                <Dialog
-                    onClose={this.onTopicDialogClose}
-                    open={this.state.topicDialogState}
-                >
-                    <DialogTitle>Dodaj przedmiot</DialogTitle>
-                    <form onSubmit={e => this.onAddTopic(e)}>
-                        <DialogContent>
-                            <TextField
-                                label="Temat"
-                                type="text"
-                                autoFocus
-                                name="name"
-                            />
-                        </DialogContent>
-                        <DialogActions>
-                            <Button
-                                onClick={() =>
-                                    this.setState({ topicDialogState: false })
-                                }
-                            >
-                                Anuluj
-                            </Button>
-                            <Button type="submit">Dodaj</Button>
-                        </DialogActions>
-                    </form>
-                </Dialog>
+                <AddDialog
+                    label="Przedmiot"
+                    title="Dodaj przedmiot"
+                    toggleDialog={() => this.toggleDialog('subjectDialogState')}
+                    stateField={this.state.subjectDialogState}
+                    onSubmit={this.onAddSubject}
+                />
+
+                <AddDialog
+                    label="Temat"
+                    title="Dodaj temat"
+                    toggleDialog={() => this.toggleDialog('topicDialogState')}
+                    stateField={this.state.topicDialogState}
+                    onSubmit={this.onAddTopic}
+                />
             </Fragment>
         );
     }
