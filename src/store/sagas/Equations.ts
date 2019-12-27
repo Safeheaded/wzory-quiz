@@ -19,14 +19,17 @@ import {
     fetchAllSubjectsSuccess,
     fetchAllSubjectsError,
     fetchAllTopicsSuccess,
-    FetchAllTopicsError
+    FetchAllTopicsError,
+    fetchAllEquationsSuccess,
+    fetchAllEquationsError
 } from '../actions/Equations';
 import {
     ADD_EQUATION,
     ADD_SUBJECT,
     FETCH_ALL_SUBJECTS,
     ADD_TOPIC,
-    FETCH_ALL_TOPICS
+    FETCH_ALL_TOPICS,
+    FETCH_ALL_EQUATIONS
 } from '../constants/Equations';
 import firebase, { database } from 'firebase/app';
 
@@ -117,12 +120,34 @@ function* fetchAllTopics(action: FetchAllTopicsActionType) {
     }
 }
 
+function* fetchAllEquations() {
+    try {
+        const data: firebase.firestore.QuerySnapshot = yield call(
+            rsf.firestore.getCollection,
+            'Equations'
+        );
+        const equations: EquationWithId[] = [];
+        data.forEach(equation => {
+            const newEquation: EquationWithId = {
+                id: equation.id,
+                explanation: equation.get('explanation'),
+                equation: equation.get('equation')
+            };
+            equations.push(newEquation);
+        });
+        yield put(fetchAllEquationsSuccess(equations));
+    } catch (error) {
+        yield put(fetchAllEquationsError(error));
+    }
+}
+
 export function* EquationsSaga() {
     yield all([
         takeLatest(ADD_EQUATION, addEquation),
         takeLatest(ADD_SUBJECT, addSubject),
         takeLatest(FETCH_ALL_SUBJECTS, fetchAllSubjects),
         takeLatest(ADD_TOPIC, addTopic),
-        takeLatest(FETCH_ALL_TOPICS, fetchAllTopics)
+        takeLatest(FETCH_ALL_TOPICS, fetchAllTopics),
+        takeLatest(FETCH_ALL_EQUATIONS, fetchAllEquations)
     ]);
 }

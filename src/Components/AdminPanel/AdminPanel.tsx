@@ -1,25 +1,41 @@
 import React, { Fragment } from 'react';
 import { Button } from '@material-ui/core';
-import { Route, Redirect, Switch } from 'react-router';
+import {
+    Route,
+    Redirect,
+    Switch,
+    withRouter,
+    useRouteMatch
+} from 'react-router';
 import { Dispatch } from 'redux';
 import { logout } from '../../store/actions/Authentication';
 import { LogoutActionType, AuthState } from '../../store/types/Authentication';
 import { connect } from 'react-redux';
 import MainPage from './MainPage/MainPage';
+import EquationsList from './EquationsList/EquationsList';
+import { RouteComponentProps } from 'react-router-dom';
 
 interface Props {
     logout: () => LogoutActionType;
     isLoggedIn: boolean;
 }
 
-const adminPanel = (props: Props) => {
+const AdminPanel = (props: Props) => {
     const onLogout = () => {
         props.logout();
     };
 
+    const { path, url } = useRouteMatch();
+
     return (
         <Switch>
-            <Route path="/" component={MainPage} />
+            <Route path={`${path}/add-equation`} component={MainPage} />
+            <Route
+                exact
+                path={`${path}/edit-equation/:id`}
+                component={MainPage}
+            />
+            <Route path={path} component={EquationsList} />
         </Switch>
     );
 };
@@ -32,4 +48,4 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     logout: () => dispatch(logout())
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(adminPanel);
+export default connect(mapStateToProps, mapDispatchToProps)(AdminPanel);

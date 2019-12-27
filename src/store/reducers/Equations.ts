@@ -12,7 +12,8 @@ import {
     FETCH_ALL_EQUATIONS,
     FETCH_ALL_SUBJECTS,
     FETCH_ALL_SUBJECTS_SUCCESS,
-    FETCH_ALL_TOPICS_SUCCESS
+    FETCH_ALL_TOPICS_SUCCESS,
+    FETCH_ALL_EQUATIONS_SUCCESS
 } from '../constants/Equations';
 
 const initState: EquationsState = { equations: [], subjects: [], topics: [] };
@@ -32,6 +33,8 @@ const EquationsReducer = (
             return { ...state, subjects: action.payload };
         case FETCH_ALL_TOPICS_SUCCESS:
             return { ...state, topics: action.payload };
+        case FETCH_ALL_EQUATIONS_SUCCESS:
+            return { ...state, equations: action.payload };
     }
     return state;
 };

@@ -22,7 +22,10 @@ import {
     FetchAllTopicsSuccessActionType,
     FetchAllTopicsErrorActionType,
     ExtendedTopic,
-    ExtendedTopicWithId
+    ExtendedTopicWithId,
+    FetchAllEquationsActionType,
+    FetchAllEquationsSuccessActionType,
+    FetchAllEquationsErrorActionType
 } from '../types/Equations';
 import {
     ADD_EQUATION,
@@ -39,7 +42,10 @@ import {
     ADD_TOPIC_ERROR,
     FETCH_ALL_TOPICS,
     FETCH_ALL_TOPICS_SUCCESS,
-    FETCH_ALL_TOPICS_ERROR
+    FETCH_ALL_TOPICS_ERROR,
+    FETCH_ALL_EQUATIONS,
+    FETCH_ALL_EQUATIONS_SUCCESS,
+    FETCH_ALL_EQUATIONS_ERROR
 } from '../constants/Equations';
 
 export function addEquation(equation: ExtendedEquation): AddEquationActionType {
@@ -133,4 +139,20 @@ export function FetchAllTopicsError(
         type: FETCH_ALL_TOPICS_ERROR,
         payload: error
     };
+}
+
+export function fetchAllEquations(): FetchAllEquationsActionType {
+    return { type: FETCH_ALL_EQUATIONS };
+}
+
+export function fetchAllEquationsSuccess(
+    equations: EquationWithId[]
+): FetchAllEquationsSuccessActionType {
+    return { type: FETCH_ALL_EQUATIONS_SUCCESS, payload: equations };
+}
+
+export function fetchAllEquationsError(
+    error: object
+): FetchAllEquationsErrorActionType {
+    return { type: FETCH_ALL_EQUATIONS_ERROR, payload: error };
 }

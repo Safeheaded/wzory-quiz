@@ -1,4 +1,4 @@
-import React, { InputHTMLAttributes } from 'react';
+import React from 'react';
 import { FormControl, TextField } from '@material-ui/core';
 
 interface Props {

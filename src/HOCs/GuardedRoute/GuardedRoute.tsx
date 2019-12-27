@@ -1,38 +1,40 @@
-import { Route } from 'react-router-dom';
-import { Redirect } from 'react-router';
+import { Route, RouteComponentProps } from 'react-router-dom';
+import { Redirect, useRouteMatch, RouteProps } from 'react-router';
 import { connect } from 'react-redux';
 import React from 'react';
 import { RootReducer } from '../../store/types/main';
 
-interface Props {
+interface Props extends RouteProps {
     isLoggedIn: boolean;
-    component: React.ComponentType;
-    path: string;
     redirectTo: string;
     flow: GuardMode;
 }
 
 export enum GuardMode {
-    authenticated,
-    unauthenticated
+    Authenticated,
+    Unauthenticated
 }
 
-const GuardedRoute: React.SFC<Props> = (props: Props) => {
-    const Component = props.component;
-    const guardingFlow = props.flow === GuardMode.authenticated ? true : false;
-
-    return (
-        <Route
-            render={() =>
-                props.isLoggedIn === guardingFlow ? (
-                    <Component />
-                ) : (
-                    <Redirect to={props.redirectTo} />
-                )
-            }
-        />
-    );
-};
+class GuardedRoute extends Route<Props> {
+    render() {
+        const guardingFlow =
+            this.props.flow === GuardMode.Authenticated ? true : false;
+        if (this.props.isLoggedIn === guardingFlow) {
+            return <Route {...this.props} />;
+        } else {
+            const redirectComponent = () => (
+                <Redirect to={this.props.redirectTo} />
+            );
+            return (
+                <Route
+                    {...this.props}
+                    component={redirectComponent}
+                    render={undefined}
+                />
+            );
+        }
+    }
+}
 
 const mapStateToProps = (state: RootReducer) => ({
     isLoggedIn: state.authReducer.isLoggedIn

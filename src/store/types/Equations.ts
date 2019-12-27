@@ -13,7 +13,10 @@ import {
     ADD_TOPIC_ERROR,
     FETCH_ALL_TOPICS,
     FETCH_ALL_TOPICS_SUCCESS,
-    FETCH_ALL_TOPICS_ERROR
+    FETCH_ALL_TOPICS_ERROR,
+    FETCH_ALL_EQUATIONS,
+    FETCH_ALL_EQUATIONS_SUCCESS,
+    FETCH_ALL_EQUATIONS_ERROR
 } from '../constants/Equations';
 
 export interface EquationsState {
@@ -135,6 +138,20 @@ export interface FetchAllTopicsErrorActionType {
     payload: object;
 }
 
+export interface FetchAllEquationsActionType {
+    type: typeof FETCH_ALL_EQUATIONS;
+}
+
+export interface FetchAllEquationsSuccessActionType {
+    type: typeof FETCH_ALL_EQUATIONS_SUCCESS;
+    payload: EquationWithId[];
+}
+
+export interface FetchAllEquationsErrorActionType {
+    type: typeof FETCH_ALL_EQUATIONS_ERROR;
+    payload: object;
+}
+
 export type EqActionTypes =
     | AddEquationActionType
     | AddEquationErrorActionType
@@ -150,4 +167,7 @@ export type EqActionTypes =
     | AddTopicErrorActionType
     | FetchAllTopicsActionType
     | FetchAllTopicsSuccessActionType
-    | FetchAllTopicsErrorActionType;
+    | FetchAllTopicsErrorActionType
+    | FetchAllEquationsActionType
+    | FetchAllEquationsSuccessActionType
+    | FetchAllEquationsErrorActionType;
