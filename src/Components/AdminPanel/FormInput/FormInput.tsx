@@ -1,5 +1,6 @@
 import React from 'react';
 import { FormControl, TextField } from '@material-ui/core';
+import { onChangeType } from '../../../types/admin';
 
 interface Props {
     name: string;
@@ -8,12 +9,22 @@ interface Props {
     fullWidth?: boolean;
     rows?: string;
     disabled?: boolean;
+    onValueChange: Function;
+    value: string;
 }
 
 const FormInput: React.SFC<Props> = (props: Props) => {
     return (
         <FormControl disabled={props.disabled}>
-            <TextField {...props} />
+            <TextField
+                onChange={(e: onChangeType) => props.onValueChange(e)}
+                name={props.name}
+                label={props.label}
+                multiline={props.multiline}
+                fullWidth={props.fullWidth}
+                rows={props.rows}
+                value={props.value}
+            />
         </FormControl>
     );
 };

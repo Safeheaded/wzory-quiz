@@ -16,11 +16,14 @@ import {
     FETCH_ALL_TOPICS_ERROR,
     FETCH_ALL_EQUATIONS,
     FETCH_ALL_EQUATIONS_SUCCESS,
-    FETCH_ALL_EQUATIONS_ERROR
+    FETCH_ALL_EQUATIONS_ERROR,
+    FETCH_EQUATION,
+    FETCH_EQUATION_SUCCESS,
+    FETCH_EQUATION_ERROR
 } from '../constants/Equations';
 
 export interface EquationsState {
-    equations: Array<EquationWithId>;
+    equations: Array<ExtendedEquationWithId>;
     subjects: Array<SubjectWithId>;
     topics: Array<ExtendedTopicWithId>;
 }
@@ -144,11 +147,26 @@ export interface FetchAllEquationsActionType {
 
 export interface FetchAllEquationsSuccessActionType {
     type: typeof FETCH_ALL_EQUATIONS_SUCCESS;
-    payload: EquationWithId[];
+    payload: ExtendedEquationWithId[];
 }
 
 export interface FetchAllEquationsErrorActionType {
     type: typeof FETCH_ALL_EQUATIONS_ERROR;
+    payload: object;
+}
+
+export interface FetchEquationActionType {
+    type: typeof FETCH_EQUATION;
+    payload: string;
+}
+
+export interface FetchEquationSuccessActionType {
+    type: typeof FETCH_EQUATION_SUCCESS;
+    payload: ExtendedEquation;
+}
+
+export interface FetchEquationErrorActionType {
+    type: typeof FETCH_EQUATION_ERROR;
     payload: object;
 }
 
@@ -170,4 +188,7 @@ export type EqActionTypes =
     | FetchAllTopicsErrorActionType
     | FetchAllEquationsActionType
     | FetchAllEquationsSuccessActionType
-    | FetchAllEquationsErrorActionType;
+    | FetchAllEquationsErrorActionType
+    | FetchEquationActionType
+    | FetchEquationSuccessActionType
+    | FetchEquationErrorActionType;

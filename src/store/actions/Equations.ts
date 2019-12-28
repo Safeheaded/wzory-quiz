@@ -25,7 +25,11 @@ import {
     ExtendedTopicWithId,
     FetchAllEquationsActionType,
     FetchAllEquationsSuccessActionType,
-    FetchAllEquationsErrorActionType
+    FetchAllEquationsErrorActionType,
+    FetchEquationActionType,
+    ExtendedEquationWithId,
+    FetchEquationSuccessActionType,
+    FetchEquationErrorActionType
 } from '../types/Equations';
 import {
     ADD_EQUATION,
@@ -45,7 +49,10 @@ import {
     FETCH_ALL_TOPICS_ERROR,
     FETCH_ALL_EQUATIONS,
     FETCH_ALL_EQUATIONS_SUCCESS,
-    FETCH_ALL_EQUATIONS_ERROR
+    FETCH_ALL_EQUATIONS_ERROR,
+    FETCH_EQUATION,
+    FETCH_EQUATION_SUCCESS,
+    FETCH_EQUATION_ERROR
 } from '../constants/Equations';
 
 export function addEquation(equation: ExtendedEquation): AddEquationActionType {
@@ -146,7 +153,7 @@ export function fetchAllEquations(): FetchAllEquationsActionType {
 }
 
 export function fetchAllEquationsSuccess(
-    equations: EquationWithId[]
+    equations: ExtendedEquationWithId[]
 ): FetchAllEquationsSuccessActionType {
     return { type: FETCH_ALL_EQUATIONS_SUCCESS, payload: equations };
 }
@@ -155,4 +162,20 @@ export function fetchAllEquationsError(
     error: object
 ): FetchAllEquationsErrorActionType {
     return { type: FETCH_ALL_EQUATIONS_ERROR, payload: error };
+}
+
+export function fetchEquation(id: string): FetchEquationActionType {
+    return { type: FETCH_EQUATION, payload: id };
+}
+
+export function fetchEquationSuccess(
+    equation: ExtendedEquation
+): FetchEquationSuccessActionType {
+    return { type: FETCH_EQUATION_SUCCESS, payload: equation };
+}
+
+export function fetchEquationError(
+    error: object
+): FetchEquationErrorActionType {
+    return { type: FETCH_EQUATION_ERROR, payload: error };
 }

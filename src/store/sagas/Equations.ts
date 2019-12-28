@@ -1,4 +1,4 @@
-import { call, put, takeLatest, all, takeLeading } from 'redux-saga/effects';
+import { call, put, takeLatest, all, select } from 'redux-saga/effects';
 import { firebaseHandler } from '../../firebaseConfig';
 import {
     Equation,
@@ -9,7 +9,10 @@ import {
     AddTopicActionType,
     Topic,
     FetchAllTopicsActionType,
-    ExtendedTopicWithId
+    ExtendedTopicWithId,
+    FetchEquationActionType,
+    ExtendedEquation,
+    ExtendedEquationWithId
 } from '../types/Equations';
 import {
     addEquationSuccess,
@@ -21,7 +24,9 @@ import {
     fetchAllTopicsSuccess,
     FetchAllTopicsError,
     fetchAllEquationsSuccess,
-    fetchAllEquationsError
+    fetchAllEquationsError,
+    fetchEquationSuccess,
+    fetchEquationError
 } from '../actions/Equations';
 import {
     ADD_EQUATION,
@@ -29,9 +34,11 @@ import {
     FETCH_ALL_SUBJECTS,
     ADD_TOPIC,
     FETCH_ALL_TOPICS,
-    FETCH_ALL_EQUATIONS
+    FETCH_ALL_EQUATIONS,
+    FETCH_EQUATION
 } from '../constants/Equations';
 import firebase, { database } from 'firebase/app';
+import { getEquations } from './Selectors';
 
 const rsf = firebaseHandler.getRSF();
 
@@ -126,18 +133,32 @@ function* fetchAllEquations() {
             rsf.firestore.getCollection,
             'Equations'
         );
-        const equations: EquationWithId[] = [];
+        const equations: ExtendedEquationWithId[] = [];
         data.forEach(equation => {
-            const newEquation: EquationWithId = {
+            const fetchedEquation: ExtendedEquationWithId = {
                 id: equation.id,
-                explanation: equation.get('explanation'),
-                equation: equation.get('equation')
+                ...(equation.data() as ExtendedEquation)
             };
-            equations.push(newEquation);
+            equations.push(fetchedEquation);
         });
         yield put(fetchAllEquationsSuccess(equations));
     } catch (error) {
         yield put(fetchAllEquationsError(error));
+    }
+}
+
+function* fetchEquation(action: FetchEquationActionType) {
+    try {
+        const snapshot: firebase.firestore.DocumentSnapshot = yield call(
+            rsf.firestore.getDocument,
+            `Equations/${action.payload}`
+        );
+        const fetchedEquation: ExtendedEquation = {
+            ...(snapshot.data() as ExtendedEquation)
+        };
+        yield put(fetchEquationSuccess(fetchedEquation));
+    } catch (error) {
+        yield put(fetchEquationError(error));
     }
 }
 
@@ -148,6 +169,7 @@ export function* EquationsSaga() {
         takeLatest(FETCH_ALL_SUBJECTS, fetchAllSubjects),
         takeLatest(ADD_TOPIC, addTopic),
         takeLatest(FETCH_ALL_TOPICS, fetchAllTopics),
-        takeLatest(FETCH_ALL_EQUATIONS, fetchAllEquations)
+        takeLatest(FETCH_ALL_EQUATIONS, fetchAllEquations),
+        takeLatest(FETCH_EQUATION, fetchEquation)
     ]);
 }

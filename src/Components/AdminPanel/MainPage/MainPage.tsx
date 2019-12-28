@@ -1,4 +1,4 @@
-import React, { Component, Fragment, FormEvent } from 'react';
+import React, { Component, Fragment, ComponentState } from 'react';
 import MathInput from '../MathInput/MathInput';
 import { Button, MenuItem, FormControl } from '@material-ui/core';
 import { Dispatch } from 'redux';
@@ -12,7 +12,8 @@ import {
     ExtendedTopicWithId,
     FetchAllTopicsActionType,
     ExtendedTopic,
-    AddTopicActionType
+    AddTopicActionType,
+    ExtendedEquationWithId
 } from '../../../store/types/Equations';
 import {
     addEquation,
@@ -29,23 +30,41 @@ import FormSelect from '../FormSelect/FormSelect';
 import { onChangeType } from '../../../types/admin';
 import { RootReducer } from '../../../store/types/main';
 import AddDialog from '../AddDialog/AddDialog';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
 
-interface Props {
+interface Props extends RouteComponentProps {
+    equations: ExtendedEquationWithId[];
+    subjects: SubjectWithId[];
+    topics: ExtendedTopicWithId[];
     addEquation: (equation: ExtendedEquation) => AddEquationActionType;
     fetchAllSubjects: () => FetchAllSubjectsActionType;
-    subjects: SubjectWithId[];
     addSubject: (subject: Subject) => AddSubjectActionType;
-    topics: ExtendedTopicWithId[];
     fetchAllTopics: (subjectRef: string) => FetchAllTopicsActionType;
     addTopic: (topic: ExtendedTopic) => AddTopicActionType;
 }
+
+type selectChangeOptions = {
+    lastItemAction?: string;
+};
+
+type params = { id: string };
 
 interface State {
     subjectDialogState: boolean;
     topicDialogState: boolean;
     subjectValue: string;
     topicValue: string;
+    equationId?: string;
+    mode: Mode;
+    explanation: string;
+    equation: string;
 }
+
+enum Mode {
+    Edit,
+    Add
+}
+
 type inputTypes = HTMLSelectElement | HTMLInputElement | HTMLTextAreaElement;
 
 class MainPage extends Component<Props, State> {
@@ -53,11 +72,41 @@ class MainPage extends Component<Props, State> {
         subjectDialogState: false,
         subjectValue: '',
         topicValue: '',
-        topicDialogState: false
+        topicDialogState: false,
+        mode: Mode.Add,
+        equation: '',
+        explanation: ''
     };
 
     componentDidMount() {
         this.props.fetchAllSubjects();
+        const equationId = (this.props.match.params as params).id;
+        if (equationId) {
+            const equation = this.props.equations.find(
+                equation => equation.id === equationId
+            );
+            if (equation) {
+                this.props.fetchAllTopics(equation.subjectRef);
+                this.setState({
+                    equationId,
+                    mode: Mode.Edit,
+                    subjectValue: equation.subjectRef,
+                    explanation: equation.explanation,
+                    equation: equation.equation
+                });
+            }
+        }
+    }
+
+    componentDidUpdate(prevProps: Props, prevState: State) {
+        if (prevProps.topics !== this.props.topics) {
+            const equation = this.props.equations.find(
+                equation => equation.id === this.state.equationId
+            );
+            if (equation) {
+                this.setState({ topicValue: equation.topicRef });
+            }
+        }
     }
 
     onSubmitHandler = (event: React.FormEvent<HTMLFormElement>) => {
@@ -76,18 +125,13 @@ class MainPage extends Component<Props, State> {
         this.setState({ subjectDialogState: true });
     };
 
-    onSelectChange = (
-        event: onChangeType,
-        {
-            lastItemAction,
-            fieldToUpdate
-        }: { lastItemAction: string; fieldToUpdate: string }
-    ) => {
+    onSelectChange = (event: onChangeType, lastItemValue?: string) => {
         const value = (event.target as inputTypes).value;
-        if (value === lastItemAction) {
-            this.setState({ [fieldToUpdate as 'subjectDialogState']: true });
+        const target = (event.target as inputTypes).name as keyof State;
+        if (lastItemValue) {
+            this.setValueOrOpenDialog(value, lastItemValue, target);
         } else {
-            this.setSubjectOrTopic(fieldToUpdate, value);
+            this.setState({ [target]: value } as ComponentState);
         }
     };
 
@@ -107,6 +151,18 @@ class MainPage extends Component<Props, State> {
         };
         this.props.addTopic(topic);
     };
+
+    private setValueOrOpenDialog(
+        value: string,
+        lastItemAction: string | undefined,
+        fieldToUpdate: keyof State
+    ) {
+        if (value === lastItemAction) {
+            this.setState({ [fieldToUpdate]: true } as ComponentState);
+        } else {
+            this.setSubjectOrTopic(fieldToUpdate, value);
+        }
+    }
 
     private setSubjectOrTopic(fieldToUpdate: string, value: string) {
         if (fieldToUpdate === 'subjectDialogState') {
@@ -135,14 +191,13 @@ class MainPage extends Component<Props, State> {
     }
 
     toggleDialog = (field: string) => {
-        const fieldToUpdate = field as
-            | 'subjectDialogState'
-            | 'topicDialogState';
-        this.setState(prevState => ({
-            [fieldToUpdate as 'subjectDialogState']: !prevState[
-                fieldToUpdate as 'subjectDialogState'
-            ]
-        }));
+        const fieldToUpdate = field as keyof State;
+        this.setState(
+            prevState =>
+                ({
+                    [fieldToUpdate]: !prevState[fieldToUpdate]
+                } as ComponentState)
+        );
     };
 
     render() {
@@ -163,13 +218,22 @@ class MainPage extends Component<Props, State> {
                     className={styles.Form}
                     onSubmit={e => this.onSubmitHandler(e)}
                 >
-                    <MathInput />
+                    <MathInput
+                        value={this.state.equation}
+                        onValueChange={(e: onChangeType) =>
+                            this.onSelectChange(e)
+                        }
+                    />
                     <FormInput
                         label="Znaczenie równania"
                         rows="5"
                         fullWidth
                         multiline
                         name="explanation"
+                        onValueChange={(e: onChangeType) =>
+                            this.onSelectChange(e)
+                        }
+                        value={this.state.explanation}
                     />
                     <FormSelect
                         value={this.state.subjectValue}
@@ -178,10 +242,7 @@ class MainPage extends Component<Props, State> {
                         lastItem={subjectLastItem}
                         label="Przedmioty"
                         onValueChange={(e: onChangeType) =>
-                            this.onSelectChange(e, {
-                                lastItemAction: 'add_subject',
-                                fieldToUpdate: 'subjectDialogState'
-                            })
+                            this.onSelectChange(e, 'add_subject')
                         }
                         values={this.props.subjects}
                     />
@@ -193,10 +254,7 @@ class MainPage extends Component<Props, State> {
                         lastItem={topicLastItem}
                         label="Tematy"
                         onValueChange={(e: onChangeType) =>
-                            this.onSelectChange(e, {
-                                lastItemAction: 'add_topic',
-                                fieldToUpdate: 'topicDialogState'
-                            })
+                            this.onSelectChange(e, 'add_topic')
                         }
                         values={this.props.topics}
                         disabled={this.state.subjectValue === '' ? true : false}
@@ -245,7 +303,10 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
 
 const mapStateToProps = (state: RootReducer) => ({
     subjects: state.eqReducer.subjects,
-    topics: state.eqReducer.topics
+    topics: state.eqReducer.topics,
+    equations: state.eqReducer.equations
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(MainPage);
+export default withRouter(
+    connect(mapStateToProps, mapDispatchToProps)(MainPage)
+);

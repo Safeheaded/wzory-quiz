@@ -11,7 +11,7 @@ import { Dispatch } from 'redux';
 import { logout } from '../../store/actions/Authentication';
 import { LogoutActionType, AuthState } from '../../store/types/Authentication';
 import { connect } from 'react-redux';
-import MainPage from './MainPage/MainPage';
+import EditPgae from './MainPage/MainPage';
 import EquationsList from './EquationsList/EquationsList';
 import { RouteComponentProps } from 'react-router-dom';
 
@@ -29,11 +29,11 @@ const AdminPanel = (props: Props) => {
 
     return (
         <Switch>
-            <Route path={`${path}/add-equation`} component={MainPage} />
+            <Route path={`${path}/add-equation`} component={EditPgae} />
             <Route
                 exact
                 path={`${path}/edit-equation/:id`}
-                component={MainPage}
+                component={EditPgae}
             />
             <Route path={path} component={EquationsList} />
         </Switch>

@@ -2,18 +2,18 @@ import {
     EquationsState,
     EqActionTypes,
     SubjectWithId,
-    EquationWithId
+    ExtendedEquationWithId,
+    AddEquationSuccessActionType
 } from '../types/Equations';
 import {
     ADD_EQUATION,
     ADD_EQUATION_SUCCESS,
     ADD_EQUATION_ERROR,
     ADD_SUBJECT_SUCCESS,
-    FETCH_ALL_EQUATIONS,
-    FETCH_ALL_SUBJECTS,
     FETCH_ALL_SUBJECTS_SUCCESS,
     FETCH_ALL_TOPICS_SUCCESS,
-    FETCH_ALL_EQUATIONS_SUCCESS
+    FETCH_ALL_EQUATIONS_SUCCESS,
+    FETCH_EQUATION_SUCCESS
 } from '../constants/Equations';
 
 const initState: EquationsState = { equations: [], subjects: [], topics: [] };
@@ -35,6 +35,8 @@ const EquationsReducer = (
             return { ...state, topics: action.payload };
         case FETCH_ALL_EQUATIONS_SUCCESS:
             return { ...state, equations: action.payload };
+        case FETCH_EQUATION_SUCCESS:
+            return { ...state };
     }
     return state;
 };
@@ -43,9 +45,12 @@ export default EquationsReducer;
 
 function addEquationSuccessHandler(
     state: EquationsState,
-    action: import('d:/React/wzory-quiz/src/store/types/Equations').AddEquationSuccessActionType
+    action: AddEquationSuccessActionType
 ) {
-    const equations = [...state.equations, action.payload as EquationWithId];
+    const equations = [
+        ...state.equations,
+        action.payload as ExtendedEquationWithId
+    ];
     return {
         ...state,
         equations
