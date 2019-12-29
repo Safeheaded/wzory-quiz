@@ -153,7 +153,8 @@ function* fetchEquation(action: FetchEquationActionType) {
             rsf.firestore.getDocument,
             `Equations/${action.payload}`
         );
-        const fetchedEquation: ExtendedEquation = {
+        const fetchedEquation: ExtendedEquationWithId = {
+            id: snapshot.id,
             ...(snapshot.data() as ExtendedEquation)
         };
         yield put(fetchEquationSuccess(fetchedEquation));

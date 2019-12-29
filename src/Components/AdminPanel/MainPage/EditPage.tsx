@@ -13,14 +13,16 @@ import {
     FetchAllTopicsActionType,
     ExtendedTopic,
     AddTopicActionType,
-    ExtendedEquationWithId
+    ExtendedEquationWithId,
+    FetchEquationActionType
 } from '../../../store/types/Equations';
 import {
     addEquation,
     fetchAllSubjects,
     addSubject,
     fetchAllTopics,
-    addTopic
+    addTopic,
+    fetchEquation
 } from '../../../store/actions/Equations';
 import { connect } from 'react-redux';
 import styles from './MainPage.module.sass';
@@ -31,6 +33,7 @@ import { onChangeType } from '../../../types/admin';
 import { RootReducer } from '../../../store/types/main';
 import AddDialog from '../AddDialog/AddDialog';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { mapEqState } from '../../../utils/StatesPropsToMap';
 
 interface Props extends RouteComponentProps {
     equations: ExtendedEquationWithId[];
@@ -42,6 +45,7 @@ interface Props extends RouteComponentProps {
     addSubject: (subject: Subject) => AddSubjectActionType;
     fetchAllTopics: (subjectRef: string) => FetchAllTopicsActionType;
     addTopic: (topic: ExtendedTopic) => AddTopicActionType;
+    fetchEquation: (id: string) => FetchEquationActionType;
 }
 
 type params = { id: string };
@@ -79,30 +83,51 @@ class MainPage extends Component<Props, State> {
         this.props.fetchAllSubjects();
         const equationId = (this.props.match.params as params).id;
         if (equationId) {
-            const equation = this.props.equations.find(
-                equation => equation.id === equationId
-            );
-            if (equation) {
-                this.props.fetchAllTopics(equation.subjectRef);
-                this.setState({
-                    equationId,
-                    mode: Mode.Edit,
-                    subjectValue: equation.subjectRef,
-                    explanation: equation.explanation,
-                    equation: equation.equation
-                });
-            }
+            this.setState({
+                mode: Mode.Edit,
+                equationId
+            });
+            this.extractEquation(equationId);
         }
     }
 
+    private extractEquation(equationId: string) {
+        if (this.props.equations.length === 0) {
+            this.props.fetchEquation(equationId);
+        } else {
+            this.getEquation(equationId);
+        }
+    }
+
+    private getEquation(equationId: string) {
+        const equation = this.findEquation(equationId);
+        this.handleEquationData(equation);
+    }
+
+    private handleEquationData(equation: ExtendedEquationWithId | undefined) {
+        if (equation) {
+            this.props.fetchAllTopics(equation.subjectRef);
+            this.setState({
+                subjectValue: equation.subjectRef,
+                explanation: equation.explanation,
+                equation: equation.equation
+            });
+        }
+    }
+
+    private findEquation(equationId: string) {
+        return this.props.equations.find(
+            equation => equation.id === equationId
+        );
+    }
+
     componentDidUpdate(prevProps: Props, prevState: State) {
+        const equationFetched = prevProps.equations !== this.props.equations;
+        if (equationFetched && prevState.equationId) {
+            this.getEquation(prevState.equationId);
+        }
         if (prevProps.topics !== this.props.topics) {
-            const equation = this.props.equations.find(
-                equation => equation.id === this.state.equationId
-            );
-            if (equation) {
-                this.setState({ topicValue: equation.topicRef });
-            }
+            this.setTopic();
         }
     }
 
@@ -148,6 +173,15 @@ class MainPage extends Component<Props, State> {
         };
         this.props.addTopic(topic);
     };
+
+    private setTopic() {
+        const equation = this.props.equations.find(
+            equation => equation.id === this.state.equationId
+        );
+        if (equation) {
+            this.setState({ topicValue: equation.topicRef });
+        }
+    }
 
     private setValueOrOpenDialog(
         value: string,
@@ -295,15 +329,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     addSubject: (subject: Subject) => dispatch(addSubject(subject)),
     fetchAllTopics: (subjectRef: string) =>
         dispatch(fetchAllTopics(subjectRef)),
-    addTopic: (topic: ExtendedTopic) => dispatch(addTopic(topic))
+    addTopic: (topic: ExtendedTopic) => dispatch(addTopic(topic)),
+    fetchEquation: (id: string) => dispatch(fetchEquation(id))
 });
 
-const mapStateToProps = (state: RootReducer) => ({
-    subjects: state.eqReducer.subjects,
-    topics: state.eqReducer.topics,
-    equations: state.eqReducer.equations
-});
-
-export default withRouter(
-    connect(mapStateToProps, mapDispatchToProps)(MainPage)
-);
+export default withRouter(connect(mapEqState, mapDispatchToProps)(MainPage));

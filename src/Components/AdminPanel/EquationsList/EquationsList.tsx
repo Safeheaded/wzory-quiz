@@ -8,8 +8,7 @@ import {
     EquationWithId
 } from '../../../store/types/Equations';
 import { List, ListItem, Fab } from '@material-ui/core';
-import { Link, withRouter, RouteComponentProps } from 'react-router-dom';
-import { url } from 'inspector';
+import { Link } from 'react-router-dom';
 import AddIcon from '@material-ui/icons/Add';
 
 interface Props {
@@ -26,7 +25,7 @@ class EquationsList extends Component<Props> {
     render() {
         const listItems = this.props.equations.map(equation => (
             <ListItem key={equation.id} button>
-                <Link to={`${url}/edit-equation/${equation.id}`}>
+                <Link to={`${this.props.url}/edit-equation/${equation.id}`}>
                     {equation.explanation}
                 </Link>
             </ListItem>

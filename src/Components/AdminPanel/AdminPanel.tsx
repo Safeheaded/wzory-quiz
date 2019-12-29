@@ -11,7 +11,7 @@ import { Dispatch } from 'redux';
 import { logout } from '../../store/actions/Authentication';
 import { LogoutActionType, AuthState } from '../../store/types/Authentication';
 import { connect } from 'react-redux';
-import EditPgae from './MainPage/MainPage';
+import EditPgae from './MainPage/EditPage';
 import EquationsList from './EquationsList/EquationsList';
 import { RouteComponentProps } from 'react-router-dom';
 

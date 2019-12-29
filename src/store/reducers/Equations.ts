@@ -36,7 +36,10 @@ const EquationsReducer = (
         case FETCH_ALL_EQUATIONS_SUCCESS:
             return { ...state, equations: action.payload };
         case FETCH_EQUATION_SUCCESS:
-            return { ...state };
+            return {
+                ...state,
+                equations: [...state.equations, action.payload]
+            };
     }
     return state;
 };

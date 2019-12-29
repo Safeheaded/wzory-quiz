@@ -162,7 +162,7 @@ export interface FetchEquationActionType {
 
 export interface FetchEquationSuccessActionType {
     type: typeof FETCH_EQUATION_SUCCESS;
-    payload: ExtendedEquation;
+    payload: ExtendedEquationWithId;
 }
 
 export interface FetchEquationErrorActionType {

@@ -169,7 +169,7 @@ export function fetchEquation(id: string): FetchEquationActionType {
 }
 
 export function fetchEquationSuccess(
-    equation: ExtendedEquation
+    equation: ExtendedEquationWithId
 ): FetchEquationSuccessActionType {
     return { type: FETCH_EQUATION_SUCCESS, payload: equation };
 }
