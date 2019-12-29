@@ -36,16 +36,13 @@ interface Props extends RouteComponentProps {
     equations: ExtendedEquationWithId[];
     subjects: SubjectWithId[];
     topics: ExtendedTopicWithId[];
+    url: string;
     addEquation: (equation: ExtendedEquation) => AddEquationActionType;
     fetchAllSubjects: () => FetchAllSubjectsActionType;
     addSubject: (subject: Subject) => AddSubjectActionType;
     fetchAllTopics: (subjectRef: string) => FetchAllTopicsActionType;
     addTopic: (topic: ExtendedTopic) => AddTopicActionType;
 }
-
-type selectChangeOptions = {
-    lastItemAction?: string;
-};
 
 type params = { id: string };
 

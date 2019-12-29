@@ -29,13 +29,17 @@ const AdminPanel = (props: Props) => {
 
     return (
         <Switch>
-            <Route path={`${path}/add-equation`} component={EditPgae} />
+            <Route path={`${path}/add-equation`}>
+                <EditPgae url={url} />
+            </Route>
             <Route
                 exact
                 path={`${path}/edit-equation/:id`}
                 component={EditPgae}
             />
-            <Route path={path} component={EquationsList} />
+            <Route path={path}>
+                <EquationsList url={url} />
+            </Route>
         </Switch>
     );
 };
