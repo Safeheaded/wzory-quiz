@@ -13,7 +13,9 @@ import {
     FETCH_ALL_SUBJECTS_SUCCESS,
     FETCH_ALL_TOPICS_SUCCESS,
     FETCH_ALL_EQUATIONS_SUCCESS,
-    FETCH_EQUATION_SUCCESS
+    FETCH_EQUATION_SUCCESS,
+    UPDATE_EQUATION_ERROR,
+    UPDATE_EQUATION_SUCCESS
 } from '../constants/Equations';
 
 const initState: EquationsState = { equations: [], subjects: [], topics: [] };
@@ -26,7 +28,6 @@ const EquationsReducer = (
         case ADD_EQUATION_SUCCESS:
             return addEquationSuccessHandler(state, action);
         case ADD_EQUATION_ERROR:
-            console.log(action.payload);
         case ADD_SUBJECT_SUCCESS:
             return addSubjectSuccessHandler(state, action);
         case FETCH_ALL_SUBJECTS_SUCCESS:
@@ -40,6 +41,16 @@ const EquationsReducer = (
                 ...state,
                 equations: [...state.equations, action.payload]
             };
+        case UPDATE_EQUATION_ERROR:
+            return { ...state };
+        case UPDATE_EQUATION_SUCCESS:
+            const updatedEquations = state.equations.map(equation => {
+                if (equation.id === action.payload.id) {
+                    return action.payload;
+                }
+                return equation;
+            });
+            return { ...state, equations: updatedEquations };
     }
     return state;
 };

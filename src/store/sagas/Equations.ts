@@ -12,7 +12,8 @@ import {
     ExtendedTopicWithId,
     FetchEquationActionType,
     ExtendedEquation,
-    ExtendedEquationWithId
+    ExtendedEquationWithId,
+    UpdateEquationActionType
 } from '../types/Equations';
 import {
     addEquationSuccess,
@@ -26,7 +27,9 @@ import {
     fetchAllEquationsSuccess,
     fetchAllEquationsError,
     fetchEquationSuccess,
-    fetchEquationError
+    fetchEquationError,
+    updateEquationSuccess,
+    updateEquationError
 } from '../actions/Equations';
 import {
     ADD_EQUATION,
@@ -35,7 +38,8 @@ import {
     ADD_TOPIC,
     FETCH_ALL_TOPICS,
     FETCH_ALL_EQUATIONS,
-    FETCH_EQUATION
+    FETCH_EQUATION,
+    UPDATE_EQUATION
 } from '../constants/Equations';
 import firebase, { database } from 'firebase/app';
 import { getEquations } from './Selectors';
@@ -163,6 +167,19 @@ function* fetchEquation(action: FetchEquationActionType) {
     }
 }
 
+function* updateEquation(action: UpdateEquationActionType) {
+    try {
+        yield call(
+            rsf.firestore.updateDocument,
+            `Equations/${action.payload.id}`,
+            action.payload
+        );
+        yield put(updateEquationSuccess(action.payload));
+    } catch (error) {
+        yield put(updateEquationError(error));
+    }
+}
+
 export function* EquationsSaga() {
     yield all([
         takeLatest(ADD_EQUATION, addEquation),
@@ -171,6 +188,7 @@ export function* EquationsSaga() {
         takeLatest(ADD_TOPIC, addTopic),
         takeLatest(FETCH_ALL_TOPICS, fetchAllTopics),
         takeLatest(FETCH_ALL_EQUATIONS, fetchAllEquations),
-        takeLatest(FETCH_EQUATION, fetchEquation)
+        takeLatest(FETCH_EQUATION, fetchEquation),
+        takeLatest(UPDATE_EQUATION, updateEquation)
     ]);
 }

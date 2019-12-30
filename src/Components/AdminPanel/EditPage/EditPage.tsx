@@ -14,7 +14,8 @@ import {
     ExtendedTopic,
     AddTopicActionType,
     ExtendedEquationWithId,
-    FetchEquationActionType
+    FetchEquationActionType,
+    UpdateEquationActionType
 } from '../../../store/types/Equations';
 import {
     addEquation,
@@ -22,18 +23,20 @@ import {
     addSubject,
     fetchAllTopics,
     addTopic,
-    fetchEquation
+    fetchEquation,
+    updateEquation
 } from '../../../store/actions/Equations';
 import { connect } from 'react-redux';
 import styles from './MainPage.module.sass';
 import AddIcon from '@material-ui/icons/Add';
 import FormInput from '../FormInput/FormInput';
 import FormSelect from '../FormSelect/FormSelect';
-import { onChangeType } from '../../../types/admin';
+import { onChangeType, WriteMode } from '../../../types/admin';
 import { RootReducer } from '../../../store/types/main';
 import AddDialog from '../AddDialog/AddDialog';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { mapEqState } from '../../../utils/StatesPropsToMap';
+import FormActions from './FormActions/FormActions';
 
 interface Props extends RouteComponentProps {
     equations: ExtendedEquationWithId[];
@@ -46,6 +49,9 @@ interface Props extends RouteComponentProps {
     fetchAllTopics: (subjectRef: string) => FetchAllTopicsActionType;
     addTopic: (topic: ExtendedTopic) => AddTopicActionType;
     fetchEquation: (id: string) => FetchEquationActionType;
+    updateEquation: (
+        equation: ExtendedEquationWithId
+    ) => UpdateEquationActionType;
 }
 
 type params = { id: string };
@@ -56,14 +62,9 @@ interface State {
     subjectValue: string;
     topicValue: string;
     equationId?: string;
-    mode: Mode;
+    mode: WriteMode;
     explanation: string;
     equation: string;
-}
-
-enum Mode {
-    Edit,
-    Add
 }
 
 type inputTypes = HTMLSelectElement | HTMLInputElement | HTMLTextAreaElement;
@@ -74,7 +75,7 @@ class MainPage extends Component<Props, State> {
         subjectValue: '',
         topicValue: '',
         topicDialogState: false,
-        mode: Mode.Add,
+        mode: WriteMode.Add,
         equation: '',
         explanation: ''
     };
@@ -84,7 +85,7 @@ class MainPage extends Component<Props, State> {
         const equationId = (this.props.match.params as params).id;
         if (equationId) {
             this.setState({
-                mode: Mode.Edit,
+                mode: WriteMode.Edit,
                 equationId
             });
             this.extractEquation(equationId);
@@ -140,7 +141,14 @@ class MainPage extends Component<Props, State> {
             subjectRef: data.get('subjectRef') as string,
             topicRef: data.get('topicRef') as string
         };
-        this.props.addEquation(equation);
+        if (this.state.mode === WriteMode.Add) {
+            this.props.addEquation(equation);
+        } else {
+            this.props.updateEquation({
+                ...equation,
+                id: this.state.equationId as string
+            });
+        }
     };
 
     addSubjectHandler = () => {
@@ -291,15 +299,7 @@ class MainPage extends Component<Props, State> {
                         disabled={this.state.subjectValue === '' ? true : false}
                     />
 
-                    <FormControl>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            type="submit"
-                        >
-                            Wyślij
-                        </Button>
-                    </FormControl>
+                    <FormActions mode={this.state.mode} />
                 </form>
 
                 <AddDialog
@@ -330,7 +330,9 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     fetchAllTopics: (subjectRef: string) =>
         dispatch(fetchAllTopics(subjectRef)),
     addTopic: (topic: ExtendedTopic) => dispatch(addTopic(topic)),
-    fetchEquation: (id: string) => dispatch(fetchEquation(id))
+    fetchEquation: (id: string) => dispatch(fetchEquation(id)),
+    updateEquation: (equation: ExtendedEquationWithId) =>
+        dispatch(updateEquation(equation))
 });
 
 export default withRouter(connect(mapEqState, mapDispatchToProps)(MainPage));

@@ -19,7 +19,10 @@ import {
     FETCH_ALL_EQUATIONS_ERROR,
     FETCH_EQUATION,
     FETCH_EQUATION_SUCCESS,
-    FETCH_EQUATION_ERROR
+    FETCH_EQUATION_ERROR,
+    UPDATE_EQUATION,
+    UPDATE_EQUATION_SUCCESS,
+    UPDATE_EQUATION_ERROR
 } from '../constants/Equations';
 
 export interface EquationsState {
@@ -170,6 +173,21 @@ export interface FetchEquationErrorActionType {
     payload: object;
 }
 
+export interface UpdateEquationActionType {
+    type: typeof UPDATE_EQUATION;
+    payload: ExtendedEquationWithId;
+}
+
+export interface UpdateEquationSuccessActionType {
+    type: typeof UPDATE_EQUATION_SUCCESS;
+    payload: ExtendedEquationWithId;
+}
+
+export interface UpdateEquationErrorActionType {
+    type: typeof UPDATE_EQUATION_ERROR;
+    payload: object;
+}
+
 export type EqActionTypes =
     | AddEquationActionType
     | AddEquationErrorActionType
@@ -191,4 +209,7 @@ export type EqActionTypes =
     | FetchAllEquationsErrorActionType
     | FetchEquationActionType
     | FetchEquationSuccessActionType
-    | FetchEquationErrorActionType;
+    | FetchEquationErrorActionType
+    | UpdateEquationActionType
+    | UpdateEquationSuccessActionType
+    | UpdateEquationErrorActionType;

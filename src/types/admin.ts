@@ -4,3 +4,8 @@ export type onChangeType =
           value: unknown;
       }>
     | React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>;
+
+export enum WriteMode {
+    Edit,
+    Add
+}
