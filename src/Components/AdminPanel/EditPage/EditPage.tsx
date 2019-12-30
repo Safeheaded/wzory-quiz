@@ -59,8 +59,8 @@ type params = { id: string };
 interface State {
     subjectDialogState: boolean;
     topicDialogState: boolean;
-    subjectValue: string;
-    topicValue: string;
+    subjectRef: string;
+    topicRef: string;
     equationId?: string;
     mode: WriteMode;
     explanation: string;
@@ -72,8 +72,8 @@ type inputTypes = HTMLSelectElement | HTMLInputElement | HTMLTextAreaElement;
 class MainPage extends Component<Props, State> {
     state: State = {
         subjectDialogState: false,
-        subjectValue: '',
-        topicValue: '',
+        subjectRef: '',
+        topicRef: '',
         topicDialogState: false,
         mode: WriteMode.Add,
         equation: '',
@@ -109,7 +109,7 @@ class MainPage extends Component<Props, State> {
         if (equation) {
             this.props.fetchAllTopics(equation.subjectRef);
             this.setState({
-                subjectValue: equation.subjectRef,
+                subjectRef: equation.subjectRef,
                 explanation: equation.explanation,
                 equation: equation.equation
             });
@@ -177,7 +177,7 @@ class MainPage extends Component<Props, State> {
         const data = new FormData(event.target as HTMLFormElement);
         const topic: ExtendedTopic = {
             name: data.get('name') as string,
-            subjectRef: this.state.subjectValue
+            subjectRef: this.state.subjectRef
         };
         this.props.addTopic(topic);
     };
@@ -187,35 +187,31 @@ class MainPage extends Component<Props, State> {
             equation => equation.id === this.state.equationId
         );
         if (equation) {
-            this.setState({ topicValue: equation.topicRef });
+            this.setState({ topicRef: equation.topicRef });
         }
     }
 
     private setValueOrOpenDialog(
         value: string,
-        lastItemAction: string | undefined,
+        lastItemValue: string | undefined,
         fieldToUpdate: keyof State
     ) {
-        if (value === lastItemAction) {
-            this.setState({ [fieldToUpdate]: true } as ComponentState);
+        const dialog =
+            lastItemValue === 'add_subject'
+                ? 'subjectDialogState'
+                : 'topicDialogState';
+        if (value === lastItemValue) {
+            this.setState({ [dialog]: true } as ComponentState);
         } else {
             this.setSubjectOrTopic(fieldToUpdate, value);
         }
     }
 
     private setSubjectOrTopic(fieldToUpdate: string, value: string) {
-        if (fieldToUpdate === 'subjectDialogState') {
+        if (fieldToUpdate === 'subjectRef') {
             this.updateSubject(value);
         } else {
-            this.updateTopic(value);
-        }
-    }
-
-    private updateTopic(value: string) {
-        if (value === 'add_topic') {
-            this.setState({ topicDialogState: true });
-        } else {
-            this.setState({ topicValue: value });
+            this.setState({ topicRef: value });
         }
     }
 
@@ -226,7 +222,7 @@ class MainPage extends Component<Props, State> {
         if (subject) {
             this.props.fetchAllTopics(subject.id);
         }
-        this.setState({ subjectValue: value });
+        this.setState({ subjectRef: value });
     }
 
     toggleDialog = (field: string) => {
@@ -280,7 +276,7 @@ class MainPage extends Component<Props, State> {
                         value={this.state.explanation}
                     />
                     <FormSelect
-                        value={this.state.subjectValue}
+                        value={this.state.subjectRef}
                         name="subjectRef"
                         id="subject"
                         lastItem={subjectLastItem}
@@ -292,7 +288,7 @@ class MainPage extends Component<Props, State> {
                     />
 
                     <FormSelect
-                        value={this.state.topicValue}
+                        value={this.state.topicRef}
                         name="topicRef"
                         id="topic"
                         lastItem={topicLastItem}
@@ -301,7 +297,7 @@ class MainPage extends Component<Props, State> {
                             this.onSelectChange(e, 'add_topic')
                         }
                         values={this.props.topics}
-                        disabled={this.state.subjectValue === '' ? true : false}
+                        disabled={this.state.subjectRef === '' ? true : false}
                     />
 
                     <FormActions

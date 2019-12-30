@@ -4,22 +4,37 @@ import {
     AddTopic,
     Topic,
     FetchAllTopics,
-    ExtendedTopicWithId
+    ExtendedTopicWithId,
+    TopicWithId
 } from '../types/Topics';
 
 import { put, call, all, takeLatest } from 'redux-saga/effects';
 
-import { fetchAllTopicsSuccess, fetchAllTopicsError } from '../actions/Topics';
+import {
+    fetchAllTopicsSuccess,
+    fetchAllTopicsError,
+    addTopicSuccess,
+    addTopicError
+} from '../actions/Topics';
 import { ADD_TOPIC, FETCH_ALL_TOPICS } from '../constants/Topics';
 
 const rsf = firebaseHandler.getRSF();
 function* addTopic(action: AddTopic) {
-    const topic: Topic = { name: action.payload.name };
-    const data: firebase.firestore.DocumentReference = yield call(
-        rsf.firestore.addDocument,
-        `Subjects/${action.payload.subjectRef}/Topics`,
-        topic
-    );
+    try {
+        const topic: Topic = { name: action.payload.name };
+        const snapshot: firebase.firestore.DocumentSnapshot = yield call(
+            rsf.firestore.addDocument,
+            `Subjects/${action.payload.subjectRef}/Topics`,
+            topic
+        );
+        const addedTopic: TopicWithId = {
+            id: snapshot.id,
+            ...(snapshot.data() as Topic)
+        };
+        yield put(addTopicSuccess(addedTopic));
+    } catch (error) {
+        yield put(addTopicError(error));
+    }
 }
 
 function* fetchAllTopics(action: FetchAllTopics) {
