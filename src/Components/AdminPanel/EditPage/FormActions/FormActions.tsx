@@ -4,13 +4,16 @@ import { FormControl, Button } from '@material-ui/core';
 
 interface Props {
     mode: WriteMode;
+    secondaryButtonAction: Function;
 }
 
 const FormActions: React.FC<Props> = (props: Props) => {
     const deleteButton =
         props.mode === WriteMode.Edit ? (
             <FormControl>
-                <Button>Usuń</Button>
+                <Button onClick={() => props.secondaryButtonAction()}>
+                    Usuń
+                </Button>
             </FormControl>
         ) : null;
 

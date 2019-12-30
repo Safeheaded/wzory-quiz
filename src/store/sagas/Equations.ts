@@ -1,12 +1,13 @@
 import { call, put, takeLatest, all, select } from 'redux-saga/effects';
 import { firebaseHandler } from '../../firebaseConfig';
 import {
-    AddEquationActionType,
+    AddEquation,
     EquationWithId,
-    FetchEquationActionType,
+    FetchEquation,
     ExtendedEquation,
     ExtendedEquationWithId,
-    UpdateEquationActionType
+    UpdateEquation,
+    DeleteEquation
 } from '../types/Equations';
 import {
     addEquationSuccess,
@@ -16,19 +17,22 @@ import {
     fetchEquationSuccess,
     fetchEquationError,
     updateEquationSuccess,
-    updateEquationError
+    updateEquationError,
+    deleteEquationSuccess,
+    deleteEquationError
 } from '../actions/Equations';
 import {
     ADD_EQUATION,
     FETCH_ALL_EQUATIONS,
     FETCH_EQUATION,
-    UPDATE_EQUATION
+    UPDATE_EQUATION,
+    DELETE_EQUATION
 } from '../constants/Equations';
 import firebase, { database } from 'firebase/app';
 
 const rsf = firebaseHandler.getRSF();
 
-function* addEquation(action: AddEquationActionType) {
+function* addEquation(action: AddEquation) {
     try {
         const data: firebase.firestore.DocumentReference = yield call(
             rsf.firestore.addDocument,
@@ -66,7 +70,7 @@ function* fetchAllEquations() {
     }
 }
 
-function* fetchEquation(action: FetchEquationActionType) {
+function* fetchEquation(action: FetchEquation) {
     try {
         const snapshot: firebase.firestore.DocumentSnapshot = yield call(
             rsf.firestore.getDocument,
@@ -82,7 +86,7 @@ function* fetchEquation(action: FetchEquationActionType) {
     }
 }
 
-function* updateEquation(action: UpdateEquationActionType) {
+function* updateEquation(action: UpdateEquation) {
     try {
         yield call(
             rsf.firestore.updateDocument,
@@ -95,11 +99,21 @@ function* updateEquation(action: UpdateEquationActionType) {
     }
 }
 
+function* deleteEquation(action: DeleteEquation) {
+    try {
+        yield call(rsf.firestore.deleteDocument, `Equations/${action.payload}`);
+        yield put(deleteEquationSuccess(action.payload));
+    } catch (error) {
+        yield put(deleteEquationError(error));
+    }
+}
+
 export function* EquationsSaga() {
     yield all([
         takeLatest(ADD_EQUATION, addEquation),
         takeLatest(FETCH_ALL_EQUATIONS, fetchAllEquations),
         takeLatest(FETCH_EQUATION, fetchEquation),
-        takeLatest(UPDATE_EQUATION, updateEquation)
+        takeLatest(UPDATE_EQUATION, updateEquation),
+        takeLatest(DELETE_EQUATION, deleteEquation)
     ]);
 }

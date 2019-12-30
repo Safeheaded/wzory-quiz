@@ -1,13 +1,13 @@
 import {
     ExtendedTopic,
-    AddTopicActionType,
+    AddTopic,
     TopicWithId,
-    AddTopicSuccessActionType,
-    AddTopicErrorActionType,
-    FetchAllTopicsActionType,
+    AddTopicSuccess,
+    AddTopicError,
+    FetchAllTopics,
     ExtendedTopicWithId,
-    FetchAllTopicsSuccessActionType,
-    FetchAllTopicsErrorActionType
+    FetchAllTopicsSuccess,
+    FetchAllTopicsError
 } from '../types/Topics';
 
 import {
@@ -19,37 +19,35 @@ import {
     FETCH_ALL_TOPICS_ERROR
 } from '../constants/Topics';
 
-export function addTopic(topic: ExtendedTopic): AddTopicActionType {
+export function addTopic(topic: ExtendedTopic): AddTopic {
     return {
         type: ADD_TOPIC,
         payload: topic
     };
 }
 
-export function addTopicSuccess(topic: TopicWithId): AddTopicSuccessActionType {
+export function addTopicSuccess(topic: TopicWithId): AddTopicSuccess {
     return {
         type: ADD_TOPIC_SUCCESS,
         payload: topic
     };
 }
 
-export function addTopicError(error: object): AddTopicErrorActionType {
+export function addTopicError(error: object): AddTopicError {
     return { type: ADD_TOPIC_ERROR, payload: error };
 }
 
-export function fetchAllTopics(subjectRef: string): FetchAllTopicsActionType {
+export function fetchAllTopics(subjectRef: string): FetchAllTopics {
     return { type: FETCH_ALL_TOPICS, payload: subjectRef };
 }
 
 export function fetchAllTopicsSuccess(
     topics: ExtendedTopicWithId[]
-): FetchAllTopicsSuccessActionType {
+): FetchAllTopicsSuccess {
     return { type: FETCH_ALL_TOPICS_SUCCESS, payload: topics };
 }
 
-export function FetchAllTopicsError(
-    error: object
-): FetchAllTopicsErrorActionType {
+export function fetchAllTopicsError(error: object): FetchAllTopicsError {
     return {
         type: FETCH_ALL_TOPICS_ERROR,
         payload: error

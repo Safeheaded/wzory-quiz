@@ -2,13 +2,13 @@ import {
     SubjectsState,
     SubjectsActionTypes,
     SubjectWithId,
-    AddSubjectSuccessActionType
+    AddSubjectSuccess
 } from '../types/Subjects';
 import {
     ADD_SUBJECT_SUCCESS,
     FETCH_ALL_SUBJECTS_SUCCESS
 } from '../constants/Subjects';
-import { AddEquationErrorActionType } from '../types/Equations';
+import { AddEquationError } from '../types/Equations';
 
 const initState = { subjects: [] };
 
@@ -27,7 +27,7 @@ const SubjectsReducer = (
 
 function addSubjectSuccessHandler(
     state: SubjectsState,
-    action: AddEquationErrorActionType | AddSubjectSuccessActionType
+    action: AddEquationError | AddSubjectSuccess
 ) {
     const subjects = [...state.subjects, action.payload as SubjectWithId];
     return { ...state, subjects };

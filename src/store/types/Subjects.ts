@@ -19,39 +19,39 @@ export interface SubjectWithId extends Subject {
     id: string;
 }
 
-export interface AddSubjectActionType {
+export interface AddSubject {
     payload: Subject;
     type: typeof ADD_SUBJECT;
 }
 
-export interface AddSubjectErrorActionType {
+export interface AddSubjectError {
     type: typeof ADD_SUBJECT_ERROR;
     payload: object;
 }
 
-export interface AddSubjectSuccessActionType {
+export interface AddSubjectSuccess {
     type: typeof ADD_SUBJECT_SUCCESS;
     payload: SubjectWithId;
 }
 
-export interface FetchAllSubjectsActionType {
+export interface FetchAllSubjects {
     type: typeof FETCH_ALL_SUBJECTS;
 }
 
-export interface FetchAllSubjectsSuccessActionType {
+export interface FetchAllSubjectsSuccess {
     type: typeof FETCH_ALL_SUBJECTS_SUCCESS;
     payload: Array<SubjectWithId>;
 }
 
-export interface FetchAllSubjectsErrorActionType {
+export interface FetchAllSubjectsError {
     type: typeof FETCH_ALL_SUBJECTS_ERROR;
     payload: object;
 }
 
 export type SubjectsActionTypes =
-    | AddSubjectActionType
-    | AddSubjectErrorActionType
-    | AddSubjectSuccessActionType
-    | FetchAllSubjectsActionType
-    | FetchAllSubjectsSuccessActionType
-    | FetchAllSubjectsErrorActionType;
+    | AddSubject
+    | AddSubjectError
+    | AddSubjectSuccess
+    | FetchAllSubjects
+    | FetchAllSubjectsSuccess
+    | FetchAllSubjectsError;

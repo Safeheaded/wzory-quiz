@@ -1,5 +1,5 @@
 import { firebaseHandler } from '../../firebaseConfig';
-import { AddSubjectActionType, SubjectWithId } from '../types/Subjects';
+import { AddSubject, SubjectWithId } from '../types/Subjects';
 import { put, call, all, takeLatest } from 'redux-saga/effects';
 import {
     addSubjectSuccess,
@@ -10,7 +10,7 @@ import {
 import { ADD_SUBJECT, FETCH_ALL_SUBJECTS } from '../constants/Subjects';
 
 const rsf = firebaseHandler.getRSF();
-function* addSubject(action: AddSubjectActionType) {
+function* addSubject(action: AddSubject) {
     try {
         const data: firebase.firestore.DocumentReference = yield call(
             rsf.firestore.addDocument,

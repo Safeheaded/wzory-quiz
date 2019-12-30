@@ -3,16 +3,18 @@ import MathInput from '../MathInput/MathInput';
 import { Button, MenuItem, FormControl } from '@material-ui/core';
 import { Dispatch } from 'redux';
 import {
-    AddEquationActionType,
+    AddEquation,
     ExtendedEquation,
     ExtendedEquationWithId,
-    FetchEquationActionType,
-    UpdateEquationActionType
+    FetchEquation,
+    UpdateEquation,
+    DeleteEquation
 } from '../../../store/types/Equations';
 import {
     fetchEquation,
     updateEquation,
-    addEquation
+    addEquation,
+    deleteEquation
 } from '../../../store/actions/Equations';
 import { connect } from 'react-redux';
 import styles from './MainPage.module.sass';
@@ -27,30 +29,29 @@ import { mapEqState, EqStateProps } from '../../../utils/StatesPropsToMap';
 import FormActions from './FormActions/FormActions';
 import {
     SubjectWithId,
-    FetchAllSubjectsActionType,
+    FetchAllSubjects,
     Subject,
-    AddSubjectActionType
+    AddSubject
 } from '../../../store/types/Subjects';
 import {
     ExtendedTopicWithId,
-    FetchAllTopicsActionType,
+    FetchAllTopics,
     ExtendedTopic,
-    AddTopicActionType
+    AddTopic
 } from '../../../store/types/Topics';
 import { fetchAllSubjects, addSubject } from '../../../store/actions/Subjects';
 import { fetchAllTopics, addTopic } from '../../../store/actions/Topics';
 
 interface Props extends RouteComponentProps, EqStateProps {
     url: string;
-    addEquation: (equation: ExtendedEquation) => AddEquationActionType;
-    fetchAllSubjects: () => FetchAllSubjectsActionType;
-    addSubject: (subject: Subject) => AddSubjectActionType;
-    fetchAllTopics: (subjectRef: string) => FetchAllTopicsActionType;
-    addTopic: (topic: ExtendedTopic) => AddTopicActionType;
-    fetchEquation: (id: string) => FetchEquationActionType;
-    updateEquation: (
-        equation: ExtendedEquationWithId
-    ) => UpdateEquationActionType;
+    addEquation: (equation: ExtendedEquation) => AddEquation;
+    fetchAllSubjects: () => FetchAllSubjects;
+    addSubject: (subject: Subject) => AddSubject;
+    fetchAllTopics: (subjectRef: string) => FetchAllTopics;
+    addTopic: (topic: ExtendedTopic) => AddTopic;
+    fetchEquation: (id: string) => FetchEquation;
+    updateEquation: (equation: ExtendedEquationWithId) => UpdateEquation;
+    deleteEquation: (id: string) => DeleteEquation;
 }
 
 type params = { id: string };
@@ -238,6 +239,11 @@ class MainPage extends Component<Props, State> {
         );
     };
 
+    deleteEquationHandler = () => {
+        this.props.deleteEquation(this.state.equationId as string);
+        this.props.history.replace('/admin');
+    };
+
     render() {
         const subjectLastItem = (
             <MenuItem value="add_subject">
@@ -298,7 +304,10 @@ class MainPage extends Component<Props, State> {
                         disabled={this.state.subjectValue === '' ? true : false}
                     />
 
-                    <FormActions mode={this.state.mode} />
+                    <FormActions
+                        secondaryButtonAction={this.deleteEquationHandler}
+                        mode={this.state.mode}
+                    />
                 </form>
 
                 <AddDialog
@@ -331,7 +340,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     addTopic: (topic: ExtendedTopic) => dispatch(addTopic(topic)),
     fetchEquation: (id: string) => dispatch(fetchEquation(id)),
     updateEquation: (equation: ExtendedEquationWithId) =>
-        dispatch(updateEquation(equation))
+        dispatch(updateEquation(equation)),
+    deleteEquation: (id: string) => dispatch(deleteEquation(id))
 });
 
 export default withRouter(connect(mapEqState, mapDispatchToProps)(MainPage));

@@ -1,12 +1,12 @@
 import {
     Subject,
-    AddSubjectActionType,
+    AddSubject,
     SubjectWithId,
-    AddSubjectSuccessActionType,
-    AddSubjectErrorActionType,
-    FetchAllSubjectsActionType,
-    FetchAllSubjectsSuccessActionType,
-    FetchAllSubjectsErrorActionType
+    AddSubjectSuccess,
+    AddSubjectError,
+    FetchAllSubjects,
+    FetchAllSubjectsSuccess,
+    FetchAllSubjectsError
 } from '../types/Subjects';
 
 import {
@@ -18,33 +18,29 @@ import {
     FETCH_ALL_SUBJECTS_ERROR
 } from '../constants/Subjects';
 
-export function addSubject(subject: Subject): AddSubjectActionType {
+export function addSubject(subject: Subject): AddSubject {
     return { type: ADD_SUBJECT, payload: subject };
 }
 
-export function addSubjectSuccess(
-    subject: SubjectWithId
-): AddSubjectSuccessActionType {
+export function addSubjectSuccess(subject: SubjectWithId): AddSubjectSuccess {
     return { type: ADD_SUBJECT_SUCCESS, payload: subject };
 }
 
-export function addSubjectError(error: object): AddSubjectErrorActionType {
+export function addSubjectError(error: object): AddSubjectError {
     return { type: ADD_SUBJECT_ERROR, payload: error };
 }
 
-export function fetchAllSubjects(): FetchAllSubjectsActionType {
+export function fetchAllSubjects(): FetchAllSubjects {
     return { type: FETCH_ALL_SUBJECTS };
 }
 
 export function fetchAllSubjectsSuccess(
     subjects: SubjectWithId[]
-): FetchAllSubjectsSuccessActionType {
+): FetchAllSubjectsSuccess {
     return { type: FETCH_ALL_SUBJECTS_SUCCESS, payload: subjects };
 }
 
-export function fetchAllSubjectsError(
-    error: object
-): FetchAllSubjectsErrorActionType {
+export function fetchAllSubjectsError(error: object): FetchAllSubjectsError {
     return {
         type: FETCH_ALL_SUBJECTS_ERROR,
         payload: error

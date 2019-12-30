@@ -1,19 +1,22 @@
 import {
-    AddEquationActionType,
+    AddEquation,
     EquationWithId,
-    AddEquationSuccessActionType,
-    AddEquationErrorActionType,
+    AddEquationSuccess,
+    AddEquationError,
     ExtendedEquation,
-    FetchAllEquationsActionType,
-    FetchAllEquationsSuccessActionType,
-    FetchAllEquationsErrorActionType,
-    FetchEquationActionType,
+    FetchAllEquations,
+    FetchAllEquationsSuccess,
+    FetchAllEquationsError,
+    FetchEquation,
     ExtendedEquationWithId,
-    FetchEquationSuccessActionType,
-    FetchEquationErrorActionType,
-    UpdateEquationActionType,
-    UpdateEquationSuccessActionType,
-    UpdateEquationErrorActionType
+    FetchEquationSuccess,
+    FetchEquationError,
+    UpdateEquation,
+    UpdateEquationSuccess,
+    UpdateEquationError,
+    DeleteEquation,
+    DeleteEquationSuccess,
+    DeleteEquationError
 } from '../types/Equations';
 import {
     ADD_EQUATION,
@@ -27,10 +30,13 @@ import {
     FETCH_EQUATION_ERROR,
     UPDATE_EQUATION,
     UPDATE_EQUATION_SUCCESS,
-    UPDATE_EQUATION_ERROR
+    UPDATE_EQUATION_ERROR,
+    DELETE_EQUATION,
+    DELETE_EQUATION_SUCCESS,
+    DELETE_EQUATION_ERROR
 } from '../constants/Equations';
 
-export function addEquation(equation: ExtendedEquation): AddEquationActionType {
+export function addEquation(equation: ExtendedEquation): AddEquation {
     return {
         type: ADD_EQUATION,
         payload: equation
@@ -39,66 +45,72 @@ export function addEquation(equation: ExtendedEquation): AddEquationActionType {
 
 export function addEquationSuccess(
     equation: EquationWithId
-): AddEquationSuccessActionType {
+): AddEquationSuccess {
     return {
         type: ADD_EQUATION_SUCCESS,
         payload: equation
     };
 }
 
-export function addEquationError(error: object): AddEquationErrorActionType {
+export function addEquationError(error: object): AddEquationError {
     return {
         type: ADD_EQUATION_ERROR,
         payload: error
     };
 }
 
-export function fetchAllEquations(): FetchAllEquationsActionType {
+export function fetchAllEquations(): FetchAllEquations {
     return { type: FETCH_ALL_EQUATIONS };
 }
 
 export function fetchAllEquationsSuccess(
     equations: ExtendedEquationWithId[]
-): FetchAllEquationsSuccessActionType {
+): FetchAllEquationsSuccess {
     return { type: FETCH_ALL_EQUATIONS_SUCCESS, payload: equations };
 }
 
-export function fetchAllEquationsError(
-    error: object
-): FetchAllEquationsErrorActionType {
+export function fetchAllEquationsError(error: object): FetchAllEquationsError {
     return { type: FETCH_ALL_EQUATIONS_ERROR, payload: error };
 }
 
-export function fetchEquation(id: string): FetchEquationActionType {
+export function fetchEquation(id: string): FetchEquation {
     return { type: FETCH_EQUATION, payload: id };
 }
 
 export function fetchEquationSuccess(
     equation: ExtendedEquationWithId
-): FetchEquationSuccessActionType {
+): FetchEquationSuccess {
     return { type: FETCH_EQUATION_SUCCESS, payload: equation };
 }
 
-export function fetchEquationError(
-    error: object
-): FetchEquationErrorActionType {
+export function fetchEquationError(error: object): FetchEquationError {
     return { type: FETCH_EQUATION_ERROR, payload: error };
 }
 
 export function updateEquation(
     equation: ExtendedEquationWithId
-): UpdateEquationActionType {
+): UpdateEquation {
     return { type: UPDATE_EQUATION, payload: equation };
 }
 
 export function updateEquationSuccess(
     equation: ExtendedEquationWithId
-): UpdateEquationSuccessActionType {
+): UpdateEquationSuccess {
     return { type: UPDATE_EQUATION_SUCCESS, payload: equation };
 }
 
-export function updateEquationError(
-    error: object
-): UpdateEquationErrorActionType {
+export function updateEquationError(error: object): UpdateEquationError {
     return { type: UPDATE_EQUATION_ERROR, payload: error };
+}
+
+export function deleteEquation(id: string): DeleteEquation {
+    return { type: DELETE_EQUATION, payload: id };
+}
+
+export function deleteEquationSuccess(id: string): DeleteEquationSuccess {
+    return { type: DELETE_EQUATION_SUCCESS, payload: id };
+}
+
+export function deleteEquationError(error: object): DeleteEquationError {
+    return { type: DELETE_EQUATION_ERROR, payload: error };
 }

@@ -4,7 +4,7 @@ import { RootReducer } from '../../../store/types/main';
 import { Dispatch } from 'redux';
 import { fetchAllEquations } from '../../../store/actions/Equations';
 import {
-    FetchAllEquationsActionType,
+    FetchAllEquations,
     EquationWithId
 } from '../../../store/types/Equations';
 import { List, ListItem, Fab } from '@material-ui/core';
@@ -12,7 +12,7 @@ import { Link } from 'react-router-dom';
 import AddIcon from '@material-ui/icons/Add';
 
 interface Props {
-    fetchAllEquations: () => FetchAllEquationsActionType;
+    fetchAllEquations: () => FetchAllEquations;
     equations: EquationWithId[];
     url: string;
 }

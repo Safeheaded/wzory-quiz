@@ -25,40 +25,40 @@ export interface ExtendedTopic extends Topic {
 
 export interface ExtendedTopicWithId extends ExtendedTopic, TopicWithId {}
 
-export interface AddTopicActionType {
+export interface AddTopic {
     type: typeof ADD_TOPIC;
     payload: ExtendedTopic;
 }
 
-export interface AddTopicSuccessActionType {
+export interface AddTopicSuccess {
     type: typeof ADD_TOPIC_SUCCESS;
     payload: TopicWithId;
 }
 
-export interface AddTopicErrorActionType {
+export interface AddTopicError {
     type: typeof ADD_TOPIC_ERROR;
     payload: object;
 }
 
-export interface FetchAllTopicsActionType {
+export interface FetchAllTopics {
     type: typeof FETCH_ALL_TOPICS;
     payload: string;
 }
 
-export interface FetchAllTopicsSuccessActionType {
+export interface FetchAllTopicsSuccess {
     type: typeof FETCH_ALL_TOPICS_SUCCESS;
     payload: ExtendedTopicWithId[];
 }
 
-export interface FetchAllTopicsErrorActionType {
+export interface FetchAllTopicsError {
     type: typeof FETCH_ALL_TOPICS_ERROR;
     payload: object;
 }
 
 export type TopicsActionTypes =
-    | AddTopicActionType
-    | AddTopicSuccessActionType
-    | AddTopicErrorActionType
-    | FetchAllTopicsActionType
-    | FetchAllTopicsSuccessActionType
-    | FetchAllTopicsErrorActionType;
+    | AddTopic
+    | AddTopicSuccess
+    | AddTopicError
+    | FetchAllTopics
+    | FetchAllTopicsSuccess
+    | FetchAllTopicsError;

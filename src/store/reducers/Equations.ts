@@ -2,7 +2,7 @@ import {
     EquationsState,
     EqActionTypes,
     ExtendedEquationWithId,
-    AddEquationSuccessActionType
+    AddEquationSuccess
 } from '../types/Equations';
 import {
     ADD_EQUATION,
@@ -11,7 +11,8 @@ import {
     FETCH_ALL_EQUATIONS_SUCCESS,
     FETCH_EQUATION_SUCCESS,
     UPDATE_EQUATION_ERROR,
-    UPDATE_EQUATION_SUCCESS
+    UPDATE_EQUATION_SUCCESS,
+    DELETE_EQUATION_SUCCESS
 } from '../constants/Equations';
 
 const initState: EquationsState = { equations: [] };
@@ -40,6 +41,11 @@ const EquationsReducer = (
                 return equation;
             });
             return { ...state, equations: updatedEquations };
+        case DELETE_EQUATION_SUCCESS:
+            const equationsAfterDeletion = state.equations.filter(
+                equation => equation.id != action.payload
+            );
+            return { ...state, equations: equationsAfterDeletion };
     }
     return state;
 };
@@ -48,7 +54,7 @@ export default EquationsReducer;
 
 function addEquationSuccessHandler(
     state: EquationsState,
-    action: AddEquationSuccessActionType
+    action: AddEquationSuccess
 ) {
     const equations = [
         ...state.equations,

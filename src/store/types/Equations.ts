@@ -10,7 +10,10 @@ import {
     FETCH_EQUATION_ERROR,
     UPDATE_EQUATION,
     UPDATE_EQUATION_SUCCESS,
-    UPDATE_EQUATION_ERROR
+    UPDATE_EQUATION_ERROR,
+    DELETE_EQUATION,
+    DELETE_EQUATION_SUCCESS,
+    DELETE_EQUATION_ERROR
 } from '../constants/Equations';
 
 export interface EquationsState {
@@ -35,75 +38,93 @@ export interface EquationWithId extends Equation {
     id: string;
 }
 
-export interface AddEquationActionType {
+export interface AddEquation {
     type: typeof ADD_EQUATION;
     payload: ExtendedEquation;
 }
 
-export interface AddEquationSuccessActionType {
+export interface AddEquationSuccess {
     type: typeof ADD_EQUATION_SUCCESS;
     payload: EquationWithId;
 }
 
-export interface AddEquationErrorActionType {
+export interface AddEquationError {
     type: typeof ADD_EQUATION_ERROR;
     payload: object;
 }
 
-export interface FetchAllEquationsActionType {
+export interface FetchAllEquations {
     type: typeof FETCH_ALL_EQUATIONS;
 }
 
-export interface FetchAllEquationsSuccessActionType {
+export interface FetchAllEquationsSuccess {
     type: typeof FETCH_ALL_EQUATIONS_SUCCESS;
     payload: ExtendedEquationWithId[];
 }
 
-export interface FetchAllEquationsErrorActionType {
+export interface FetchAllEquationsError {
     type: typeof FETCH_ALL_EQUATIONS_ERROR;
     payload: object;
 }
 
-export interface FetchEquationActionType {
+export interface FetchEquation {
     type: typeof FETCH_EQUATION;
     payload: string;
 }
 
-export interface FetchEquationSuccessActionType {
+export interface FetchEquationSuccess {
     type: typeof FETCH_EQUATION_SUCCESS;
     payload: ExtendedEquationWithId;
 }
 
-export interface FetchEquationErrorActionType {
+export interface FetchEquationError {
     type: typeof FETCH_EQUATION_ERROR;
     payload: object;
 }
 
-export interface UpdateEquationActionType {
+export interface UpdateEquation {
     type: typeof UPDATE_EQUATION;
     payload: ExtendedEquationWithId;
 }
 
-export interface UpdateEquationSuccessActionType {
+export interface UpdateEquationSuccess {
     type: typeof UPDATE_EQUATION_SUCCESS;
     payload: ExtendedEquationWithId;
 }
 
-export interface UpdateEquationErrorActionType {
+export interface UpdateEquationError {
     type: typeof UPDATE_EQUATION_ERROR;
     payload: object;
 }
 
+export interface DeleteEquation {
+    type: typeof DELETE_EQUATION;
+    payload: string;
+}
+
+export interface DeleteEquationSuccess {
+    type: typeof DELETE_EQUATION_SUCCESS;
+    payload: string;
+}
+
+export interface DeleteEquationError {
+    type: typeof DELETE_EQUATION_ERROR;
+    payload: object;
+}
+
 export type EqActionTypes =
-    | AddEquationActionType
-    | AddEquationErrorActionType
-    | AddEquationSuccessActionType
-    | FetchAllEquationsActionType
-    | FetchAllEquationsSuccessActionType
-    | FetchAllEquationsErrorActionType
-    | FetchEquationActionType
-    | FetchEquationSuccessActionType
-    | FetchEquationErrorActionType
-    | UpdateEquationActionType
-    | UpdateEquationSuccessActionType
-    | UpdateEquationErrorActionType;
+    | AddEquation
+    | AddEquationError
+    | AddEquationSuccess
+    | FetchAllEquations
+    | FetchAllEquationsSuccess
+    | FetchAllEquationsError
+    | FetchEquation
+    | FetchEquationSuccess
+    | FetchEquationError
+    | UpdateEquation
+    | UpdateEquationSuccess
+    | UpdateEquationError
+    | DeleteEquation
+    | DeleteEquationSuccess
+    | DeleteEquationError;
