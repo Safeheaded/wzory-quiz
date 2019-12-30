@@ -9,7 +9,7 @@ import {
 import AddIcon from '@material-ui/icons/Add';
 import { OverridableComponent } from '@material-ui/core/OverridableComponent';
 import { onChangeType } from '../../../types/admin';
-import { SubjectWithId } from '../../../store/types/Equations';
+import { SubjectWithId } from '../../../store/types/Subjects';
 
 interface Props {
     name: string;

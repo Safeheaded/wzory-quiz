@@ -5,26 +5,14 @@ import { Dispatch } from 'redux';
 import {
     AddEquationActionType,
     ExtendedEquation,
-    FetchAllSubjectsActionType,
-    SubjectWithId,
-    Subject,
-    AddSubjectActionType,
-    ExtendedTopicWithId,
-    FetchAllTopicsActionType,
-    ExtendedTopic,
-    AddTopicActionType,
     ExtendedEquationWithId,
     FetchEquationActionType,
     UpdateEquationActionType
 } from '../../../store/types/Equations';
 import {
-    addEquation,
-    fetchAllSubjects,
-    addSubject,
-    fetchAllTopics,
-    addTopic,
     fetchEquation,
-    updateEquation
+    updateEquation,
+    addEquation
 } from '../../../store/actions/Equations';
 import { connect } from 'react-redux';
 import styles from './MainPage.module.sass';
@@ -37,6 +25,20 @@ import AddDialog from '../AddDialog/AddDialog';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { mapEqState } from '../../../utils/StatesPropsToMap';
 import FormActions from './FormActions/FormActions';
+import {
+    SubjectWithId,
+    FetchAllSubjectsActionType,
+    Subject,
+    AddSubjectActionType
+} from '../../../store/types/Subjects';
+import {
+    ExtendedTopicWithId,
+    FetchAllTopicsActionType,
+    ExtendedTopic,
+    AddTopicActionType
+} from '../../../store/types/Topics';
+import { fetchAllSubjects, addSubject } from '../../../store/actions/Subjects';
+import { fetchAllTopics, addTopic } from '../../../store/actions/Topics';
 
 interface Props extends RouteComponentProps {
     equations: ExtendedEquationWithId[];
