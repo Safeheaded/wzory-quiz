@@ -23,7 +23,7 @@ import { onChangeType, WriteMode } from '../../../types/admin';
 import { RootReducer } from '../../../store/types/main';
 import AddDialog from '../AddDialog/AddDialog';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
-import { mapEqState } from '../../../utils/StatesPropsToMap';
+import { mapEqState, EqStateProps } from '../../../utils/StatesPropsToMap';
 import FormActions from './FormActions/FormActions';
 import {
     SubjectWithId,
@@ -40,10 +40,7 @@ import {
 import { fetchAllSubjects, addSubject } from '../../../store/actions/Subjects';
 import { fetchAllTopics, addTopic } from '../../../store/actions/Topics';
 
-interface Props extends RouteComponentProps {
-    equations: ExtendedEquationWithId[];
-    subjects: SubjectWithId[];
-    topics: ExtendedTopicWithId[];
+interface Props extends RouteComponentProps, EqStateProps {
     url: string;
     addEquation: (equation: ExtendedEquation) => AddEquationActionType;
     fetchAllSubjects: () => FetchAllSubjectsActionType;
