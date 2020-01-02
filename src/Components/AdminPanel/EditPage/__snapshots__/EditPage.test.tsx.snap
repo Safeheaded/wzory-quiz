@@ -1,0 +1,75 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<EditPage /> general tests Should match snapshot 1`] = `
+<Fragment>
+  <form
+    className="Form"
+    onSubmit={[Function]}
+  >
+    <MathInput
+      onValueChange={[Function]}
+      value=""
+    />
+    <FormInput
+      fullWidth={true}
+      label="Znaczenie równania"
+      multiline={true}
+      name="explanation"
+      onValueChange={[Function]}
+      rows="5"
+      value=""
+    />
+    <FormSelect
+      id="subject"
+      label="Przedmioty"
+      lastItem={
+        <ForwardRef(WithStyles)
+          value="add_subject"
+        >
+          Dodaj przedmiot 
+          <UNDEFINED />
+        </ForwardRef(WithStyles)>
+      }
+      name="subjectRef"
+      onValueChange={[Function]}
+      value=""
+      values={Array []}
+    />
+    <FormSelect
+      disabled={true}
+      id="topic"
+      label="Tematy"
+      lastItem={
+        <ForwardRef(WithStyles)
+          value="add_topic"
+        >
+          Dodaj temat 
+          <UNDEFINED />
+        </ForwardRef(WithStyles)>
+      }
+      name="topicRef"
+      onValueChange={[Function]}
+      value=""
+      values={Array []}
+    />
+    <FormActions
+      mode={1}
+      secondaryButtonAction={[Function]}
+    />
+  </form>
+  <AddDialog
+    label="Przedmiot"
+    onSubmit={[Function]}
+    stateField={false}
+    title="Dodaj przedmiot"
+    toggleDialog={[Function]}
+  />
+  <AddDialog
+    label="Temat"
+    onSubmit={[Function]}
+    stateField={false}
+    title="Dodaj temat"
+    toggleDialog={[Function]}
+  />
+</Fragment>
+`;

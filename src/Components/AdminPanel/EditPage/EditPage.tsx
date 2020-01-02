@@ -1,6 +1,6 @@
 import React, { Component, Fragment, ComponentState } from 'react';
 import MathInput from '../MathInput/MathInput';
-import { Button, MenuItem, FormControl } from '@material-ui/core';
+import { MenuItem } from '@material-ui/core';
 import { Dispatch } from 'redux';
 import {
     AddEquation,
@@ -22,7 +22,6 @@ import AddIcon from '@material-ui/icons/Add';
 import FormInput from '../FormInput/FormInput';
 import FormSelect from '../FormSelect/FormSelect';
 import { onChangeType, WriteMode } from '../../../types/admin';
-import { RootReducer } from '../../../store/types/main';
 import AddDialog from '../AddDialog/AddDialog';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { mapEqState, EqStateProps } from '../../../utils/StatesPropsToMap';
@@ -42,7 +41,7 @@ import {
 import { fetchAllSubjects, addSubject } from '../../../store/actions/Subjects';
 import { fetchAllTopics, addTopic } from '../../../store/actions/Topics';
 
-interface Props extends RouteComponentProps, EqStateProps {
+export interface Props extends RouteComponentProps, EqStateProps {
     url: string;
     addEquation: (equation: ExtendedEquation) => AddEquation;
     fetchAllSubjects: () => FetchAllSubjects;
@@ -56,7 +55,7 @@ interface Props extends RouteComponentProps, EqStateProps {
 
 type params = { id: string };
 
-interface State {
+export interface State {
     subjectDialogState: boolean;
     topicDialogState: boolean;
     subjectRef: string;
@@ -69,7 +68,7 @@ interface State {
 
 type inputTypes = HTMLSelectElement | HTMLInputElement | HTMLTextAreaElement;
 
-class MainPage extends Component<Props, State> {
+export class EditPage extends Component<Props, State> {
     state: State = {
         subjectDialogState: false,
         subjectRef: '',
@@ -340,4 +339,4 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     deleteEquation: (id: string) => dispatch(deleteEquation(id))
 });
 
-export default withRouter(connect(mapEqState, mapDispatchToProps)(MainPage));
+export default withRouter(connect(mapEqState, mapDispatchToProps)(EditPage));
