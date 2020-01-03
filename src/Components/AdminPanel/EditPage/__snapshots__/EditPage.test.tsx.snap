@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<EditPage /> general tests Should match snapshot 1`] = `
+exports[`<EditPage /> General Should match snapshot 1`] = `
 <Fragment>
   <form
     className="Form"
