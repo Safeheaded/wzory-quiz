@@ -24,10 +24,13 @@ class EquationsList extends Component<Props> {
 
     render() {
         const listItems = this.props.equations.map(equation => (
-            <ListItem key={equation.id} button>
-                <Link to={`${this.props.url}/edit-equation/${equation.id}`}>
-                    {equation.explanation}
-                </Link>
+            <ListItem
+                component={Link}
+                button
+                to={`${this.props.url}/edit-equation/${equation.id}`}
+                key={equation.id}
+            >
+                {equation.explanation}
             </ListItem>
         ));
 
