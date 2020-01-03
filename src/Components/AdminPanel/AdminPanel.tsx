@@ -14,6 +14,7 @@ import { connect } from 'react-redux';
 import EditPgae from './EditPage/EditPage';
 import EquationsList from './EquationsList/EquationsList';
 import { RouteComponentProps } from 'react-router-dom';
+import SubjectsList from './SubjectsList/SubjectsList';
 
 interface Props {
     logout: () => LogoutActionType;
@@ -37,6 +38,9 @@ const AdminPanel = (props: Props) => {
                 path={`${path}/edit-equation/:id`}
                 component={EditPgae}
             />
+            <Route path={`${path}/subjects`}>
+                <SubjectsList url={url} />
+            </Route>
             <Route path={path}>
                 <EquationsList url={url} />
             </Route>

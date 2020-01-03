@@ -7,9 +7,7 @@ import {
     FetchAllEquations,
     EquationWithId
 } from '../../../store/types/Equations';
-import { List, ListItem, Fab } from '@material-ui/core';
-import { Link } from 'react-router-dom';
-import AddIcon from '@material-ui/icons/Add';
+import UniversalList from '../UniversalList/UniversalList';
 
 interface Props {
     fetchAllEquations: () => FetchAllEquations;
@@ -23,26 +21,12 @@ class EquationsList extends Component<Props> {
     }
 
     render() {
-        const listItems = this.props.equations.map(equation => (
-            <ListItem
-                component={Link}
-                button
-                to={`${this.props.url}/edit-equation/${equation.id}`}
-                key={equation.id}
-            >
-                {equation.explanation}
-            </ListItem>
-        ));
-
         return (
-            <Fragment>
-                <List>{listItems}</List>
-                <Link to={`${this.props.url}/add-equation`}>
-                    <Fab>
-                        <AddIcon />
-                    </Fab>
-                </Link>
-            </Fragment>
+            <UniversalList
+                actionPath="/add-equation"
+                items={this.props.equations}
+                url={this.props.url}
+            />
         );
     }
 }
