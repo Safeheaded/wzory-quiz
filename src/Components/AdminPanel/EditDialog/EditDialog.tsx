@@ -8,6 +8,8 @@ import {
 } from '@material-ui/core';
 import FormInput from '../FormInput/FormInput';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { ItemOfList } from '../../../types/General';
+import { WriteMode } from '../../../types/admin';
 
 interface Props extends RouteComponentProps {
     id?: string;
@@ -15,20 +17,24 @@ interface Props extends RouteComponentProps {
     label: string;
     name: string;
     redirectPath: string;
+    item?: ItemOfList;
+    isDialogOpen: boolean;
 }
 
 interface State {
     inputValue: string;
-    isDialogOpen: boolean;
+    id?: string;
 }
 
 export class EditDialog extends Component<Props, State> {
-    state = { isDialogOpen: false, inputValue: '' };
+    state = { inputValue: '', mode: WriteMode.Edit };
 
     componentDidUpdate(prevProps: Props, prevState: State) {
-        if (prevProps.id !== this.props.id && this.props.id) {
-            const isId = this.props.id.length === 0 ? false : true;
-            this.setState({ isDialogOpen: isId });
+        if (prevProps.item !== this.props.item && this.props.item) {
+            const name = (this.props.name
+                ? this.props.item.name
+                : this.props.item.explanation) as string;
+            this.setState({ inputValue: name, id: this.props.item.id });
         }
     }
 
@@ -42,14 +48,14 @@ export class EditDialog extends Component<Props, State> {
     };
 
     closeHandler = () => {
-        this.setState({ isDialogOpen: false });
+        this.setState({ id: '', inputValue: '' });
         this.props.history.push(this.props.redirectPath);
     };
 
     render() {
         const id = this.props.id ? this.props.id : '';
         return (
-            <Dialog onClose={this.closeHandler} open={this.state.isDialogOpen}>
+            <Dialog onClose={this.closeHandler} open={this.props.isDialogOpen}>
                 <DialogTitle>{this.props.title}</DialogTitle>
                 <form onSubmit={e => this.submitHandler(e)}>
                     <DialogContent>
@@ -63,7 +69,7 @@ export class EditDialog extends Component<Props, State> {
                         />
                     </DialogContent>
                     <DialogActions>
-                        <Button>{id.length === 0 ? 'Edytuj' : 'Dodaj'}</Button>
+                        <Button>{id.length === 0 ? 'Dodaj' : 'Edytuj'}</Button>
                     </DialogActions>
                 </form>
             </Dialog>

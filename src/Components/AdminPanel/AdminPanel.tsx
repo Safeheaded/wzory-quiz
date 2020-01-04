@@ -15,6 +15,7 @@ import EditPgae from './EditPage/EditPage';
 import EquationsList from './EquationsList/EquationsList';
 import { RouteComponentProps } from 'react-router-dom';
 import SubjectsList from './SubjectsList/SubjectsList';
+import { WriteMode } from '../../types/admin';
 
 interface Props {
     logout: () => LogoutActionType;
@@ -40,6 +41,9 @@ const AdminPanel = (props: Props) => {
             />
             <Route path={`${path}/subjects/edit/:id`}>
                 <SubjectsList url={url} />
+            </Route>
+            <Route path={`${path}/subjects/add`}>
+                <SubjectsList url={url} mode={WriteMode.Add} />
             </Route>
             <Route path={`${path}/subjects`}>
                 <SubjectsList url={url} />

@@ -6,24 +6,26 @@ import { fetchAllSubjects } from '../../../store/actions/Subjects';
 import { RootReducer } from '../../../store/types/main';
 import UniversalList from '../UniversalList/UniversalList';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
-import { Dialog, DialogTitle, DialogContent } from '@material-ui/core';
-import FormInput from '../FormInput/FormInput';
 import EditDialog from '../EditDialog/EditDialog';
+import { WriteMode } from '../../../types/admin';
 
 interface Props extends RouteComponentProps {
     subjects: SubjectWithId[];
     fetchAllSubjects: () => FetchAllSubjects;
     url: string;
+    mode?: WriteMode;
 }
 
 interface State {
     subjectId?: string;
+    isDialogOpen: boolean;
+    mode: WriteMode;
 }
 
 type Params = { id: string };
 
 class SubjectsList extends Component<Props, State> {
-    state = { subjectId: '' };
+    state = { subjectId: '', isDialogOpen: false, mode: WriteMode.Edit };
 
     componentDidMount() {
         this.props.fetchAllSubjects();
@@ -34,18 +36,24 @@ class SubjectsList extends Component<Props, State> {
         if (prevProps.match.params !== this.props.match.params) {
             this.setSubjectId();
         }
+        if (prevProps.mode !== this.props.mode) {
+            this.setState({ isDialogOpen: !this.state.isDialogOpen });
+        }
     }
 
     private setSubjectId() {
         if ((this.props.match.params as Params).id) {
             const subjectId = (this.props.match.params as Params).id;
-            this.setState({ subjectId });
+            this.setState({ subjectId, isDialogOpen: true });
         } else {
-            this.setState({ subjectId: '' });
+            this.setState({ subjectId: '', isDialogOpen: false });
         }
     }
 
     render() {
+        const item = this.props.subjects.find(
+            subject => subject.id === this.state.subjectId
+        );
         return (
             <Fragment>
                 <UniversalList
@@ -64,6 +72,8 @@ class SubjectsList extends Component<Props, State> {
                     name="subjectId"
                     id={this.state.subjectId}
                     redirectPath={`${this.props.url}/subjects`}
+                    item={item}
+                    isDialogOpen={this.state.isDialogOpen}
                 />
             </Fragment>
         );
