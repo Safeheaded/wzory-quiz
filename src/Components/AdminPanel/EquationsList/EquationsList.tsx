@@ -23,9 +23,10 @@ class EquationsList extends Component<Props> {
     render() {
         return (
             <UniversalList
-                actionPath="/add-equation"
+                actionPath="/edit"
                 items={this.props.equations}
                 url={this.props.url}
+                itemPath="edit-equation"
             />
         );
     }

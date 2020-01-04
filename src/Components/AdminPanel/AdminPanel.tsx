@@ -38,10 +38,13 @@ const AdminPanel = (props: Props) => {
                 path={`${path}/edit-equation/:id`}
                 component={EditPgae}
             />
+            <Route path={`${path}/subjects/edit/:id`}>
+                <SubjectsList url={url} />
+            </Route>
             <Route path={`${path}/subjects`}>
                 <SubjectsList url={url} />
             </Route>
-            <Route path={path}>
+            <Route exact path={path}>
                 <EquationsList url={url} />
             </Route>
         </Switch>

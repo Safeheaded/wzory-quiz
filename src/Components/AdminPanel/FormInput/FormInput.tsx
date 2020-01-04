@@ -1,19 +1,9 @@
 import React from 'react';
 import { FormControl, TextField } from '@material-ui/core';
 import { onChangeType } from '../../../types/admin';
+import { FormInputProps } from '../../../types/General';
 
-interface Props {
-    name: string;
-    label: string;
-    multiline?: boolean;
-    fullWidth?: boolean;
-    rows?: string;
-    disabled?: boolean;
-    onValueChange: Function;
-    value: string;
-}
-
-const FormInput: React.SFC<Props> = (props: Props) => {
+const FormInput: React.SFC<FormInputProps> = (props: FormInputProps) => {
     return (
         <FormControl disabled={props.disabled}>
             <TextField

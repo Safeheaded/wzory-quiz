@@ -9,6 +9,7 @@ interface Props {
     items: ItemOfList[];
     url: string;
     actionPath: string;
+    itemPath: string;
 }
 
 const UniversalList: React.FC<Props> = (props: Props) => {
@@ -16,7 +17,7 @@ const UniversalList: React.FC<Props> = (props: Props) => {
         <ListItem
             component={Link}
             button
-            to={`${props.url}/edit-equation/${item.id}`}
+            to={`${props.url}/${props.itemPath}/${item.id}`}
             key={item.id}
         >
             {item.explanation ? item.explanation : item.name}
