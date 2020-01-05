@@ -4,7 +4,8 @@ import {
     AddTopic,
     FetchAllTopics,
     ExtendedTopicWithId,
-    ExtendedTopic
+    ExtendedTopic,
+    FetchTopics
 } from '../types/Topics';
 
 import { put, call, all, takeLatest } from 'redux-saga/effects';
@@ -13,9 +14,12 @@ import {
     fetchAllTopicsSuccess,
     fetchAllTopicsError,
     addTopicSuccess,
-    addTopicError
+    addTopicError,
+    fetchTopicsSuccess,
+    fetchTopicsError
 } from '../actions/Topics';
 import { ADD_TOPIC, FETCH_ALL_TOPICS } from '../constants/Topics';
+import { firestore } from 'firebase';
 
 const rsf = firebaseHandler.getRSF();
 function* addTopic(action: AddTopic) {
@@ -56,9 +60,37 @@ function* fetchAllTopics(action: FetchAllTopics) {
     }
 }
 
+function* fetchTopics(action: FetchTopics) {
+    try {
+        const collectionRef = yield firestore().collection('Topics');
+        const snapshot: firestore.QuerySnapshot = yield call(
+            rsf.firestore.getCollection,
+            collectionRef.where('subjectRef', '==', action.payload)
+        );
+        const topics: ExtendedTopicWithId[] = collectionToArray<
+            ExtendedTopicWithId,
+            ExtendedTopic
+        >(snapshot);
+        yield put(fetchTopicsSuccess(topics));
+    } catch (error) {
+        yield put(fetchTopicsError(error));
+    }
+}
+
 export function* TopicsSaga() {
     yield all([
         takeLatest(ADD_TOPIC, addTopic),
         takeLatest(FETCH_ALL_TOPICS, fetchAllTopics)
     ]);
+}
+
+function collectionToArray<T extends K & { id: string }, K>(
+    snapshot: firestore.QuerySnapshot
+): T[] {
+    const items: T[] = [];
+    snapshot.forEach(item => {
+        const newItem = { id: item.id, ...(item.data() as K) } as T;
+        items.push(newItem);
+    });
+    return items;
 }

@@ -4,7 +4,10 @@ import {
     ADD_TOPIC_ERROR,
     FETCH_ALL_TOPICS,
     FETCH_ALL_TOPICS_SUCCESS,
-    FETCH_ALL_TOPICS_ERROR
+    FETCH_ALL_TOPICS_ERROR,
+    FETCH_TOPICS,
+    FETCH_TOPICS_SUCCESS,
+    FETCH_TOPICS_ERROR
 } from '../constants/Topics';
 
 export interface TopicsState {
@@ -55,10 +58,28 @@ export interface FetchAllTopicsError {
     payload: object;
 }
 
+export interface FetchTopics {
+    type: typeof FETCH_TOPICS;
+    payload: string;
+}
+
+export interface FetchTopicsSuccess {
+    type: typeof FETCH_TOPICS_SUCCESS;
+    payload: ExtendedTopicWithId[];
+}
+
+export interface FetchTopicsError {
+    type: typeof FETCH_TOPICS_ERROR;
+    payload: object;
+}
+
 export type TopicsActionTypes =
     | AddTopic
     | AddTopicSuccess
     | AddTopicError
     | FetchAllTopics
     | FetchAllTopicsSuccess
-    | FetchAllTopicsError;
+    | FetchAllTopicsError
+    | FetchTopics
+    | FetchTopicsSuccess
+    | FetchTopicsError;
