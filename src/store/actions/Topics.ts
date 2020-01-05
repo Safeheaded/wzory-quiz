@@ -26,7 +26,7 @@ export function addTopic(topic: ExtendedTopic): AddTopic {
     };
 }
 
-export function addTopicSuccess(topic: TopicWithId): AddTopicSuccess {
+export function addTopicSuccess(topic: ExtendedTopicWithId): AddTopicSuccess {
     return {
         type: ADD_TOPIC_SUCCESS,
         payload: topic

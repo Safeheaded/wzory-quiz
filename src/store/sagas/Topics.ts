@@ -2,10 +2,9 @@ import { firebaseHandler } from '../../firebaseConfig';
 
 import {
     AddTopic,
-    Topic,
     FetchAllTopics,
     ExtendedTopicWithId,
-    TopicWithId
+    ExtendedTopic
 } from '../types/Topics';
 
 import { put, call, all, takeLatest } from 'redux-saga/effects';
@@ -21,15 +20,14 @@ import { ADD_TOPIC, FETCH_ALL_TOPICS } from '../constants/Topics';
 const rsf = firebaseHandler.getRSF();
 function* addTopic(action: AddTopic) {
     try {
-        const topic: Topic = { name: action.payload.name };
         const snapshot: firebase.firestore.DocumentSnapshot = yield call(
             rsf.firestore.addDocument,
-            `Subjects/${action.payload.subjectRef}/Topics`,
-            topic
+            `Topics`,
+            action.payload
         );
-        const addedTopic: TopicWithId = {
+        const addedTopic: ExtendedTopicWithId = {
             id: snapshot.id,
-            ...(snapshot.data() as Topic)
+            ...(snapshot.data() as ExtendedTopic)
         };
         yield put(addTopicSuccess(addedTopic));
     } catch (error) {
@@ -41,7 +39,7 @@ function* fetchAllTopics(action: FetchAllTopics) {
     try {
         const data: firebase.firestore.QuerySnapshot = yield call(
             rsf.firestore.getCollection,
-            `Subjects/${action.payload}/Topics`
+            `Topics`
         );
         const topics: ExtendedTopicWithId[] = [];
         data.forEach(topic => {
