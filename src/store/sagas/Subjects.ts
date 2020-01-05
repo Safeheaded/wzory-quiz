@@ -1,13 +1,19 @@
 import { firebaseHandler } from '../../firebaseConfig';
-import { AddSubject, SubjectWithId } from '../types/Subjects';
+import { AddSubject, SubjectWithId, UpdateSubject } from '../types/Subjects';
 import { put, call, all, takeLatest } from 'redux-saga/effects';
 import {
     addSubjectSuccess,
     addSubjectError,
     fetchAllSubjectsSuccess,
-    fetchAllSubjectsError
+    fetchAllSubjectsError,
+    updateSubjectSuccess,
+    updateSubjectError
 } from '../actions/Subjects';
-import { ADD_SUBJECT, FETCH_ALL_SUBJECTS } from '../constants/Subjects';
+import {
+    ADD_SUBJECT,
+    FETCH_ALL_SUBJECTS,
+    UPDATE_SUBJECT
+} from '../constants/Subjects';
 
 const rsf = firebaseHandler.getRSF();
 function* addSubject(action: AddSubject) {
@@ -47,9 +53,23 @@ function* fetchAllSubjects() {
     }
 }
 
+function* updateSubject(action: UpdateSubject) {
+    try {
+        yield call(
+            rsf.firestore.updateDocument,
+            `Subjects/${action.payload.id}`,
+            { name: action.payload.name }
+        );
+        yield put(updateSubjectSuccess(action.payload));
+    } catch (error) {
+        yield put(updateSubjectError(action.payload));
+    }
+}
+
 export function* SubjectsSaga() {
     yield all([
         takeLatest(ADD_SUBJECT, addSubject),
-        takeLatest(FETCH_ALL_SUBJECTS, fetchAllSubjects)
+        takeLatest(FETCH_ALL_SUBJECTS, fetchAllSubjects),
+        takeLatest(UPDATE_SUBJECT, updateSubject)
     ]);
 }

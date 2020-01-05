@@ -10,6 +10,8 @@ import FormInput from '../FormInput/FormInput';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { ItemOfList } from '../../../types/General';
 import { WriteMode } from '../../../types/admin';
+import { SubjectWithId } from '../../../store/types/Subjects';
+import { TopicWithId } from '../../../store/types/Topics';
 
 interface Props extends RouteComponentProps {
     id?: string;
@@ -19,6 +21,7 @@ interface Props extends RouteComponentProps {
     redirectPath: string;
     item?: ItemOfList;
     isDialogOpen: boolean;
+    primaryAction: (item: SubjectWithId | TopicWithId) => void;
 }
 
 interface State {
@@ -45,6 +48,13 @@ export class EditDialog extends Component<Props, State> {
     submitHandler = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = new FormData(event.target as HTMLFormElement);
+        const item: { name: string; id?: string } = {
+            name: data.get(this.props.name) as string
+        };
+        if (this.props.id && this.props.id.length !== 0) {
+            item.id = this.props.id;
+        }
+        this.props.primaryAction(item as SubjectWithId | TopicWithId);
     };
 
     closeHandler = () => {
@@ -69,7 +79,9 @@ export class EditDialog extends Component<Props, State> {
                         />
                     </DialogContent>
                     <DialogActions>
-                        <Button>{id.length === 0 ? 'Dodaj' : 'Edytuj'}</Button>
+                        <Button type="submit">
+                            {id.length === 0 ? 'Dodaj' : 'Edytuj'}
+                        </Button>
                     </DialogActions>
                 </form>
             </Dialog>

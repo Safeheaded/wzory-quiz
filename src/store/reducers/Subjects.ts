@@ -6,7 +6,8 @@ import {
 } from '../types/Subjects';
 import {
     ADD_SUBJECT_SUCCESS,
-    FETCH_ALL_SUBJECTS_SUCCESS
+    FETCH_ALL_SUBJECTS_SUCCESS,
+    UPDATE_SUBJECT_SUCCESS
 } from '../constants/Subjects';
 import { AddEquationError } from '../types/Equations';
 
@@ -21,6 +22,14 @@ const SubjectsReducer = (
             return addSubjectSuccessHandler(state, action);
         case FETCH_ALL_SUBJECTS_SUCCESS:
             return { ...state, subjects: action.payload };
+        case UPDATE_SUBJECT_SUCCESS:
+            const updatedSubjects = state.subjects.map(subject => {
+                if (subject.id === action.payload.id) {
+                    return action.payload;
+                }
+                return subject;
+            });
+            return { ...state, subjects: updatedSubjects };
     }
     return state;
 };

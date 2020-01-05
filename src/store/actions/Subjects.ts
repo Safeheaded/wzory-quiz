@@ -6,7 +6,10 @@ import {
     AddSubjectError,
     FetchAllSubjects,
     FetchAllSubjectsSuccess,
-    FetchAllSubjectsError
+    FetchAllSubjectsError,
+    UpdateSubject,
+    UpdateSubjectSuccess,
+    UpdateSubjectError
 } from '../types/Subjects';
 
 import {
@@ -15,7 +18,10 @@ import {
     ADD_SUBJECT_ERROR,
     FETCH_ALL_SUBJECTS,
     FETCH_ALL_SUBJECTS_SUCCESS,
-    FETCH_ALL_SUBJECTS_ERROR
+    FETCH_ALL_SUBJECTS_ERROR,
+    UPDATE_SUBJECT,
+    UPDATE_SUBJECT_SUCCESS,
+    UPDATE_SUBJECT_ERROR
 } from '../constants/Subjects';
 
 export function addSubject(subject: Subject): AddSubject {
@@ -43,6 +49,29 @@ export function fetchAllSubjectsSuccess(
 export function fetchAllSubjectsError(error: object): FetchAllSubjectsError {
     return {
         type: FETCH_ALL_SUBJECTS_ERROR,
+        payload: error
+    };
+}
+
+export function updateSubject(subject: SubjectWithId): UpdateSubject {
+    return {
+        type: UPDATE_SUBJECT,
+        payload: subject
+    };
+}
+
+export function updateSubjectSuccess(
+    subject: SubjectWithId
+): UpdateSubjectSuccess {
+    return {
+        type: UPDATE_SUBJECT_SUCCESS,
+        payload: subject
+    };
+}
+
+export function updateSubjectError(error: object): UpdateSubjectError {
+    return {
+        type: UPDATE_SUBJECT_ERROR,
         payload: error
     };
 }

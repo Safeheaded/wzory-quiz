@@ -4,7 +4,10 @@ import {
     ADD_SUBJECT_SUCCESS,
     FETCH_ALL_SUBJECTS,
     FETCH_ALL_SUBJECTS_SUCCESS,
-    FETCH_ALL_SUBJECTS_ERROR
+    FETCH_ALL_SUBJECTS_ERROR,
+    UPDATE_SUBJECT,
+    UPDATE_SUBJECT_SUCCESS,
+    UPDATE_SUBJECT_ERROR
 } from '../constants/Subjects';
 
 export interface SubjectsState {
@@ -48,10 +51,28 @@ export interface FetchAllSubjectsError {
     payload: object;
 }
 
+export interface UpdateSubject {
+    type: typeof UPDATE_SUBJECT;
+    payload: SubjectWithId;
+}
+
+export interface UpdateSubjectSuccess {
+    type: typeof UPDATE_SUBJECT_SUCCESS;
+    payload: SubjectWithId;
+}
+
+export interface UpdateSubjectError {
+    type: typeof UPDATE_SUBJECT_ERROR;
+    payload: object;
+}
+
 export type SubjectsActionTypes =
     | AddSubject
     | AddSubjectError
     | AddSubjectSuccess
     | FetchAllSubjects
     | FetchAllSubjectsSuccess
-    | FetchAllSubjectsError;
+    | FetchAllSubjectsError
+    | UpdateSubject
+    | UpdateSubjectSuccess
+    | UpdateSubjectError;

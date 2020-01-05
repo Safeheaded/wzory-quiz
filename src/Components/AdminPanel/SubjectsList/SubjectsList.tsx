@@ -1,8 +1,18 @@
 import React, { Component, Fragment } from 'react';
-import { SubjectWithId, FetchAllSubjects } from '../../../store/types/Subjects';
+import {
+    SubjectWithId,
+    FetchAllSubjects,
+    UpdateSubject,
+    Subject,
+    AddSubject
+} from '../../../store/types/Subjects';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
-import { fetchAllSubjects } from '../../../store/actions/Subjects';
+import {
+    fetchAllSubjects,
+    updateSubject,
+    addSubject
+} from '../../../store/actions/Subjects';
 import { RootReducer } from '../../../store/types/main';
 import UniversalList from '../UniversalList/UniversalList';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
@@ -10,8 +20,10 @@ import EditDialog from '../EditDialog/EditDialog';
 import { WriteMode } from '../../../types/admin';
 
 interface Props extends RouteComponentProps {
-    subjects: SubjectWithId[];
     fetchAllSubjects: () => FetchAllSubjects;
+    updateSubject: (subject: SubjectWithId) => UpdateSubject;
+    addSubject: (subject: Subject) => AddSubject;
+    subjects: SubjectWithId[];
     url: string;
     mode?: WriteMode;
 }
@@ -38,6 +50,11 @@ class SubjectsList extends Component<Props, State> {
         }
         if (prevProps.mode !== this.props.mode) {
             this.setState({ isDialogOpen: !this.state.isDialogOpen });
+            if (prevProps.mode === WriteMode.Add) {
+                this.setState({ mode: WriteMode.Edit });
+            } else {
+                this.setState({ mode: WriteMode.Add });
+            }
         }
     }
 
@@ -54,6 +71,10 @@ class SubjectsList extends Component<Props, State> {
         const item = this.props.subjects.find(
             subject => subject.id === this.state.subjectId
         );
+        const primaryAction =
+            this.state.mode === WriteMode.Add
+                ? this.props.addSubject
+                : this.props.updateSubject;
         return (
             <Fragment>
                 <UniversalList
@@ -74,6 +95,7 @@ class SubjectsList extends Component<Props, State> {
                     redirectPath={`${this.props.url}/subjects`}
                     item={item}
                     isDialogOpen={this.state.isDialogOpen}
+                    primaryAction={primaryAction}
                 />
             </Fragment>
         );
@@ -81,7 +103,9 @@ class SubjectsList extends Component<Props, State> {
 }
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-    fetchAllSubjects: () => dispatch(fetchAllSubjects())
+    fetchAllSubjects: () => dispatch(fetchAllSubjects()),
+    updateSubject: (subject: SubjectWithId) => dispatch(updateSubject(subject)),
+    addSubject: (subject: Subject) => dispatch(addSubject(subject))
 });
 
 const mapStateToProps = (state: RootReducer) => ({
