@@ -32,7 +32,7 @@ export interface AddTopic {
 
 export interface AddTopicSuccess {
     type: typeof ADD_TOPIC_SUCCESS;
-    payload: TopicWithId;
+    payload: ExtendedTopicWithId;
 }
 
 export interface AddTopicError {

@@ -20,11 +20,12 @@ import { ADD_TOPIC, FETCH_ALL_TOPICS } from '../constants/Topics';
 const rsf = firebaseHandler.getRSF();
 function* addTopic(action: AddTopic) {
     try {
-        const snapshot: firebase.firestore.DocumentSnapshot = yield call(
+        const doc: firebase.firestore.DocumentReference = yield call(
             rsf.firestore.addDocument,
             `Topics`,
             action.payload
         );
+        const snapshot: firebase.firestore.DocumentSnapshot = yield doc.get();
         const addedTopic: ExtendedTopicWithId = {
             id: snapshot.id,
             ...(snapshot.data() as ExtendedTopic)

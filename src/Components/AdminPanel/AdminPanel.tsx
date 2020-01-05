@@ -31,8 +31,11 @@ const AdminPanel = (props: Props) => {
 
     return (
         <Switch>
-            <Route path={`${path}/add-equation`}>
+            <Route path={`${path}/equations/add`}>
                 <EditPgae url={url} />
+            </Route>
+            <Route path={`${path}/equations`}>
+                <EquationsList url={url} />
             </Route>
             <Route
                 exact
@@ -48,9 +51,7 @@ const AdminPanel = (props: Props) => {
             <Route path={`${path}/subjects`}>
                 <SubjectsList url={url} />
             </Route>
-            <Route exact path={path}>
-                <EquationsList url={url} />
-            </Route>
+            <Redirect exact path={path} to={`${url}/equations`} />
         </Switch>
     );
 };
