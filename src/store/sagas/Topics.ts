@@ -46,8 +46,7 @@ function* fetchAllTopics(action: FetchAllTopics) {
         data.forEach(topic => {
             const newTopic: ExtendedTopicWithId = {
                 id: topic.id,
-                name: topic.get('name'),
-                subjectRef: topic.get('subjectRef')
+                ...(topic.data() as ExtendedTopic)
             };
             topics.push(newTopic);
         });
