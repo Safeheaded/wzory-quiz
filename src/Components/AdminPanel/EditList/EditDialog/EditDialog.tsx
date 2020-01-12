@@ -55,14 +55,22 @@ abstract class EditDialog<
 
     submitHandler = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        const data = new FormData(event.target as HTMLFormElement);
-        const item: { name: string; id?: string } = {
-            name: data.get(this.props.name) as string
-        };
+        const form = event.target;
+        const data = new FormData(form as HTMLFormElement);
+        const item = { id: '', name: '', subjectRef: '' } as T;
+        for (const key in item) {
+            if (data.get(key)) {
+                item[key] = data.get(key) as any;
+            } else {
+                delete item[key];
+            }
+        }
         if (this.props.id && this.props.id.length !== 0) {
             item.id = this.props.id;
+        } else {
+            delete item.id;
         }
-        this.props.primaryAction(item as T);
+        this.props.primaryAction(item);
     };
 
     closeHandler = () => {

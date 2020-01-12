@@ -60,7 +60,7 @@ class SubjectsList extends EditList<Props, State> {
                             : 'Edytuj przedmiot'
                     }
                     label="Nazwa"
-                    name="subjectId"
+                    name="name"
                     id={this.state.itemId}
                     redirectPath={`${this.props.url}/subjects`}
                     item={item}

@@ -87,7 +87,7 @@ export class TopicsList extends EditList<Props, State> {
                             : 'Edytuj temat'
                     }
                     label="Nazwa"
-                    name="topicId"
+                    name="name"
                     id={this.state.itemId}
                     redirectPath={`${this.props.url}/topics`}
                     item={item}
