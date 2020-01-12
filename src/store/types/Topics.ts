@@ -9,14 +9,13 @@ import {
     FETCH_TOPICS_SUCCESS,
     FETCH_TOPICS_ERROR
 } from '../constants/Topics';
+import { BaseType } from './main';
 
 export interface TopicsState {
     topics: ExtendedTopicWithId[];
 }
 
-export interface Topic {
-    name: string;
-}
+export interface Topic extends BaseType {}
 
 export interface TopicWithId extends Topic {
     id: string;
@@ -45,7 +44,6 @@ export interface AddTopicError {
 
 export interface FetchAllTopics {
     type: typeof FETCH_ALL_TOPICS;
-    payload: string;
 }
 
 export interface FetchAllTopicsSuccess {

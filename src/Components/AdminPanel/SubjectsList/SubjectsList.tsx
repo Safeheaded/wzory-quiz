@@ -16,61 +16,31 @@ import {
 import { RootReducer } from '../../../store/types/main';
 import UniversalList from '../UniversalList/UniversalList';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
-import EditDialog from '../EditDialog/EditDialog';
+import SubjectDialog from './SubjectDialog/SubjectDialog';
 import { WriteMode } from '../../../types/admin';
+import EditList from '../EditList/EditList';
+import { State } from '../EditList/EditList';
 
 interface Props extends RouteComponentProps {
     fetchAllSubjects: () => FetchAllSubjects;
     updateSubject: (subject: SubjectWithId) => UpdateSubject;
     addSubject: (subject: Subject) => AddSubject;
-    subjects: SubjectWithId[];
+    items: SubjectWithId[];
     url: string;
     mode?: WriteMode;
 }
 
-interface State {
-    subjectId?: string;
-    isDialogOpen: boolean;
-    mode: WriteMode;
-}
-
-type Params = { id: string };
-
-class SubjectsList extends Component<Props, State> {
-    state = { subjectId: '', isDialogOpen: false, mode: WriteMode.Edit };
-
+class SubjectsList extends EditList<Props, State> {
     componentDidMount() {
-        this.props.fetchAllSubjects();
-        this.setSubjectId();
+        this.baseComponentDidMount(this.props.fetchAllSubjects);
     }
 
-    componentDidUpdate(prevProps: Props, prevState: State) {
-        if (prevProps.match.params !== this.props.match.params) {
-            this.setSubjectId();
-        }
-        if (prevProps.mode !== this.props.mode) {
-            this.setState({ isDialogOpen: !this.state.isDialogOpen });
-            if (prevProps.mode === WriteMode.Add) {
-                this.setState({ mode: WriteMode.Edit });
-            } else {
-                this.setState({ mode: WriteMode.Add });
-            }
-        }
-    }
-
-    private setSubjectId() {
-        if ((this.props.match.params as Params).id) {
-            const subjectId = (this.props.match.params as Params).id;
-            this.setState({ subjectId, isDialogOpen: true });
-        } else {
-            this.setState({ subjectId: '', isDialogOpen: false });
-        }
+    componentDidUpdate(prevProps: Props) {
+        this.baseComponentDidUpdate(prevProps);
     }
 
     render() {
-        const item = this.props.subjects.find(
-            subject => subject.id === this.state.subjectId
-        );
+        const item = this.getItem(this.state.itemId);
         const primaryAction =
             this.state.mode === WriteMode.Add
                 ? this.props.addSubject
@@ -78,20 +48,20 @@ class SubjectsList extends Component<Props, State> {
         return (
             <Fragment>
                 <UniversalList
-                    items={this.props.subjects}
+                    items={this.props.items}
                     url={this.props.url}
                     actionPath="/subjects/add"
                     itemPath="subjects/edit"
                 />
-                <EditDialog
+                <SubjectDialog
                     title={
-                        this.state.subjectId.length === 0
+                        this.state.itemId.length === 0
                             ? 'Dodaj przedmiot'
                             : 'Edytuj przedmiot'
                     }
                     label="Nazwa"
                     name="subjectId"
-                    id={this.state.subjectId}
+                    id={this.state.itemId}
                     redirectPath={`${this.props.url}/subjects`}
                     item={item}
                     isDialogOpen={this.state.isDialogOpen}
@@ -109,7 +79,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
 });
 
 const mapStateToProps = (state: RootReducer) => ({
-    subjects: state.subjectsReducer.subjects
+    items: state.subjectsReducer.subjects
 });
 
 export default withRouter(

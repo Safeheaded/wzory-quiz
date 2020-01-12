@@ -9,14 +9,13 @@ import {
     UPDATE_SUBJECT_SUCCESS,
     UPDATE_SUBJECT_ERROR
 } from '../constants/Subjects';
+import { BaseType } from './main';
 
 export interface SubjectsState {
     subjects: SubjectWithId[];
 }
 
-export interface Subject {
-    name: string;
-}
+export interface Subject extends BaseType {}
 
 export interface SubjectWithId extends Subject {
     id: string;

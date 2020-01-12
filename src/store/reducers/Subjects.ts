@@ -7,7 +7,8 @@ import {
 import {
     ADD_SUBJECT_SUCCESS,
     FETCH_ALL_SUBJECTS_SUCCESS,
-    UPDATE_SUBJECT_SUCCESS
+    UPDATE_SUBJECT_SUCCESS,
+    ADD_SUBJECT_ERROR
 } from '../constants/Subjects';
 import { AddEquationError } from '../types/Equations';
 
@@ -20,6 +21,9 @@ const SubjectsReducer = (
     switch (action.type) {
         case ADD_SUBJECT_SUCCESS:
             return addSubjectSuccessHandler(state, action);
+        case ADD_SUBJECT_ERROR:
+            console.log(action.payload);
+            return { ...state };
         case FETCH_ALL_SUBJECTS_SUCCESS:
             return { ...state, subjects: action.payload };
         case UPDATE_SUBJECT_SUCCESS:

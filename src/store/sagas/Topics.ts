@@ -18,7 +18,7 @@ import {
     fetchTopicsSuccess,
     fetchTopicsError
 } from '../actions/Topics';
-import { ADD_TOPIC, FETCH_ALL_TOPICS } from '../constants/Topics';
+import { ADD_TOPIC, FETCH_ALL_TOPICS, FETCH_TOPICS } from '../constants/Topics';
 import { firestore } from 'firebase';
 
 const rsf = firebaseHandler.getRSF();
@@ -40,7 +40,7 @@ function* addTopic(action: AddTopic) {
     }
 }
 
-function* fetchAllTopics(action: FetchAllTopics) {
+function* fetchAllTopics() {
     try {
         const data: firebase.firestore.QuerySnapshot = yield call(
             rsf.firestore.getCollection,
@@ -80,7 +80,8 @@ function* fetchTopics(action: FetchTopics) {
 export function* TopicsSaga() {
     yield all([
         takeLatest(ADD_TOPIC, addTopic),
-        takeLatest(FETCH_ALL_TOPICS, fetchAllTopics)
+        takeLatest(FETCH_ALL_TOPICS, fetchAllTopics),
+        takeLatest(FETCH_TOPICS, fetchTopics)
     ]);
 }
 

@@ -16,6 +16,7 @@ import EquationsList from './EquationsList/EquationsList';
 import { RouteComponentProps } from 'react-router-dom';
 import SubjectsList from './SubjectsList/SubjectsList';
 import { WriteMode } from '../../types/admin';
+import TopicsList from './TopicsList/TopicsList';
 
 interface Props {
     logout: () => LogoutActionType;
@@ -31,6 +32,15 @@ const AdminPanel = (props: Props) => {
 
     return (
         <Switch>
+            <Route path={`${path}/topics/edit/:id`}>
+                <TopicsList url={url} />
+            </Route>
+            <Route path={`${path}/topics/add`}>
+                <TopicsList url={url} mode={WriteMode.Add} />
+            </Route>
+            <Route path={`${path}/topics`}>
+                <TopicsList url={url} />
+            </Route>
             <Route path={`${path}/equations/add`}>
                 <EditPgae url={url} />
             </Route>

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, ComponentType } from 'react';
 import {
     Dialog,
     DialogTitle,
@@ -6,14 +6,20 @@ import {
     DialogActions,
     Button
 } from '@material-ui/core';
-import FormInput from '../FormInput/FormInput';
+import FormInput from '../../FormInput/FormInput';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
-import { ItemOfList } from '../../../types/General';
-import { WriteMode } from '../../../types/admin';
-import { SubjectWithId } from '../../../store/types/Subjects';
-import { TopicWithId } from '../../../store/types/Topics';
+import { ItemOfList } from '../../../../types/General';
+import { WriteMode } from '../../../../types/admin';
+import { SubjectWithId } from '../../../../store/types/Subjects';
+import {
+    TopicWithId,
+    ExtendedTopicWithId,
+    ExtendedTopic
+} from '../../../../store/types/Topics';
+import { BaseType } from '../../../../store/types/main';
+import styles from './EditDialog.module.sass';
 
-interface Props extends RouteComponentProps {
+interface Props<T> extends RouteComponentProps {
     id?: string;
     title: string;
     label: string;
@@ -21,7 +27,7 @@ interface Props extends RouteComponentProps {
     redirectPath: string;
     item?: ItemOfList;
     isDialogOpen: boolean;
-    primaryAction: (item: SubjectWithId | TopicWithId) => void;
+    primaryAction: (item: T) => void;
 }
 
 interface State {
@@ -29,10 +35,12 @@ interface State {
     id?: string;
 }
 
-export class EditDialog extends Component<Props, State> {
+abstract class EditDialog<
+    T extends SubjectWithId | ExtendedTopicWithId
+> extends Component<Props<T>, State> {
     state = { inputValue: '', mode: WriteMode.Edit };
 
-    componentDidUpdate(prevProps: Props, prevState: State) {
+    componentDidUpdate(prevProps: Props<T>, prevState: State) {
         if (prevProps.item !== this.props.item && this.props.item) {
             const name = (this.props.name
                 ? this.props.item.name
@@ -54,7 +62,7 @@ export class EditDialog extends Component<Props, State> {
         if (this.props.id && this.props.id.length !== 0) {
             item.id = this.props.id;
         }
-        this.props.primaryAction(item as SubjectWithId | TopicWithId);
+        this.props.primaryAction(item as T);
     };
 
     closeHandler = () => {
@@ -68,7 +76,8 @@ export class EditDialog extends Component<Props, State> {
             <Dialog onClose={this.closeHandler} open={this.props.isDialogOpen}>
                 <DialogTitle>{this.props.title}</DialogTitle>
                 <form onSubmit={e => this.submitHandler(e)}>
-                    <DialogContent>
+                    <DialogContent className={styles.DialogContent}>
+                        {this.props.children}
                         <FormInput
                             label={this.props.label}
                             name={this.props.name}
@@ -89,4 +98,4 @@ export class EditDialog extends Component<Props, State> {
     }
 }
 
-export default withRouter(EditDialog);
+export default EditDialog;

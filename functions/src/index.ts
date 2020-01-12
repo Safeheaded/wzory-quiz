@@ -11,7 +11,7 @@ admin.initializeApp();
 //  response.send("Hello from Firebase!");
 // });
 
-export const addEquationHandler = functions.firestore
+/* export const addEquationHandler = functions.firestore
     .document('Equations/{equationId}')
     .onCreate(async (snap, context) => {
         const equation = snap.data() as ExtendedEquation;
@@ -24,4 +24,4 @@ export const addEquationHandler = functions.firestore
             .doc(equation.topicRef)
             .collection('Equations')
             .add({ ref: equationRef });
-    });
+    }); */

@@ -36,17 +36,22 @@ import {
     ExtendedTopicWithId,
     FetchAllTopics,
     ExtendedTopic,
-    AddTopic
+    AddTopic,
+    FetchTopics
 } from '../../../store/types/Topics';
 import { fetchAllSubjects, addSubject } from '../../../store/actions/Subjects';
-import { fetchAllTopics, addTopic } from '../../../store/actions/Topics';
+import {
+    fetchAllTopics,
+    addTopic,
+    fetchTopics
+} from '../../../store/actions/Topics';
 
 export interface Props extends RouteComponentProps, EqStateProps {
     url: string;
     addEquation: (equation: ExtendedEquation) => AddEquation;
     fetchAllSubjects: () => FetchAllSubjects;
     addSubject: (subject: Subject) => AddSubject;
-    fetchAllTopics: (subjectRef: string) => FetchAllTopics;
+    fetchTopics: (subjectRef: string) => FetchTopics;
     addTopic: (topic: ExtendedTopic) => AddTopic;
     fetchEquation: (id: string) => FetchEquation;
     updateEquation: (equation: ExtendedEquationWithId) => UpdateEquation;
@@ -106,7 +111,7 @@ export class EditPage extends Component<Props, State> {
 
     private handleEquationData(equation: ExtendedEquationWithId | undefined) {
         if (equation) {
-            this.props.fetchAllTopics(equation.subjectRef);
+            this.props.fetchTopics(equation.subjectRef);
             this.setState({
                 subjectRef: equation.subjectRef,
                 explanation: equation.explanation,
@@ -219,7 +224,7 @@ export class EditPage extends Component<Props, State> {
             subject => subject.id === value
         );
         if (subject) {
-            this.props.fetchAllTopics(subject.id);
+            this.props.fetchTopics(subject.id);
         }
         this.setState({ subjectRef: value });
     }
@@ -330,8 +335,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
         dispatch(addEquation(equation)),
     fetchAllSubjects: () => dispatch(fetchAllSubjects()),
     addSubject: (subject: Subject) => dispatch(addSubject(subject)),
-    fetchAllTopics: (subjectRef: string) =>
-        dispatch(fetchAllTopics(subjectRef)),
+    fetchTopics: (subjectRef: string) => dispatch(fetchTopics(subjectRef)),
     addTopic: (topic: ExtendedTopic) => dispatch(addTopic(topic)),
     fetchEquation: (id: string) => dispatch(fetchEquation(id)),
     updateEquation: (equation: ExtendedEquationWithId) =>

@@ -43,8 +43,8 @@ export function addTopicError(error: object): AddTopicError {
     return { type: ADD_TOPIC_ERROR, payload: error };
 }
 
-export function fetchAllTopics(subjectRef: string): FetchAllTopics {
-    return { type: FETCH_ALL_TOPICS, payload: subjectRef };
+export function fetchAllTopics(): FetchAllTopics {
+    return { type: FETCH_ALL_TOPICS };
 }
 
 export function fetchAllTopicsSuccess(

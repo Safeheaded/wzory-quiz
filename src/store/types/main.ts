@@ -9,3 +9,7 @@ export interface RootReducer {
     subjectsReducer: SubjectsState;
     topicsReducer: TopicsState;
 }
+
+export interface BaseType {
+    name: string;
+}
