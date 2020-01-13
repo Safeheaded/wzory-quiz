@@ -3,7 +3,11 @@ import UniversalList from '../UniversalList/UniversalList';
 import { connect } from 'react-redux';
 import { RootReducer } from '../../../store/types/main';
 import { Dispatch } from 'redux';
-import { fetchAllTopics, addTopic } from '../../../store/actions/Topics';
+import {
+    fetchAllTopics,
+    addTopic,
+    updateTopic
+} from '../../../store/actions/Topics';
 import {
     ExtendedTopicWithId,
     ExtendedTopic
@@ -21,6 +25,7 @@ import { SubjectWithId } from '../../../store/types/Subjects';
 interface Props extends RouteComponentProps {
     fetchAllTopics: typeof fetchAllTopics;
     addTopic: typeof addTopic;
+    updateTopic: typeof updateTopic;
     items: ExtendedTopicWithId[];
     mode?: WriteMode;
     url: string;
@@ -70,7 +75,10 @@ export class TopicsList extends EditList<Props, State> {
 
     render() {
         const item = this.getItem(this.state.itemId);
-        const primaryAction = this.props.addTopic;
+        const primaryAction =
+            this.state.mode === WriteMode.Add
+                ? this.props.addTopic
+                : this.props.updateTopic;
 
         return (
             <Fragment>
@@ -118,7 +126,8 @@ const mapStateToProps = (state: RootReducer) => ({
 const mapDispatchToProps = (dispatch: Dispatch) => ({
     fetchAllTopics: () => dispatch(fetchAllTopics()),
     fetchAllSubjects: () => dispatch(fetchAllSubjects()),
-    addTopic: (topic: ExtendedTopic) => dispatch(addTopic(topic))
+    addTopic: (topic: ExtendedTopic) => dispatch(addTopic(topic)),
+    updateTopic: (topic: ExtendedTopicWithId) => dispatch(updateTopic(topic))
 });
 
 export default withRouter(

@@ -27,6 +27,7 @@ const TopicsReducer = (
                 }
                 return topic;
             });
+            return { ...state, topics: updatedTopics };
     }
     return state;
 };
