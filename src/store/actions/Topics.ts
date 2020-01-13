@@ -1,7 +1,6 @@
 import {
     ExtendedTopic,
     AddTopic,
-    TopicWithId,
     AddTopicSuccess,
     AddTopicError,
     FetchAllTopics,
@@ -13,7 +12,10 @@ import {
     FetchTopicsError,
     UpdateTopic,
     UpdateTopicSuccess,
-    UpdateTopicError
+    UpdateTopicError,
+    DeleteTopic,
+    DeleteTopicSuccess,
+    DeleteTopicError
 } from '../types/Topics';
 
 import {
@@ -28,7 +30,10 @@ import {
     FETCH_TOPICS_ERROR,
     UPDATE_TOPIC,
     UPDATE_TOPIC_SUCCESS,
-    UPDATE_TOPIC_ERROR
+    UPDATE_TOPIC_ERROR,
+    DELETE_TOPIC,
+    DELETE_TOPIC_SUCCESS,
+    DELETE_TOPIC_ERROR
 } from '../constants/Topics';
 
 export function addTopic(topic: ExtendedTopic): AddTopic {
@@ -92,4 +97,16 @@ export function updateTopicSuccess(
 
 export function updateTopicError(error: object): UpdateTopicError {
     return { type: UPDATE_TOPIC_ERROR, payload: error };
+}
+
+export function deleteTopic(id: string): DeleteTopic {
+    return { type: DELETE_TOPIC, payload: id };
+}
+
+export function deleteTopicSuccess(id: string): DeleteTopicSuccess {
+    return { type: DELETE_TOPIC_SUCCESS, payload: id };
+}
+
+export function deleteTopicError(error: object): DeleteTopicError {
+    return { type: DELETE_TOPIC_ERROR, payload: error };
 }

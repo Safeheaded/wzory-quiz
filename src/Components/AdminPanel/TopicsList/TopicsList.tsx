@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Fragment } from 'react';
 import UniversalList from '../UniversalList/UniversalList';
 import { connect } from 'react-redux';
 import { RootReducer } from '../../../store/types/main';

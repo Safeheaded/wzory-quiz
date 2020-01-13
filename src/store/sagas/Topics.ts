@@ -6,7 +6,8 @@ import {
     ExtendedTopicWithId,
     ExtendedTopic,
     FetchTopics,
-    UpdateTopic
+    UpdateTopic,
+    DeleteTopic
 } from '../types/Topics';
 
 import { put, call, all, takeLatest } from 'redux-saga/effects';
@@ -19,7 +20,9 @@ import {
     fetchTopicsSuccess,
     fetchTopicsError,
     updateTopicError,
-    updateTopicSuccess
+    updateTopicSuccess,
+    deleteTopicSuccess,
+    deleteTopicError
 } from '../actions/Topics';
 import {
     ADD_TOPIC,
@@ -94,6 +97,15 @@ function* updateTopic(action: UpdateTopic) {
         yield put(updateTopicSuccess(action.payload));
     } catch (error) {
         yield put(updateTopicError(error));
+    }
+}
+
+function* deleteTopic(action: DeleteTopic) {
+    try {
+        yield call(rsf.firestore.deleteDocument, `Topics/${action.payload}`);
+        yield put(deleteTopicSuccess(action.payload));
+    } catch (error) {
+        yield put(deleteTopicError(error));
     }
 }
 
