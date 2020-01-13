@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { Button } from '@material-ui/core';
+import { Button, AppBar, Toolbar } from '@material-ui/core';
 import {
     Route,
     Redirect,
@@ -13,7 +13,6 @@ import { LogoutActionType, AuthState } from '../../store/types/Authentication';
 import { connect } from 'react-redux';
 import EditPgae from './EditPage/EditPage';
 import EquationsList from './EquationsList/EquationsList';
-import { RouteComponentProps } from 'react-router-dom';
 import SubjectsList from './SubjectsList/SubjectsList';
 import { WriteMode } from '../../types/admin';
 import TopicsList from './TopicsList/TopicsList';
@@ -31,38 +30,40 @@ const AdminPanel = (props: Props) => {
     const { path, url } = useRouteMatch();
 
     return (
-        <Switch>
-            <Route path={`${path}/topics/edit/:id`}>
-                <TopicsList url={url} />
-            </Route>
-            <Route path={`${path}/topics/add`}>
-                <TopicsList url={url} mode={WriteMode.Add} />
-            </Route>
-            <Route path={`${path}/topics`}>
-                <TopicsList url={url} />
-            </Route>
-            <Route path={`${path}/equations/add`}>
-                <EditPgae url={url} />
-            </Route>
-            <Route path={`${path}/equations`}>
-                <EquationsList url={url} />
-            </Route>
-            <Route
-                exact
-                path={`${path}/edit-equation/:id`}
-                component={EditPgae}
-            />
-            <Route path={`${path}/subjects/edit/:id`}>
-                <SubjectsList url={url} />
-            </Route>
-            <Route path={`${path}/subjects/add`}>
-                <SubjectsList url={url} mode={WriteMode.Add} />
-            </Route>
-            <Route path={`${path}/subjects`}>
-                <SubjectsList url={url} />
-            </Route>
-            <Redirect exact path={path} to={`${url}/equations`} />
-        </Switch>
+        <Fragment>
+            <Switch>
+                <Route path={`${path}/topics/edit/:id`}>
+                    <TopicsList url={url} />
+                </Route>
+                <Route path={`${path}/topics/add`}>
+                    <TopicsList url={url} mode={WriteMode.Add} />
+                </Route>
+                <Route path={`${path}/topics`}>
+                    <TopicsList url={url} />
+                </Route>
+                <Route path={`${path}/equations/add`}>
+                    <EditPgae url={url} />
+                </Route>
+                <Route path={`${path}/equations`}>
+                    <EquationsList url={url} />
+                </Route>
+                <Route
+                    exact
+                    path={`${path}/edit-equation/:id`}
+                    component={EditPgae}
+                />
+                <Route path={`${path}/subjects/edit/:id`}>
+                    <SubjectsList url={url} />
+                </Route>
+                <Route path={`${path}/subjects/add`}>
+                    <SubjectsList url={url} mode={WriteMode.Add} />
+                </Route>
+                <Route path={`${path}/subjects`}>
+                    <SubjectsList url={url} />
+                </Route>
+                <Redirect exact path={path} to={`${url}/equations`} />
+            </Switch>
+        </Fragment>
     );
 };
 

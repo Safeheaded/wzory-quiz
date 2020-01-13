@@ -5,7 +5,8 @@ import {
     FetchAllTopics,
     ExtendedTopicWithId,
     ExtendedTopic,
-    FetchTopics
+    FetchTopics,
+    UpdateTopic
 } from '../types/Topics';
 
 import { put, call, all, takeLatest } from 'redux-saga/effects';
@@ -16,10 +17,18 @@ import {
     addTopicSuccess,
     addTopicError,
     fetchTopicsSuccess,
-    fetchTopicsError
+    fetchTopicsError,
+    updateTopicError,
+    updateTopicSuccess
 } from '../actions/Topics';
-import { ADD_TOPIC, FETCH_ALL_TOPICS, FETCH_TOPICS } from '../constants/Topics';
+import {
+    ADD_TOPIC,
+    FETCH_ALL_TOPICS,
+    FETCH_TOPICS,
+    UPDATE_TOPIC
+} from '../constants/Topics';
 import { firestore } from 'firebase';
+import { collectionToArray } from './utils';
 
 const rsf = firebaseHandler.getRSF();
 function* addTopic(action: AddTopic) {
@@ -46,14 +55,10 @@ function* fetchAllTopics() {
             rsf.firestore.getCollection,
             `Topics`
         );
-        const topics: ExtendedTopicWithId[] = [];
-        data.forEach(topic => {
-            const newTopic: ExtendedTopicWithId = {
-                id: topic.id,
-                ...(topic.data() as ExtendedTopic)
-            };
-            topics.push(newTopic);
-        });
+        const topics: ExtendedTopicWithId[] = collectionToArray<
+            ExtendedTopicWithId,
+            ExtendedTopic
+        >(data);
         yield put(fetchAllTopicsSuccess(topics));
     } catch (error) {
         yield put(fetchAllTopicsError(error));
@@ -77,21 +82,26 @@ function* fetchTopics(action: FetchTopics) {
     }
 }
 
+function* updateTopic(action: UpdateTopic) {
+    const updatedTopic = { ...action.payload };
+    delete updatedTopic.id;
+    try {
+        yield call(
+            rsf.firestore.updateDocument,
+            `Topics/${action.payload.id}`,
+            updatedTopic
+        );
+        yield put(updateTopicSuccess(action.payload));
+    } catch (error) {
+        yield put(updateTopicError(error));
+    }
+}
+
 export function* TopicsSaga() {
     yield all([
         takeLatest(ADD_TOPIC, addTopic),
         takeLatest(FETCH_ALL_TOPICS, fetchAllTopics),
-        takeLatest(FETCH_TOPICS, fetchTopics)
+        takeLatest(FETCH_TOPICS, fetchTopics),
+        takeLatest(UPDATE_TOPIC, updateTopic)
     ]);
-}
-
-function collectionToArray<T extends K & { id: string }, K>(
-    snapshot: firestore.QuerySnapshot
-): T[] {
-    const items: T[] = [];
-    snapshot.forEach(item => {
-        const newItem = { id: item.id, ...(item.data() as K) } as T;
-        items.push(newItem);
-    });
-    return items;
 }

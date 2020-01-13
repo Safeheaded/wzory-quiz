@@ -29,6 +29,7 @@ import {
     DELETE_EQUATION
 } from '../constants/Equations';
 import firebase, { database } from 'firebase/app';
+import { collectionToArray } from './utils';
 
 const rsf = firebaseHandler.getRSF();
 
@@ -56,14 +57,10 @@ function* fetchAllEquations() {
             rsf.firestore.getCollection,
             'Equations'
         );
-        const equations: ExtendedEquationWithId[] = [];
-        data.forEach(equation => {
-            const fetchedEquation: ExtendedEquationWithId = {
-                id: equation.id,
-                ...(equation.data() as ExtendedEquation)
-            };
-            equations.push(fetchedEquation);
-        });
+        const equations: ExtendedEquationWithId[] = collectionToArray<
+            ExtendedEquationWithId,
+            ExtendedEquation
+        >(data);
         yield put(fetchAllEquationsSuccess(equations));
     } catch (error) {
         yield put(fetchAllEquationsError(error));

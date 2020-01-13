@@ -10,7 +10,10 @@ import {
     FetchAllTopicsError,
     FetchTopics,
     FetchTopicsSuccess,
-    FetchTopicsError
+    FetchTopicsError,
+    UpdateTopic,
+    UpdateTopicSuccess,
+    UpdateTopicError
 } from '../types/Topics';
 
 import {
@@ -22,7 +25,10 @@ import {
     FETCH_ALL_TOPICS_ERROR,
     FETCH_TOPICS,
     FETCH_TOPICS_SUCCESS,
-    FETCH_TOPICS_ERROR
+    FETCH_TOPICS_ERROR,
+    UPDATE_TOPIC,
+    UPDATE_TOPIC_SUCCESS,
+    UPDATE_TOPIC_ERROR
 } from '../constants/Topics';
 
 export function addTopic(topic: ExtendedTopic): AddTopic {
@@ -72,4 +78,18 @@ export function fetchTopicsSuccess(
 
 export function fetchTopicsError(error: object): FetchTopicsError {
     return { type: FETCH_TOPICS_ERROR, payload: error };
+}
+
+export function updateTopic(topic: ExtendedTopicWithId): UpdateTopic {
+    return { type: UPDATE_TOPIC, payload: topic };
+}
+
+export function updateTopicSuccess(
+    topic: ExtendedTopicWithId
+): UpdateTopicSuccess {
+    return { type: UPDATE_TOPIC_SUCCESS, payload: topic };
+}
+
+export function updateTopicError(error: object): UpdateTopicError {
+    return { type: UPDATE_TOPIC_ERROR, payload: error };
 }

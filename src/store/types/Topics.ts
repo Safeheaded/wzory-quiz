@@ -7,7 +7,10 @@ import {
     FETCH_ALL_TOPICS_ERROR,
     FETCH_TOPICS,
     FETCH_TOPICS_SUCCESS,
-    FETCH_TOPICS_ERROR
+    FETCH_TOPICS_ERROR,
+    UPDATE_TOPIC_SUCCESS,
+    UPDATE_TOPIC,
+    UPDATE_TOPIC_ERROR
 } from '../constants/Topics';
 import { BaseType } from './main';
 
@@ -71,6 +74,21 @@ export interface FetchTopicsError {
     payload: object;
 }
 
+export interface UpdateTopic {
+    type: typeof UPDATE_TOPIC;
+    payload: ExtendedTopicWithId;
+}
+
+export interface UpdateTopicSuccess {
+    type: typeof UPDATE_TOPIC_SUCCESS;
+    payload: ExtendedTopicWithId;
+}
+
+export interface UpdateTopicError {
+    type: typeof UPDATE_TOPIC_ERROR;
+    payload: object;
+}
+
 export type TopicsActionTypes =
     | AddTopic
     | AddTopicSuccess
@@ -80,4 +98,7 @@ export type TopicsActionTypes =
     | FetchAllTopicsError
     | FetchTopics
     | FetchTopicsSuccess
-    | FetchTopicsError;
+    | FetchTopicsError
+    | UpdateTopic
+    | UpdateTopicSuccess
+    | UpdateTopicError;

@@ -1,5 +1,10 @@
 import { firebaseHandler } from '../../firebaseConfig';
-import { AddSubject, SubjectWithId, UpdateSubject } from '../types/Subjects';
+import {
+    AddSubject,
+    SubjectWithId,
+    UpdateSubject,
+    Subject
+} from '../types/Subjects';
 import { put, call, all, takeLatest } from 'redux-saga/effects';
 import {
     addSubjectSuccess,
@@ -14,6 +19,7 @@ import {
     FETCH_ALL_SUBJECTS,
     UPDATE_SUBJECT
 } from '../constants/Subjects';
+import { collectionToArray } from './utils';
 
 const rsf = firebaseHandler.getRSF();
 function* addSubject(action: AddSubject) {
@@ -39,14 +45,10 @@ function* fetchAllSubjects() {
             rsf.firestore.getCollection,
             'Subjects'
         );
-        const subjects: Array<SubjectWithId> = [];
-        data.forEach(subject => {
-            const newSubject: SubjectWithId = {
-                id: subject.id,
-                name: subject.get('name')
-            };
-            subjects.push(newSubject);
-        });
+        const subjects: Array<SubjectWithId> = collectionToArray<
+            SubjectWithId,
+            Subject
+        >(data);
         yield put(fetchAllSubjectsSuccess(subjects));
     } catch (error) {
         yield put(fetchAllSubjectsError(error));
