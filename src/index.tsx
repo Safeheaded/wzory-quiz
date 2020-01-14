@@ -9,10 +9,12 @@ import './firebaseConfig';
 import { Provider } from 'react-redux';
 import configureStore from './store/storeConfig';
 import { BrowserRouter } from 'react-router-dom';
+import { CssBaseline } from '@material-ui/core';
 
 const theme = createMuiTheme({
     palette: {
-        primary: purple
+        primary: purple,
+        type: 'dark'
     }
 });
 
@@ -22,6 +24,7 @@ const app = (
     <Provider store={store}>
         <ThemeProvider theme={theme}>
             <BrowserRouter>
+                <CssBaseline />
                 <App />
             </BrowserRouter>
         </ThemeProvider>
