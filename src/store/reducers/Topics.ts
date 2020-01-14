@@ -4,7 +4,9 @@ import {
     ADD_TOPIC_ERROR,
     ADD_TOPIC_SUCCESS,
     FETCH_TOPICS_SUCCESS,
-    UPDATE_TOPIC_SUCCESS
+    UPDATE_TOPIC_SUCCESS,
+    DELETE_TOPIC,
+    DELETE_TOPIC_SUCCESS
 } from '../constants/Topics';
 
 const initState = { topics: [] };
@@ -28,6 +30,11 @@ const TopicsReducer = (
                 return topic;
             });
             return { ...state, topics: updatedTopics };
+        case DELETE_TOPIC_SUCCESS:
+            const updatedTopic = state.topics.filter(
+                topic => topic.id !== action.payload
+            );
+            return { ...state, topics: updatedTopic };
     }
     return state;
 };

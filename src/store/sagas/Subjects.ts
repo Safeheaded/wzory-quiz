@@ -3,7 +3,8 @@ import {
     AddSubject,
     SubjectWithId,
     UpdateSubject,
-    Subject
+    Subject,
+    DeleteSubject
 } from '../types/Subjects';
 import { put, call, all, takeLatest } from 'redux-saga/effects';
 import {
@@ -12,14 +13,18 @@ import {
     fetchAllSubjectsSuccess,
     fetchAllSubjectsError,
     updateSubjectSuccess,
-    updateSubjectError
+    updateSubjectError,
+    deleteSubjectSuccess,
+    deleteSubjectError
 } from '../actions/Subjects';
 import {
     ADD_SUBJECT,
     FETCH_ALL_SUBJECTS,
-    UPDATE_SUBJECT
+    UPDATE_SUBJECT,
+    DELETE_SUBJECT
 } from '../constants/Subjects';
 import { collectionToArray } from './utils';
+import { functions } from 'firebase';
 
 const rsf = firebaseHandler.getRSF();
 function* addSubject(action: AddSubject) {
@@ -68,10 +73,22 @@ function* updateSubject(action: UpdateSubject) {
     }
 }
 
+function* deleteSubject(action: DeleteSubject) {
+    const cf = functions();
+    const fn = cf.httpsCallable('deleteSubject');
+    try {
+        const response = yield call(fn, { id: action.payload });
+        yield put(deleteSubjectSuccess(response.data.id));
+    } catch (error) {
+        yield put(deleteSubjectError(error));
+    }
+}
+
 export function* SubjectsSaga() {
     yield all([
         takeLatest(ADD_SUBJECT, addSubject),
         takeLatest(FETCH_ALL_SUBJECTS, fetchAllSubjects),
-        takeLatest(UPDATE_SUBJECT, updateSubject)
+        takeLatest(UPDATE_SUBJECT, updateSubject),
+        takeLatest(DELETE_SUBJECT, deleteSubject)
     ]);
 }

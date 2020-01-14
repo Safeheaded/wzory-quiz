@@ -28,7 +28,7 @@ class App extends Component<Props, State> {
                 <ListItem button component={Link} to="/admin/equations">
                     Równania
                 </ListItem>
-                <ListItem button onClick={() => this.props.logout}>
+                <ListItem button onClick={() => this.props.logout()}>
                     Wyloguj
                 </ListItem>
             </List>
@@ -38,7 +38,7 @@ class App extends Component<Props, State> {
             <Fragment>
                 <AppBar position="static">
                     <Toolbar className={styles.Menu}>
-                        {!this.props.isLoggedIn ? guardedContent : null}
+                        {this.props.isLoggedIn ? guardedContent : null}
                     </Toolbar>
                 </AppBar>
                 <Container className={styles.Container}>

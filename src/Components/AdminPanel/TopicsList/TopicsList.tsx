@@ -6,7 +6,8 @@ import { Dispatch } from 'redux';
 import {
     fetchAllTopics,
     addTopic,
-    updateTopic
+    updateTopic,
+    deleteTopic
 } from '../../../store/actions/Topics';
 import {
     ExtendedTopicWithId,
@@ -21,11 +22,13 @@ import { State as BaseState } from '../EditList/EditList';
 import FormSelect from '../FormSelect/FormSelect';
 import { fetchAllSubjects } from '../../../store/actions/Subjects';
 import { SubjectWithId } from '../../../store/types/Subjects';
+import { Button } from '@material-ui/core';
 
 interface Props extends RouteComponentProps {
     fetchAllTopics: typeof fetchAllTopics;
     addTopic: typeof addTopic;
     updateTopic: typeof updateTopic;
+    deleteTopic: typeof deleteTopic;
     items: ExtendedTopicWithId[];
     mode?: WriteMode;
     url: string;
@@ -79,7 +82,11 @@ export class TopicsList extends EditList<Props, State> {
             this.state.mode === WriteMode.Add
                 ? this.props.addTopic
                 : this.props.updateTopic;
-
+        const secondaryActionButton = (
+            <Button onClick={() => this.props.deleteTopic(this.state.itemId)}>
+                Usuń
+            </Button>
+        );
         return (
             <Fragment>
                 <UniversalList
@@ -101,6 +108,7 @@ export class TopicsList extends EditList<Props, State> {
                     item={item}
                     isDialogOpen={this.state.isDialogOpen}
                     primaryAction={primaryAction}
+                    secondaryActionButton={secondaryActionButton}
                 >
                     <FormSelect
                         label="Przedmiot"
@@ -127,7 +135,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     fetchAllTopics: () => dispatch(fetchAllTopics()),
     fetchAllSubjects: () => dispatch(fetchAllSubjects()),
     addTopic: (topic: ExtendedTopic) => dispatch(addTopic(topic)),
-    updateTopic: (topic: ExtendedTopicWithId) => dispatch(updateTopic(topic))
+    updateTopic: (topic: ExtendedTopicWithId) => dispatch(updateTopic(topic)),
+    deleteTopic: (id: string) => dispatch(deleteTopic(id))
 });
 
 export default withRouter(

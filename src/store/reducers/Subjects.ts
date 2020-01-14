@@ -8,7 +8,8 @@ import {
     ADD_SUBJECT_SUCCESS,
     FETCH_ALL_SUBJECTS_SUCCESS,
     UPDATE_SUBJECT_SUCCESS,
-    ADD_SUBJECT_ERROR
+    ADD_SUBJECT_ERROR,
+    DELETE_SUBJECT_SUCCESS
 } from '../constants/Subjects';
 import { AddEquationError } from '../types/Equations';
 
@@ -34,6 +35,11 @@ const SubjectsReducer = (
                 return subject;
             });
             return { ...state, subjects: updatedSubjects };
+        case DELETE_SUBJECT_SUCCESS:
+            const filteredSubjects = state.subjects.filter(
+                subject => subject.id !== action.payload
+            );
+            return { ...state, subjects: filteredSubjects };
     }
     return state;
 };

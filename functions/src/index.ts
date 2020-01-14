@@ -11,17 +11,70 @@ admin.initializeApp();
 //  response.send("Hello from Firebase!");
 // });
 
-/* export const addEquationHandler = functions.firestore
-    .document('Equations/{equationId}')
-    .onCreate(async (snap, context) => {
-        const equation = snap.data() as ExtendedEquation;
-        const equationRef = context.params.equationId;
-        const db = admin.firestore();
-        return db
-            .collection(`Subjects`)
-            .doc(equation.subjectRef)
-            .collection('Topics')
-            .doc(equation.topicRef)
-            .collection('Equations')
-            .add({ ref: equationRef });
-    }); */
+export const deleteTopic = functions.https.onCall(async (data, context) => {
+    authErrorCheck(context);
+    idValidityCheck(data);
+
+    const db = admin.firestore();
+
+    const collectionRef = db.collection('Equations');
+    const snapshot = await collectionRef.where('topicRef', '==', data.id).get();
+    snapshot.forEach(deleteItems(collectionRef));
+
+    await db
+        .collection('Topics')
+        .doc(data.id)
+        .delete();
+    return { id: data.id };
+});
+
+export const deleteSubject = functions.https.onCall(async (data, context) => {
+    authErrorCheck(context);
+    idValidityCheck(data);
+
+    const db = admin.firestore();
+
+    const equationsRef = db.collection('Equations');
+    const equationsSnapshot = await equationsRef
+        .where('subjectRef ', '==', data.id)
+        .get();
+    equationsSnapshot.forEach(deleteItems(equationsRef));
+
+    const topicsRef = db.collection('Topics');
+    const topicsSnapshot = await topicsRef
+        .where('subjectRef', '==', data.id)
+        .get();
+    topicsSnapshot.forEach(deleteItems(topicsRef));
+
+    await db
+        .collection('Subjects')
+        .doc(data.id)
+        .delete();
+    return { id: data.id };
+});
+
+function idValidityCheck(data: any) {
+    if (!data.id || (data.id as string).length === 0) {
+        throw new functions.https.HttpsError(
+            'invalid-argument',
+            'Valid id must be provided'
+        );
+    }
+}
+
+function authErrorCheck(context: functions.https.CallableContext) {
+    if (!context.auth) {
+        throw new functions.https.HttpsError(
+            'unauthenticated',
+            'You must login before making changes to database '
+        );
+    }
+}
+
+function deleteItems(
+    ref: FirebaseFirestore.CollectionReference
+): (result: FirebaseFirestore.QueryDocumentSnapshot) => void {
+    return async doc => {
+        await ref.doc(doc.id).delete();
+    };
+}

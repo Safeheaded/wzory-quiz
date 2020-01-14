@@ -1,17 +1,12 @@
-import React, { Component, Fragment } from 'react';
-import {
-    SubjectWithId,
-    FetchAllSubjects,
-    UpdateSubject,
-    Subject,
-    AddSubject
-} from '../../../store/types/Subjects';
+import React, { Fragment } from 'react';
+import { SubjectWithId, Subject } from '../../../store/types/Subjects';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import {
     fetchAllSubjects,
     updateSubject,
-    addSubject
+    addSubject,
+    deleteSubject
 } from '../../../store/actions/Subjects';
 import { RootReducer } from '../../../store/types/main';
 import UniversalList from '../UniversalList/UniversalList';
@@ -20,11 +15,13 @@ import SubjectDialog from './SubjectDialog/SubjectDialog';
 import { WriteMode } from '../../../types/admin';
 import EditList from '../EditList/EditList';
 import { State } from '../EditList/EditList';
+import { Button } from '@material-ui/core';
 
 interface Props extends RouteComponentProps {
-    fetchAllSubjects: () => FetchAllSubjects;
-    updateSubject: (subject: SubjectWithId) => UpdateSubject;
-    addSubject: (subject: Subject) => AddSubject;
+    fetchAllSubjects: typeof fetchAllSubjects;
+    updateSubject: typeof updateSubject;
+    addSubject: typeof addSubject;
+    deleteSubject: typeof deleteSubject;
     items: SubjectWithId[];
     url: string;
     mode?: WriteMode;
@@ -45,6 +42,11 @@ class SubjectsList extends EditList<Props, State> {
             this.state.mode === WriteMode.Add
                 ? this.props.addSubject
                 : this.props.updateSubject;
+        const secondaryActionButton = (
+            <Button onClick={() => this.props.deleteSubject(this.state.itemId)}>
+                Usuń
+            </Button>
+        );
         return (
             <Fragment>
                 <UniversalList
@@ -66,6 +68,7 @@ class SubjectsList extends EditList<Props, State> {
                     item={item}
                     isDialogOpen={this.state.isDialogOpen}
                     primaryAction={primaryAction}
+                    secondaryActionButton={secondaryActionButton}
                 />
             </Fragment>
         );
@@ -75,7 +78,8 @@ class SubjectsList extends EditList<Props, State> {
 const mapDispatchToProps = (dispatch: Dispatch) => ({
     fetchAllSubjects: () => dispatch(fetchAllSubjects()),
     updateSubject: (subject: SubjectWithId) => dispatch(updateSubject(subject)),
-    addSubject: (subject: Subject) => dispatch(addSubject(subject))
+    addSubject: (subject: Subject) => dispatch(addSubject(subject)),
+    deleteSubject: (id: string) => dispatch(deleteSubject(id))
 });
 
 const mapStateToProps = (state: RootReducer) => ({

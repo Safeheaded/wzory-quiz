@@ -28,6 +28,7 @@ interface Props<T> extends RouteComponentProps {
     item?: ItemOfList;
     isDialogOpen: boolean;
     primaryAction: (item: T) => void;
+    secondaryActionButton?: JSX.Element;
 }
 
 interface State {
@@ -99,6 +100,7 @@ abstract class EditDialog<
                         <Button type="submit">
                             {id.length === 0 ? 'Dodaj' : 'Edytuj'}
                         </Button>
+                        {this.props.secondaryActionButton}
                     </DialogActions>
                 </form>
             </Dialog>

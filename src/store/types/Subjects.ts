@@ -7,7 +7,10 @@ import {
     FETCH_ALL_SUBJECTS_ERROR,
     UPDATE_SUBJECT,
     UPDATE_SUBJECT_SUCCESS,
-    UPDATE_SUBJECT_ERROR
+    UPDATE_SUBJECT_ERROR,
+    DELETE_SUBJECT,
+    DELETE_SUBJECT_SUCCESS,
+    DELETE_SUBJECT_ERROR
 } from '../constants/Subjects';
 import { BaseType } from './main';
 
@@ -65,6 +68,21 @@ export interface UpdateSubjectError {
     payload: object;
 }
 
+export interface DeleteSubject {
+    type: typeof DELETE_SUBJECT;
+    payload: string;
+}
+
+export interface DeleteSubjectSuccess {
+    type: typeof DELETE_SUBJECT_SUCCESS;
+    payload: string;
+}
+
+export interface DeleteSubjectError {
+    type: typeof DELETE_SUBJECT_ERROR;
+    payload: object;
+}
+
 export type SubjectsActionTypes =
     | AddSubject
     | AddSubjectError
@@ -74,4 +92,7 @@ export type SubjectsActionTypes =
     | FetchAllSubjectsError
     | UpdateSubject
     | UpdateSubjectSuccess
-    | UpdateSubjectError;
+    | UpdateSubjectError
+    | DeleteSubject
+    | DeleteSubjectSuccess
+    | DeleteSubjectError;

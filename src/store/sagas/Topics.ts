@@ -28,9 +28,10 @@ import {
     ADD_TOPIC,
     FETCH_ALL_TOPICS,
     FETCH_TOPICS,
-    UPDATE_TOPIC
+    UPDATE_TOPIC,
+    DELETE_TOPIC
 } from '../constants/Topics';
-import { firestore } from 'firebase';
+import { firestore, functions } from 'firebase';
 import { collectionToArray } from './utils';
 
 const rsf = firebaseHandler.getRSF();
@@ -102,8 +103,12 @@ function* updateTopic(action: UpdateTopic) {
 
 function* deleteTopic(action: DeleteTopic) {
     try {
-        yield call(rsf.firestore.deleteDocument, `Topics/${action.payload}`);
-        yield put(deleteTopicSuccess(action.payload));
+        const cf = functions();
+        const fn = cf.httpsCallable('deleteTopic');
+        const response = yield call(fn, {
+            id: action.payload
+        });
+        yield put(deleteTopicSuccess(response.data.id));
     } catch (error) {
         yield put(deleteTopicError(error));
     }
@@ -114,6 +119,7 @@ export function* TopicsSaga() {
         takeLatest(ADD_TOPIC, addTopic),
         takeLatest(FETCH_ALL_TOPICS, fetchAllTopics),
         takeLatest(FETCH_TOPICS, fetchTopics),
-        takeLatest(UPDATE_TOPIC, updateTopic)
+        takeLatest(UPDATE_TOPIC, updateTopic),
+        takeLatest(DELETE_TOPIC, deleteTopic)
     ]);
 }
