@@ -11,7 +11,8 @@ import {
     Typography,
     Theme,
     ListItem,
-    List
+    List,
+    CardActionArea
 } from '@material-ui/core';
 import {
     makeStyles,
@@ -51,7 +52,6 @@ class Home extends Component<Props, State> {
     render() {
         const cardsList = this.props.subjects.map(subject => (
             <ListItem
-                button
                 key={subject.id}
                 component={Link}
                 to={`/${subject.name.toLowerCase()}`}

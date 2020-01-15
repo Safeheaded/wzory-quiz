@@ -1,4 +1,5 @@
 import { firestore } from 'firebase';
+import { RootReducer } from '../types/main';
 
 export function collectionToArray<T extends K & { id: string }, K>(
     snapshot: firestore.QuerySnapshot
@@ -10,3 +11,5 @@ export function collectionToArray<T extends K & { id: string }, K>(
     });
     return items;
 }
+
+export const getTopics = (state: RootReducer) => state.topicsReducer.topics;

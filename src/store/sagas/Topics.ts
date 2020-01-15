@@ -10,7 +10,7 @@ import {
     DeleteTopic
 } from '../types/Topics';
 
-import { put, call, all, takeLatest } from 'redux-saga/effects';
+import { put, call, all, takeLatest, select } from 'redux-saga/effects';
 
 import {
     fetchAllTopicsSuccess,
@@ -22,7 +22,8 @@ import {
     updateTopicError,
     updateTopicSuccess,
     deleteTopicSuccess,
-    deleteTopicError
+    deleteTopicError,
+    fetchTopicsDone
 } from '../actions/Topics';
 import {
     ADD_TOPIC,
@@ -32,7 +33,7 @@ import {
     DELETE_TOPIC
 } from '../constants/Topics';
 import { firestore, functions } from 'firebase';
-import { collectionToArray } from './utils';
+import { collectionToArray, getTopics } from './utils';
 
 const rsf = firebaseHandler.getRSF();
 function* addTopic(action: AddTopic) {
@@ -70,6 +71,15 @@ function* fetchAllTopics() {
 }
 
 function* fetchTopics(action: FetchTopics) {
+    const topics: ExtendedTopicWithId[] = yield select(getTopics);
+
+    const wantedTopics = topics.filter(topic => topic.id === action.payload);
+
+    if (wantedTopics.length !== 0) {
+        yield put(fetchTopicsDone());
+        return;
+    }
+
     try {
         const collectionRef = yield firestore().collection('Topics');
         const snapshot: firestore.QuerySnapshot = yield call(

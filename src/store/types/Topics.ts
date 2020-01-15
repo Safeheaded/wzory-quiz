@@ -13,7 +13,8 @@ import {
     UPDATE_TOPIC_ERROR,
     DELETE_TOPIC,
     DELETE_TOPIC_SUCCESS,
-    DELETE_TOPIC_ERROR
+    DELETE_TOPIC_ERROR,
+    FETCH_TOPICS_DONE
 } from '../constants/Topics';
 import { BaseType } from './main';
 
@@ -65,6 +66,10 @@ export interface FetchAllTopicsError {
 export interface FetchTopics {
     type: typeof FETCH_TOPICS;
     payload: string;
+}
+
+export interface FetchTopicsDone {
+    type: typeof FETCH_TOPICS_DONE;
 }
 
 export interface FetchTopicsSuccess {
