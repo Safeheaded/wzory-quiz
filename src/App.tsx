@@ -32,7 +32,8 @@ const classes = createStyles({
         marginLeft: '10px'
     },
     mainText: {
-        color: 'white'
+        color: 'white',
+        fontSize: '49px'
     }
 });
 
@@ -61,13 +62,13 @@ class App extends Component<Props, State> {
 
         const unguardedContent = (
             <Toolbar>
-                <MaterialLink
-                    className={this.props.classes.mainText}
-                    underline="none"
-                    component={Link}
-                    to="/"
-                >
-                    <Typography variant="h3">wzoryQuiz</Typography>
+                <MaterialLink underline="none" component={Link} to="/">
+                    <Typography
+                        className={this.props.classes.mainText}
+                        variant="h1"
+                    >
+                        wzoryQuiz
+                    </Typography>
                 </MaterialLink>
                 <Typography
                     variant="subtitle2"
