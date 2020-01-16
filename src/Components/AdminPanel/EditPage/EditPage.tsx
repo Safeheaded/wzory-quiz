@@ -256,6 +256,10 @@ export class EditPage extends Component<Props, State> {
                 Dodaj temat <AddIcon />
             </MenuItem>
         );
+
+        const topics = this.props.topics.filter(
+            topic => topic.subjectRef === this.state.subjectRef
+        );
         return (
             <Fragment>
                 <form
@@ -300,7 +304,7 @@ export class EditPage extends Component<Props, State> {
                         onValueChange={(e: onChangeType) =>
                             this.onSelectChange(e, 'add_topic')
                         }
-                        values={this.props.topics}
+                        values={topics}
                         disabled={this.state.subjectRef === '' ? true : false}
                     />
 
