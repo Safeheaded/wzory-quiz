@@ -21,17 +21,16 @@ interface Props extends RouteComponentProps {
     equations: ExtendedEquationWithId[];
 }
 
-interface State {}
+interface State {
+    topicRef: string;
+}
 
 type Params = { subjectName: string; topicName: string };
 
 class EquationsDisplay extends Component<Props, State> {
+    state: State = { topicRef: '' };
     componentDidMount() {
         const params: Params = this.props.match.params as Params;
-        this.setState({
-            subjectName: params.subjectName,
-            topicName: params.topicName
-        });
         this.props.fetchAllSubjects();
         this.fetchTopicsOfSubject(params);
     }
@@ -61,12 +60,16 @@ class EquationsDisplay extends Component<Props, State> {
             topic => topic.name.toLowerCase() === params.topicName
         );
         if (topic) {
+            this.setState({ topicRef: topic.id });
             this.props.fetchEquations(topic.id);
         }
     }
 
     render() {
-        return <ListDisplay items={this.props.equations} />;
+        const equations = this.props.equations.filter(
+            equation => equation.topicRef === this.state.topicRef
+        );
+        return <ListDisplay items={equations} />;
     }
 }
 

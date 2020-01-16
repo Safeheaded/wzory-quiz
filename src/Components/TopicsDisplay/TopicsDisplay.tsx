@@ -18,14 +18,13 @@ interface Props extends RouteComponentProps {
 
 interface State {
     itemName: string;
-    topics: ExtendedTopicWithId[];
     subjectref: string;
 }
 
 type Params = { subjectName: string };
 
 class TopicsDisplay extends Component<Props, State> {
-    state: State = { itemName: '', subjectref: '', topics: [] };
+    state: State = { itemName: '', subjectref: '' };
     componentDidMount() {
         const itemName = (this.props.match.params as Params).subjectName;
         this.setState({

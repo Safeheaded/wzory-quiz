@@ -104,7 +104,7 @@ function* updateEquation(action: UpdateEquation) {
 function* fetchEquations(action: FetchEquations) {
     const equations: ExtendedEquationWithId[] = yield select(getEquations);
     const wantedEquations = equations.filter(
-        equation => equation.topicRef !== action.payload
+        equation => equation.topicRef === action.payload
     );
 
     if (wantedEquations.length !== 0) {
