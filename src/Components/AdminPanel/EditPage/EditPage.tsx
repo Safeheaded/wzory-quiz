@@ -33,18 +33,12 @@ import {
     AddSubject
 } from '../../../store/types/Subjects';
 import {
-    ExtendedTopicWithId,
-    FetchAllTopics,
     ExtendedTopic,
     AddTopic,
     FetchTopics
 } from '../../../store/types/Topics';
 import { fetchAllSubjects, addSubject } from '../../../store/actions/Subjects';
-import {
-    fetchAllTopics,
-    addTopic,
-    fetchTopics
-} from '../../../store/actions/Topics';
+import { addTopic, fetchTopics } from '../../../store/actions/Topics';
 
 export interface Props extends RouteComponentProps, EqStateProps {
     url: string;

@@ -35,7 +35,9 @@ const ListDisplay: React.FC<Props> = (props: Props) => {
     const styles = useStyles();
     const cardsList = props.items.map((item: ItemOfList) => {
         const baseUrl = props.url || '';
-        const url = (item.explanation || item.name) as string;
+        const url = item.explanation
+            ? item.id
+            : ((item.explanation || item.name) as string);
         return (
             <ListItem
                 key={item.id}

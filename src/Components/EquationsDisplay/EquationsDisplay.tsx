@@ -69,7 +69,7 @@ class EquationsDisplay extends Component<Props, State> {
         const equations = this.props.equations.filter(
             equation => equation.topicRef === this.state.topicRef
         );
-        return <ListDisplay items={equations} />;
+        return <ListDisplay url={this.props.match.url} items={equations} />;
     }
 }
 
