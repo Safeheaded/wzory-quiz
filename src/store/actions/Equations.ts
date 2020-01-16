@@ -16,7 +16,11 @@ import {
     UpdateEquationError,
     DeleteEquation,
     DeleteEquationSuccess,
-    DeleteEquationError
+    DeleteEquationError,
+    FetchEquations,
+    FetchEquationsSuccess,
+    FetchEquationsError,
+    FetchEquationsDone
 } from '../types/Equations';
 import {
     ADD_EQUATION,
@@ -33,7 +37,11 @@ import {
     UPDATE_EQUATION_ERROR,
     DELETE_EQUATION,
     DELETE_EQUATION_SUCCESS,
-    DELETE_EQUATION_ERROR
+    DELETE_EQUATION_ERROR,
+    FETCH_EQUATIONS,
+    FETCH_EQUATIONS_SUCCESS,
+    FETCH_EQUATIONS_ERROR,
+    FETCH_EQUATIONS_DONE
 } from '../constants/Equations';
 
 export function addEquation(equation: ExtendedEquation): AddEquation {
@@ -113,4 +121,22 @@ export function deleteEquationSuccess(id: string): DeleteEquationSuccess {
 
 export function deleteEquationError(error: object): DeleteEquationError {
     return { type: DELETE_EQUATION_ERROR, payload: error };
+}
+
+export function fetchEquations(id: string): FetchEquations {
+    return { type: FETCH_EQUATIONS, payload: id };
+}
+
+export function fetchEquationsSuccess(
+    equations: ExtendedEquationWithId[]
+): FetchEquationsSuccess {
+    return { type: FETCH_EQUATIONS_SUCCESS, payload: equations };
+}
+
+export function fetchEquationsError(error: object): FetchEquationsError {
+    return { type: FETCH_EQUATIONS_ERROR, payload: error };
+}
+
+export function fetchEquationsDone(): FetchEquationsDone {
+    return { type: FETCH_EQUATIONS_DONE };
 }

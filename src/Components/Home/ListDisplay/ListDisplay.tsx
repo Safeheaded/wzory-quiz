@@ -12,6 +12,7 @@ import { makeStyles, createStyles } from '@material-ui/styles';
 
 interface Props {
     items: ItemOfList[];
+    url?: string;
 }
 
 const useStyles = makeStyles(() =>
@@ -33,17 +34,20 @@ const useStyles = makeStyles(() =>
 const ListDisplay: React.FC<Props> = (props: Props) => {
     const styles = useStyles();
     const cardsList = props.items.map((item: ItemOfList) => {
+        const baseUrl = props.url || '';
         const url = (item.explanation || item.name) as string;
         return (
             <ListItem
                 key={item.id}
                 component={Link}
-                to={`/${url.toLowerCase()}`}
+                to={`${baseUrl}/${url.toLowerCase()}`}
                 className={styles.listItem}
             >
                 <Card className={styles.card}>
                     <CardContent>
-                        <Typography variant="h5">{item.name}</Typography>
+                        <Typography variant="h5">
+                            {item.name || item.explanation}
+                        </Typography>
                     </CardContent>
                 </Card>
             </ListItem>

@@ -48,7 +48,9 @@ class TopicsDisplay extends Component<Props, State> {
     }
 
     render() {
-        return <ListDisplay items={this.props.topics} />;
+        return (
+            <ListDisplay url={this.props.match.url} items={this.props.topics} />
+        );
     }
 }
 

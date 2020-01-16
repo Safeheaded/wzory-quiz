@@ -12,7 +12,8 @@ import {
     FETCH_EQUATION_SUCCESS,
     UPDATE_EQUATION_ERROR,
     UPDATE_EQUATION_SUCCESS,
-    DELETE_EQUATION_SUCCESS
+    DELETE_EQUATION_SUCCESS,
+    FETCH_EQUATIONS_SUCCESS
 } from '../constants/Equations';
 
 const initState: EquationsState = { equations: [] };
@@ -46,6 +47,11 @@ const EquationsReducer = (
                 equation => equation.id != action.payload
             );
             return { ...state, equations: equationsAfterDeletion };
+        case FETCH_EQUATIONS_SUCCESS:
+            return {
+                ...state,
+                equations: [...state.equations, ...action.payload]
+            };
     }
     return state;
 };

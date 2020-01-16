@@ -7,7 +7,8 @@ import {
     ExtendedEquation,
     ExtendedEquationWithId,
     UpdateEquation,
-    DeleteEquation
+    DeleteEquation,
+    FetchEquations
 } from '../types/Equations';
 import {
     addEquationSuccess,
@@ -19,23 +20,27 @@ import {
     updateEquationSuccess,
     updateEquationError,
     deleteEquationSuccess,
-    deleteEquationError
+    deleteEquationError,
+    fetchEquationsDone,
+    fetchEquationsSuccess,
+    fetchEquationsError
 } from '../actions/Equations';
 import {
     ADD_EQUATION,
     FETCH_ALL_EQUATIONS,
     FETCH_EQUATION,
     UPDATE_EQUATION,
-    DELETE_EQUATION
+    DELETE_EQUATION,
+    FETCH_EQUATIONS
 } from '../constants/Equations';
-import firebase, { database } from 'firebase/app';
-import { collectionToArray } from './utils';
+import { firestore } from 'firebase';
+import { collectionToArray, getEquations } from './utils';
 
 const rsf = firebaseHandler.getRSF();
 
 function* addEquation(action: AddEquation) {
     try {
-        const data: firebase.firestore.DocumentReference = yield call(
+        const data: firestore.DocumentReference = yield call(
             rsf.firestore.addDocument,
             `Equations/`,
             action.payload
@@ -96,6 +101,34 @@ function* updateEquation(action: UpdateEquation) {
     }
 }
 
+function* fetchEquations(action: FetchEquations) {
+    const equations: ExtendedEquationWithId[] = yield select(getEquations);
+    const wantedEquations = equations.filter(
+        equation => equation.topicRef !== action.payload
+    );
+
+    if (wantedEquations.length !== 0) {
+        yield put(fetchEquationsDone());
+        return;
+    }
+
+    try {
+        const collectionRef = yield firestore().collection('Equations');
+        const snapshot: firebase.firestore.QuerySnapshot = yield call(
+            rsf.firestore.getCollection,
+            collectionRef.where('topicRef', '==', action.payload)
+        );
+        const equations = collectionToArray<
+            ExtendedEquationWithId,
+            ExtendedEquation
+        >(snapshot);
+        console.log(action.payload);
+        yield put(fetchEquationsSuccess(equations));
+    } catch (error) {
+        yield put(fetchEquationsError(error));
+    }
+}
+
 function* deleteEquation(action: DeleteEquation) {
     try {
         yield call(rsf.firestore.deleteDocument, `Equations/${action.payload}`);
@@ -111,6 +144,7 @@ export function* EquationsSaga() {
         takeLatest(FETCH_ALL_EQUATIONS, fetchAllEquations),
         takeLatest(FETCH_EQUATION, fetchEquation),
         takeLatest(UPDATE_EQUATION, updateEquation),
-        takeLatest(DELETE_EQUATION, deleteEquation)
+        takeLatest(DELETE_EQUATION, deleteEquation),
+        takeLatest(FETCH_EQUATIONS, fetchEquations)
     ]);
 }

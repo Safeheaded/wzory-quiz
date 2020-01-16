@@ -13,7 +13,11 @@ import {
     UPDATE_EQUATION_ERROR,
     DELETE_EQUATION,
     DELETE_EQUATION_SUCCESS,
-    DELETE_EQUATION_ERROR
+    DELETE_EQUATION_ERROR,
+    FETCH_EQUATIONS_ERROR,
+    FETCH_EQUATIONS_DONE,
+    FETCH_EQUATIONS,
+    FETCH_EQUATIONS_SUCCESS
 } from '../constants/Equations';
 
 export interface EquationsState {
@@ -112,6 +116,25 @@ export interface DeleteEquationError {
     payload: object;
 }
 
+export interface FetchEquations {
+    type: typeof FETCH_EQUATIONS;
+    payload: string;
+}
+
+export interface FetchEquationsSuccess {
+    type: typeof FETCH_EQUATIONS_SUCCESS;
+    payload: ExtendedEquationWithId[];
+}
+
+export interface FetchEquationsError {
+    type: typeof FETCH_EQUATIONS_ERROR;
+    payload: object;
+}
+
+export interface FetchEquationsDone {
+    type: typeof FETCH_EQUATIONS_DONE;
+}
+
 export type EqActionTypes =
     | AddEquation
     | AddEquationError
@@ -127,4 +150,8 @@ export type EqActionTypes =
     | UpdateEquationError
     | DeleteEquation
     | DeleteEquationSuccess
-    | DeleteEquationError;
+    | DeleteEquationError
+    | FetchEquations
+    | FetchEquationsSuccess
+    | FetchEquationsError
+    | FetchEquationsDone;
