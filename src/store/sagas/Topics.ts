@@ -72,7 +72,9 @@ function* fetchAllTopics() {
 function* fetchTopics(action: FetchTopics) {
     const topics: ExtendedTopicWithId[] = yield select(getTopics);
 
-    const wantedTopics = topics.filter(topic => topic.id !== action.payload);
+    const wantedTopics = topics.filter(
+        topic => topic.subjectRef === action.payload
+    );
 
     if (wantedTopics.length !== 0) {
         yield put(fetchTopicsDone());
