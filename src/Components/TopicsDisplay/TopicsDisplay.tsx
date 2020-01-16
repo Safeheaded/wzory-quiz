@@ -18,11 +18,14 @@ interface Props extends RouteComponentProps {
 
 interface State {
     itemName: string;
+    topics: ExtendedTopicWithId[];
+    subjectref: string;
 }
 
 type Params = { subjectName: string };
 
 class TopicsDisplay extends Component<Props, State> {
+    state: State = { itemName: '', subjectref: '', topics: [] };
     componentDidMount() {
         const itemName = (this.props.match.params as Params).subjectName;
         this.setState({
@@ -37,6 +40,7 @@ class TopicsDisplay extends Component<Props, State> {
             subject => subject.name.toLowerCase() === itemName
         );
         if (subject) {
+            this.setState({ subjectref: subject.id });
             this.props.fetchTopics(subject.id);
         }
     }
@@ -48,9 +52,10 @@ class TopicsDisplay extends Component<Props, State> {
     }
 
     render() {
-        return (
-            <ListDisplay url={this.props.match.url} items={this.props.topics} />
+        const topics = this.props.topics.filter(
+            topic => topic.subjectRef === this.state.subjectref
         );
+        return <ListDisplay url={this.props.match.url} items={topics} />;
     }
 }
 
