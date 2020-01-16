@@ -2,7 +2,6 @@ import { firebaseHandler } from '../../firebaseConfig';
 
 import {
     AddTopic,
-    FetchAllTopics,
     ExtendedTopicWithId,
     ExtendedTopic,
     FetchTopics,

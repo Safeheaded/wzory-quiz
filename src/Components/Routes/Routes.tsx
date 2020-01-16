@@ -24,9 +24,9 @@ const Routes: React.SFC = () => {
                 flow={GuardMode.Unauthenticated}
             />
 
-            <Route path="/:subjectName" />
-            <Route path="/:subjectName/:topicRef" />
-            <Route path="/:subjectName/:topicRef/:id" />
+            <Route path="/:subjectName" component={Home} />
+            <Route path="/:subjectName/:topicName" />
+            <Route path="/:subjectName/:topicName/:id" />
 
             <Route component={NotFoundPage} />
         </Switch>
