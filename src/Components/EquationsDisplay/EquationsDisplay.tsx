@@ -17,6 +17,8 @@ import {
     DialogContent,
     DialogContentText
 } from '@material-ui/core';
+import MathJax from 'react-mathjax2';
+import EquationDialog from './EquationDialog/EquationDialog';
 
 interface Props extends RouteComponentProps {
     fetchAllSubjects: typeof fetchAllSubjects;
@@ -89,25 +91,15 @@ class EquationsDisplay extends Component<Props, State> {
             equation => equation.topicRef === this.state.topicRef
         );
         const id = (this.props.match.params as Params).id;
-        let equation: ExtendedEquationWithId;
-        equation = equations.find(
+
+        const equation: ExtendedEquationWithId = equations.find(
             equation => equation.id === id
         ) as ExtendedEquationWithId;
 
         return (
             <Fragment>
                 <ListDisplay url={this.props.match.url} items={equations} />
-                <Dialog open={this.state.isDialogOpen}>
-                    <DialogTitle>Równanie</DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>
-                            {equation ? equation.equation : null}
-                        </DialogContentText>
-                        <DialogContentText>
-                            {equation ? equation.explanation : null}
-                        </DialogContentText>
-                    </DialogContent>
-                </Dialog>
+                <EquationDialog equation={equation} />
             </Fragment>
         );
     }
