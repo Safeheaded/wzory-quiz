@@ -14,7 +14,8 @@ import {
     DELETE_TOPIC,
     DELETE_TOPIC_SUCCESS,
     DELETE_TOPIC_ERROR,
-    FETCH_TOPICS_DONE
+    FETCH_TOPICS_DONE,
+    FETCH_ALL_TOPICS_DONE
 } from '../constants/Topics';
 import { BaseType } from './main';
 
@@ -61,6 +62,10 @@ export interface FetchAllTopicsSuccess {
 export interface FetchAllTopicsError {
     type: typeof FETCH_ALL_TOPICS_ERROR;
     payload: object;
+}
+
+export interface FetchAllTopicsDone {
+    type: typeof FETCH_ALL_TOPICS_DONE;
 }
 
 export interface FetchTopics {
@@ -127,4 +132,5 @@ export type TopicsActionTypes =
     | UpdateTopicError
     | DeleteTopic
     | DeleteTopicSuccess
-    | DeleteTopicError;
+    | DeleteTopicError
+    | FetchAllTopicsDone;

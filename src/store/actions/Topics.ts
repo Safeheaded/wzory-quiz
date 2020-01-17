@@ -16,7 +16,8 @@ import {
     DeleteTopic,
     DeleteTopicSuccess,
     DeleteTopicError,
-    FetchTopicsDone
+    FetchTopicsDone,
+    FetchAllTopicsDone
 } from '../types/Topics';
 
 import {
@@ -35,7 +36,8 @@ import {
     DELETE_TOPIC,
     DELETE_TOPIC_SUCCESS,
     DELETE_TOPIC_ERROR,
-    FETCH_TOPICS_DONE
+    FETCH_TOPICS_DONE,
+    FETCH_ALL_TOPICS_DONE
 } from '../constants/Topics';
 
 export function addTopic(topic: ExtendedTopic): AddTopic {
@@ -71,6 +73,10 @@ export function fetchAllTopicsError(error: object): FetchAllTopicsError {
         type: FETCH_ALL_TOPICS_ERROR,
         payload: error
     };
+}
+
+export function fetchAllTopicsDone(): FetchAllTopicsDone {
+    return { type: FETCH_ALL_TOPICS_DONE };
 }
 
 export function fetchTopics(subjectRef: string): FetchTopics {

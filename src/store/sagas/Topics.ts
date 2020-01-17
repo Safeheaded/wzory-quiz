@@ -22,7 +22,8 @@ import {
     updateTopicSuccess,
     deleteTopicSuccess,
     deleteTopicError,
-    fetchTopicsDone
+    fetchTopicsDone,
+    fetchAllTopicsDone
 } from '../actions/Topics';
 import {
     ADD_TOPIC,
@@ -54,6 +55,13 @@ function* addTopic(action: AddTopic) {
 }
 
 function* fetchAllTopics() {
+    const topics: ExtendedTopicWithId[] = yield select(getTopics);
+
+    if (topics.length !== 0) {
+        yield put(fetchAllTopicsDone());
+        return;
+    }
+
     try {
         const data: firebase.firestore.QuerySnapshot = yield call(
             rsf.firestore.getCollection,
