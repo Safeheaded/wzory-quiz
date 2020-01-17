@@ -14,3 +14,5 @@ export function collectionToArray<T extends K & { id: string }, K>(
 
 export const getTopics = (state: RootReducer) => state.topicsReducer.topics;
 export const getEquations = (state: RootReducer) => state.eqReducer.equations;
+export const getSubjects = (state: RootReducer) =>
+    state.subjectsReducer.subjects;

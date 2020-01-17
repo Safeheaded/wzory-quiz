@@ -12,7 +12,8 @@ import {
     UpdateSubjectError,
     DeleteSubject,
     DeleteSubjectSuccess,
-    DeleteSubjectError
+    DeleteSubjectError,
+    FetchAllSubjectsDone
 } from '../types/Subjects';
 
 import {
@@ -27,7 +28,8 @@ import {
     UPDATE_SUBJECT_ERROR,
     DELETE_SUBJECT,
     DELETE_SUBJECT_SUCCESS,
-    DELETE_SUBJECT_ERROR
+    DELETE_SUBJECT_ERROR,
+    FETCH_ALL_SUBJECTS_DONE
 } from '../constants/Subjects';
 
 export function addSubject(subject: Subject): AddSubject {
@@ -57,6 +59,10 @@ export function fetchAllSubjectsError(error: object): FetchAllSubjectsError {
         type: FETCH_ALL_SUBJECTS_ERROR,
         payload: error
     };
+}
+
+export function fetchAllSubjectsDone(): FetchAllSubjectsDone {
+    return { type: FETCH_ALL_SUBJECTS_DONE };
 }
 
 export function updateSubject(subject: SubjectWithId): UpdateSubject {

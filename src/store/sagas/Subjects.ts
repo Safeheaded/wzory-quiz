@@ -6,7 +6,7 @@ import {
     Subject,
     DeleteSubject
 } from '../types/Subjects';
-import { put, call, all, takeLatest } from 'redux-saga/effects';
+import { put, call, all, takeLatest, select } from 'redux-saga/effects';
 import {
     addSubjectSuccess,
     addSubjectError,
@@ -15,7 +15,8 @@ import {
     updateSubjectSuccess,
     updateSubjectError,
     deleteSubjectSuccess,
-    deleteSubjectError
+    deleteSubjectError,
+    fetchAllSubjectsDone
 } from '../actions/Subjects';
 import {
     ADD_SUBJECT,
@@ -23,7 +24,7 @@ import {
     UPDATE_SUBJECT,
     DELETE_SUBJECT
 } from '../constants/Subjects';
-import { collectionToArray } from './utils';
+import { collectionToArray, getSubjects } from './utils';
 import { functions } from 'firebase';
 
 const rsf = firebaseHandler.getRSF();
@@ -45,6 +46,13 @@ function* addSubject(action: AddSubject) {
 }
 
 function* fetchAllSubjects() {
+    const subjects: SubjectWithId[] = yield select(getSubjects);
+
+    if (subjects.length !== 0) {
+        yield put(fetchAllSubjectsDone());
+        return;
+    }
+
     try {
         const data: firebase.firestore.QuerySnapshot = yield call(
             rsf.firestore.getCollection,
