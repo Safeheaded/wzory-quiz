@@ -29,8 +29,7 @@ class Home extends Component<Props, State> {
 
     private setProperDataList() {
         const params = this.props.match.params as Params;
-        if (params.id) {
-        } else if (params.topicName) {
+        if (params.topicName) {
             this.setState({ dataList: EquationsDisplay });
         } else if (params.subjectName) {
             this.setState({ dataList: TopicsDisplay });

@@ -37,12 +37,12 @@ const ListDisplay: React.FC<Props> = (props: Props) => {
         const baseUrl = props.url || '';
         const url = item.explanation
             ? item.id
-            : ((item.explanation || item.name) as string);
+            : ((item.explanation || item.name) as string).toLowerCase();
         return (
             <ListItem
                 key={item.id}
                 component={Link}
-                to={`${baseUrl}/${url.toLowerCase()}`}
+                to={`${baseUrl}/${url}`}
                 className={styles.listItem}
             >
                 <Card className={styles.card}>

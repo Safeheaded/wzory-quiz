@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { RootReducer } from '../../store/types/main';
 import { fetchTopics } from '../../store/actions/Topics';
 import { fetchAllSubjects } from '../../store/actions/Subjects';
@@ -11,6 +11,12 @@ import { SubjectWithId } from '../../store/types/Subjects';
 import { ExtendedEquationWithId } from '../../store/types/Equations';
 import TopicsDisplay from '../TopicsDisplay/TopicsDisplay';
 import ListDisplay from '../Home/ListDisplay/ListDisplay';
+import {
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogContentText
+} from '@material-ui/core';
 
 interface Props extends RouteComponentProps {
     fetchAllSubjects: typeof fetchAllSubjects;
@@ -23,16 +29,20 @@ interface Props extends RouteComponentProps {
 
 interface State {
     topicRef: string;
+    isDialogOpen: boolean;
 }
 
-type Params = { subjectName: string; topicName: string };
+type Params = { subjectName: string; topicName: string; id?: string };
 
 class EquationsDisplay extends Component<Props, State> {
-    state: State = { topicRef: '' };
+    state: State = { topicRef: '', isDialogOpen: false };
     componentDidMount() {
         const params: Params = this.props.match.params as Params;
         this.props.fetchAllSubjects();
         this.fetchTopicsOfSubject(params);
+        if (params.id) {
+            this.setState({ isDialogOpen: true });
+        }
     }
 
     componentDidUpdate(prevProps: Props) {
@@ -42,6 +52,15 @@ class EquationsDisplay extends Component<Props, State> {
         }
         if (prevProps.topics.length !== this.props.topics.length) {
             this.fetchEquationsOfTopic(params);
+        }
+        if (
+            (prevProps.match.params as Params).id !==
+            (this.props.match.params as Params).id
+        ) {
+            this.setState(prevState => ({
+                ...prevState,
+                isDialogOpen: !prevState.isDialogOpen
+            }));
         }
     }
 
@@ -69,7 +88,28 @@ class EquationsDisplay extends Component<Props, State> {
         const equations = this.props.equations.filter(
             equation => equation.topicRef === this.state.topicRef
         );
-        return <ListDisplay url={this.props.match.url} items={equations} />;
+        const id = (this.props.match.params as Params).id;
+        let equation: ExtendedEquationWithId;
+        equation = equations.find(
+            equation => equation.id === id
+        ) as ExtendedEquationWithId;
+
+        return (
+            <Fragment>
+                <ListDisplay url={this.props.match.url} items={equations} />
+                <Dialog open={this.state.isDialogOpen}>
+                    <DialogTitle>Równanie</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            {equation ? equation.equation : null}
+                        </DialogContentText>
+                        <DialogContentText>
+                            {equation ? equation.explanation : null}
+                        </DialogContentText>
+                    </DialogContent>
+                </Dialog>
+            </Fragment>
+        );
     }
 }
 

@@ -122,7 +122,6 @@ function* fetchEquations(action: FetchEquations) {
             ExtendedEquationWithId,
             ExtendedEquation
         >(snapshot);
-        console.log(action.payload);
         yield put(fetchEquationsSuccess(equations));
     } catch (error) {
         yield put(fetchEquationsError(error));
