@@ -7,7 +7,7 @@ import {
     Typography
 } from '@material-ui/core';
 import MathJax from 'react-mathjax2';
-import { ExtendedEquationWithId } from '../../../store/types/Equations';
+import { ExtendedEquationWithId } from '../../../../store/types/Equations';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 
 interface Props extends RouteComponentProps {

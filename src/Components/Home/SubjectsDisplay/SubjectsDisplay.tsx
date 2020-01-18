@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { RootReducer } from '../../store/types/main';
+import { RootReducer } from '../../../store/types/main';
 import { Dispatch } from 'redux';
-import { fetchAllSubjects } from '../../store/actions/Subjects';
+import { fetchAllSubjects } from '../../../store/actions/Subjects';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { SubjectWithId } from '../../store/types/Subjects';
-import ListDisplay from '../Home/ListDisplay/ListDisplay';
+import { SubjectWithId } from '../../../store/types/Subjects';
+import ListDisplay from '../ListDisplay/ListDisplay';
 
 interface Props extends RouteComponentProps {
     fetchAllSubjects: typeof fetchAllSubjects;

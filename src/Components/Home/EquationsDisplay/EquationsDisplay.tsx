@@ -1,16 +1,16 @@
 import React, { Component, Fragment } from 'react';
-import { RootReducer } from '../../store/types/main';
-import { fetchTopics } from '../../store/actions/Topics';
-import { fetchAllSubjects } from '../../store/actions/Subjects';
+import { RootReducer } from '../../../store/types/main';
+import { fetchTopics } from '../../../store/actions/Topics';
+import { fetchAllSubjects } from '../../../store/actions/Subjects';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
-import { fetchEquations } from '../../store/actions/Equations';
-import { ExtendedTopicWithId } from '../../store/types/Topics';
-import { SubjectWithId } from '../../store/types/Subjects';
-import { ExtendedEquationWithId } from '../../store/types/Equations';
+import { fetchEquations } from '../../../store/actions/Equations';
+import { ExtendedTopicWithId } from '../../../store/types/Topics';
+import { SubjectWithId } from '../../../store/types/Subjects';
+import { ExtendedEquationWithId } from '../../../store/types/Equations';
 import TopicsDisplay from '../TopicsDisplay/TopicsDisplay';
-import ListDisplay from '../Home/ListDisplay/ListDisplay';
+import ListDisplay from '../ListDisplay/ListDisplay';
 import {
     Dialog,
     DialogTitle,
