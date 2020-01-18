@@ -20,7 +20,8 @@ import {
     FetchEquations,
     FetchEquationsSuccess,
     FetchEquationsError,
-    FetchEquationsDone
+    FetchEquationsDone,
+    FetchAllEquationsDone
 } from '../types/Equations';
 import {
     ADD_EQUATION,
@@ -41,7 +42,8 @@ import {
     FETCH_EQUATIONS,
     FETCH_EQUATIONS_SUCCESS,
     FETCH_EQUATIONS_ERROR,
-    FETCH_EQUATIONS_DONE
+    FETCH_EQUATIONS_DONE,
+    FETCH_ALL_EQUATIONS_DONE
 } from '../constants/Equations';
 
 export function addEquation(equation: ExtendedEquation): AddEquation {
@@ -79,6 +81,10 @@ export function fetchAllEquationsSuccess(
 
 export function fetchAllEquationsError(error: object): FetchAllEquationsError {
     return { type: FETCH_ALL_EQUATIONS_ERROR, payload: error };
+}
+
+export function fetchAllEquationsDone(): FetchAllEquationsDone {
+    return { type: FETCH_ALL_EQUATIONS_DONE };
 }
 
 export function fetchEquation(id: string): FetchEquation {

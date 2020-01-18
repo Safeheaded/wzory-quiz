@@ -17,7 +17,8 @@ import {
     FETCH_EQUATIONS_ERROR,
     FETCH_EQUATIONS_DONE,
     FETCH_EQUATIONS,
-    FETCH_EQUATIONS_SUCCESS
+    FETCH_EQUATIONS_SUCCESS,
+    FETCH_ALL_EQUATIONS_DONE
 } from '../constants/Equations';
 
 export interface EquationsState {
@@ -69,6 +70,10 @@ export interface FetchAllEquationsSuccess {
 export interface FetchAllEquationsError {
     type: typeof FETCH_ALL_EQUATIONS_ERROR;
     payload: object;
+}
+
+export interface FetchAllEquationsDone {
+    type: typeof FETCH_ALL_EQUATIONS_DONE;
 }
 
 export interface FetchEquation {

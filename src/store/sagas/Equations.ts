@@ -57,6 +57,13 @@ function* addEquation(action: AddEquation) {
 }
 
 function* fetchAllEquations() {
+    const subjects: ExtendedEquationWithId[] = yield select(getEquations);
+
+    if (subjects.length !== 0) {
+        yield put(fetchEquationsDone());
+        return;
+    }
+
     try {
         const data: firebase.firestore.QuerySnapshot = yield call(
             rsf.firestore.getCollection,
