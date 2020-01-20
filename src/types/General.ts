@@ -14,3 +14,8 @@ export interface FormInputProps {
     onValueChange: Function;
     value: string;
 }
+
+export enum Answer {
+    Right,
+    Wrong
+}

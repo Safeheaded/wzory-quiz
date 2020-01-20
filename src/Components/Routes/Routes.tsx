@@ -5,6 +5,7 @@ import GuardedRoute, { GuardMode } from '../../HOCs/GuardedRoute/GuardedRoute';
 import AdminPanel from '../AdminPanel/AdminPanel';
 import LoginForm from '../LoginForm/LoginForm';
 import NotFoundPage from '../NotFoundPage/NotFoundPage';
+import QuizHome from '../QuizHome/QuizHome';
 
 const Routes: React.SFC = () => {
     return (
@@ -23,6 +24,8 @@ const Routes: React.SFC = () => {
                 redirectTo="/admin"
                 flow={GuardMode.Unauthenticated}
             />
+
+            <Route path="/quiz" component={QuizHome} />
 
             <Route path="/:subjectName/:topicName/:id" component={Home} />
             <Route path="/:subjectName/:topicName" component={Home} />
