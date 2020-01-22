@@ -19,6 +19,7 @@ interface State {
     selectionCounter: number;
     mode: QuizMode;
     wrongAnswerId: string;
+    answers: ExtendedEquationWithId[];
 }
 
 export enum QuizMode {
@@ -56,8 +57,20 @@ class Quiz extends Component<Props, State> {
     }
 
     private setFirstEquation() {
-        const firstEquation = this.props.equations[0];
-        this.setState({ selectedEquation: firstEquation, selectionCounter: 0 });
+        if (this.props.equations.length !== 0) {
+            const firstEquation = this.props.equations[0];
+            const wrongAnswers = this.generateUniqueRandoms(
+                this.props.equations,
+                3,
+                firstEquation
+            );
+            const answers = shuffle([...wrongAnswers, firstEquation]);
+            this.setState({
+                selectedEquation: firstEquation,
+                selectionCounter: 0,
+                answers
+            });
+        }
     }
 
     componentDidUpdate(prevProps: Props) {
@@ -89,18 +102,7 @@ class Quiz extends Component<Props, State> {
     }
 
     render() {
-        const rightAnswer = this.state?.selectedEquation;
-        let answers: ExtendedEquationWithId[] = [];
-        if (rightAnswer) {
-            const wrongAnswers = this.generateUniqueRandoms(
-                this.props.equations,
-                3,
-                rightAnswer
-            );
-            answers.push(...wrongAnswers, rightAnswer);
-        }
-        answers = shuffle(answers);
-        const answersToDisplay = answers.map((eq, index) => {
+        const answersToDisplay = this.state?.answers?.map((eq, index) => {
             return (
                 <QuizAnswer
                     id={eq.id}

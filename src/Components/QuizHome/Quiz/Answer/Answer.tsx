@@ -41,11 +41,7 @@ const QuizAnswer = (props: Props) => {
     const styles = useStyles();
     const style = [styles.paper];
     if (props.mode === QuizMode.Answered) {
-        if (props.answerType === Answer.Right) {
-            style.push(styles.correctAnswer);
-        } else if (props.answerType === Answer.Wrong) {
-            style.push(styles.wrongAnswer);
-        }
+        setAdditionalStyle(props, style, styles);
     }
     return (
         <Grid xs={xsSize} sm={smSize} item>
@@ -70,3 +66,14 @@ const QuizAnswer = (props: Props) => {
 };
 
 export default QuizAnswer;
+function setAdditionalStyle(
+    props: Props,
+    style: string[],
+    styles: Record<'button' | 'paper' | 'correctAnswer' | 'wrongAnswer', string>
+) {
+    if (props.answerType === Answer.Right) {
+        style.push(styles.correctAnswer);
+    } else if (props.answerType === Answer.Wrong) {
+        style.push(styles.wrongAnswer);
+    }
+}
