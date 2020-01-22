@@ -25,7 +25,7 @@ const Routes: React.SFC = () => {
                 flow={GuardMode.Unauthenticated}
             />
 
-            <Route path="/quiz" component={QuizHome} />
+            <Route path="/quiz/:subjectName/:topicName" component={QuizHome} />
 
             <Route path="/:subjectName/:topicName/:id" component={Home} />
             <Route path="/:subjectName/:topicName" component={Home} />
