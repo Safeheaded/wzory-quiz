@@ -9,6 +9,7 @@ import {
     EquationWithId
 } from '../../../store/types/Equations';
 import { shuffle } from 'lodash';
+import { sleep } from '../../../utils/general';
 
 interface Props extends WithStyles<typeof classes> {
     equations: ExtendedEquationWithId[];
@@ -16,10 +17,10 @@ interface Props extends WithStyles<typeof classes> {
 
 interface State {
     selectedEquation: ExtendedEquationWithId;
-    selectionCounter: number;
     mode: QuizMode;
     wrongAnswerId: string;
     answers: ExtendedEquationWithId[];
+    counter: number;
 }
 
 export enum QuizMode {
@@ -67,15 +68,35 @@ class Quiz extends Component<Props, State> {
             const answers = shuffle([...wrongAnswers, firstEquation]);
             this.setState({
                 selectedEquation: firstEquation,
-                selectionCounter: 0,
-                answers
+                answers,
+                counter: 0
             });
         }
     }
 
-    componentDidUpdate(prevProps: Props) {
+    async componentDidUpdate(prevProps: Props, prevState: State) {
         if (prevProps.equations !== this.props.equations) {
             this.setFirstEquation();
+        }
+        if (
+            prevState?.mode === QuizMode.Answering &&
+            this.state?.mode === QuizMode.Answered
+        ) {
+            await sleep(1500);
+            const counter = this.state.counter + 1;
+            const newAnswer = this.props.equations[counter];
+            const wrongAnswers = this.generateUniqueRandoms(
+                this.props.equations,
+                3,
+                newAnswer
+            );
+            const answers = shuffle([...wrongAnswers, newAnswer]);
+            this.setState({
+                answers,
+                counter,
+                selectedEquation: newAnswer,
+                mode: QuizMode.Answering
+            });
         }
     }
 
