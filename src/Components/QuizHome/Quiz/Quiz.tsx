@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { Grid, Paper, Typography, Theme, Button } from '@material-ui/core';
 import { createStyles, withStyles, WithStyles } from '@material-ui/styles';
 import QuizAnswer from './Answer/Answer';
@@ -21,6 +21,8 @@ interface State {
     wrongAnswerId: string;
     answers: ExtendedEquationWithId[];
     counter: number;
+    isFinish: boolean;
+    wrongAnswersCount: number;
 }
 
 export enum QuizMode {
@@ -54,7 +56,6 @@ class Quiz extends Component<Props, State> {
 
     componentDidMount() {
         this.setFirstEquation();
-        this.setState({ mode: QuizMode.Answering });
     }
 
     private setFirstEquation() {
@@ -69,7 +70,10 @@ class Quiz extends Component<Props, State> {
             this.setState({
                 selectedEquation: firstEquation,
                 answers,
-                counter: 0
+                counter: 0,
+                mode: QuizMode.Answering,
+                isFinish: false,
+                wrongAnswersCount: 0
             });
         }
     }
@@ -84,19 +88,31 @@ class Quiz extends Component<Props, State> {
         ) {
             await sleep(1500);
             const counter = this.state.counter + 1;
-            const newAnswer = this.props.equations[counter];
-            const wrongAnswers = this.generateUniqueRandoms(
-                this.props.equations,
-                3,
-                newAnswer
+            const equation = this.props.equations.find(
+                eq => eq.id === this.state.wrongAnswerId
             );
-            const answers = shuffle([...wrongAnswers, newAnswer]);
-            this.setState({
-                answers,
-                counter,
-                selectedEquation: newAnswer,
-                mode: QuizMode.Answering
-            });
+            let wrongAnswersCount = this.state.wrongAnswersCount;
+            if (equation?.id !== this.state.selectedEquation.id) {
+                wrongAnswersCount++;
+            }
+            if (counter < this.props.equations.length) {
+                const newAnswer = this.props.equations[counter];
+                const wrongAnswers = this.generateUniqueRandoms(
+                    this.props.equations,
+                    3,
+                    newAnswer
+                );
+                const answers = shuffle([...wrongAnswers, newAnswer]);
+                this.setState({
+                    answers,
+                    counter,
+                    selectedEquation: newAnswer,
+                    mode: QuizMode.Answering,
+                    wrongAnswersCount
+                });
+            } else {
+                this.setState({ isFinish: true, wrongAnswersCount });
+            }
         }
     }
 
@@ -141,8 +157,8 @@ class Quiz extends Component<Props, State> {
                 />
             );
         });
-        return (
-            <Grid container spacing={3}>
+        const quizContent = (
+            <Fragment>
                 <Grid item xs={12}>
                     <Paper className={this.props.classes.paper}>
                         <Typography variant="h4">
@@ -151,6 +167,23 @@ class Quiz extends Component<Props, State> {
                     </Paper>
                 </Grid>
                 {answersToDisplay}
+            </Fragment>
+        );
+        const quizResult = (
+            <Grid item xs={12}>
+                <Paper className={this.props.classes.paper}>
+                    <Typography variant="h4">
+                        Wynik:{' '}
+                        {this.props.equations.length -
+                            this.state?.wrongAnswersCount}
+                        /{this.props.equations.length}
+                    </Typography>
+                </Paper>
+            </Grid>
+        );
+        return (
+            <Grid container spacing={3}>
+                {this.state?.isFinish ? quizResult : quizContent}
             </Grid>
         );
     }
