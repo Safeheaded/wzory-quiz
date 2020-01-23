@@ -6,9 +6,9 @@ import {
     DialogContentText,
     Typography
 } from '@material-ui/core';
-import MathJax from 'react-mathjax2';
 import { ExtendedEquationWithId } from '../../../../store/types/Equations';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
+import Latex from 'react-latex';
 
 interface Props extends RouteComponentProps {
     equation: ExtendedEquationWithId;
@@ -29,11 +29,9 @@ const EquationDialog = (props: Props) => {
             <DialogTitle>Równanie</DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    <MathJax.Context>
-                        <MathJax.Node>
-                            {equation ? equation.equation : ''}
-                        </MathJax.Node>
-                    </MathJax.Context>
+                    <Latex displayMode={true}>
+                        {equation ? `$$${equation.equation}$$` : ''}
+                    </Latex>
                 </DialogContentText>
                 <Typography>Wyjaśnienie:</Typography>
                 <DialogContentText>

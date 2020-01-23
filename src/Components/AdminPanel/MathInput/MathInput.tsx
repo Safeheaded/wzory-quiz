@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
-import MathJax from 'react-mathjax2';
 import { TextField, FormControl } from '@material-ui/core';
+import Latex from 'react-latex';
 
 interface Props {
     value: string;
@@ -8,6 +8,7 @@ interface Props {
 }
 
 const MathInput: React.FC<Props> = (props: Props) => {
+    const displayValue = props.value.length !== 0 ? `$$${props.value}$$` : '';
     return (
         <FormControl>
             <TextField
@@ -16,9 +17,7 @@ const MathInput: React.FC<Props> = (props: Props) => {
                 value={props.value}
                 onChange={e => props.onValueChange(e)}
             />
-            <MathJax.Context input="ascii">
-                <MathJax.Node>{props.value}</MathJax.Node>
-            </MathJax.Context>
+            <Latex displayMode={true}>{displayValue}</Latex>
         </FormControl>
     );
 };

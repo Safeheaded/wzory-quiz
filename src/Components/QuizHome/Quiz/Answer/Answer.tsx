@@ -2,9 +2,9 @@
 import React from 'react';
 import { Answer } from '../../../../types/General';
 import { Grid, Button, Paper, Theme } from '@material-ui/core';
-import MathJax from 'react-mathjax2';
 import { makeStyles, createStyles } from '@material-ui/styles';
 import { QuizMode } from '../Quiz';
+import Latex from 'react-latex';
 
 interface Props {
     answerType?: Answer;
@@ -52,13 +52,16 @@ const QuizAnswer = (props: Props) => {
                 className={styles.button}
             >
                 <Paper className={style.join(' ')}>
-                    <MathJax.Context
+                    {/* <MathJax.Context
                         options={{
                             menuSettings: { inTabOrder: false }
                         }}
                     >
                         <MathJax.Node inline>{props.answer || ''}</MathJax.Node>
-                    </MathJax.Context>
+                    </MathJax.Context> */}
+                    <Latex displayMode={true}>
+                        {props.answer ? `$$${props.answer}$$` : ''}
+                    </Latex>
                 </Paper>
             </Button>
         </Grid>

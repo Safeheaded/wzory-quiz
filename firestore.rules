@@ -23,4 +23,4 @@ service cloud.firestore {
       allow read;
     }
   }
-}`
+}
