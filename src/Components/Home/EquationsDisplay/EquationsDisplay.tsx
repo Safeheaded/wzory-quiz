@@ -2,23 +2,18 @@ import React, { Component, Fragment } from 'react';
 import { RootReducer } from '../../../store/types/main';
 import { fetchTopics } from '../../../store/actions/Topics';
 import { fetchAllSubjects } from '../../../store/actions/Subjects';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { withRouter, RouteComponentProps, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { fetchEquations } from '../../../store/actions/Equations';
 import { ExtendedTopicWithId } from '../../../store/types/Topics';
 import { SubjectWithId } from '../../../store/types/Subjects';
 import { ExtendedEquationWithId } from '../../../store/types/Equations';
-import TopicsDisplay from '../TopicsDisplay/TopicsDisplay';
 import ListDisplay from '../ListDisplay/ListDisplay';
-import {
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogContentText
-} from '@material-ui/core';
-import MathJax from 'react-mathjax2';
+import { Fab } from '@material-ui/core';
 import EquationDialog from './EquationDialog/EquationDialog';
+import PlayArrowIcon from '@material-ui/icons/PlayArrow';
+import styles from './EquationsDisplay.module.sass';
 
 interface Props extends RouteComponentProps {
     fetchAllSubjects: typeof fetchAllSubjects;
@@ -96,10 +91,20 @@ class EquationsDisplay extends Component<Props, State> {
             equation => equation.id === id
         ) as ExtendedEquationWithId;
 
+        const { subjectName, topicName } = this.props.match.params as Params;
+
         return (
             <Fragment>
                 <ListDisplay url={this.props.match.url} items={equations} />
                 <EquationDialog equation={equation} />
+                <Link
+                    className={styles.FabLink}
+                    to={`/quiz/${subjectName}/${topicName}`}
+                >
+                    <Fab color="primary">
+                        <PlayArrowIcon />
+                    </Fab>
+                </Link>
             </Fragment>
         );
     }
