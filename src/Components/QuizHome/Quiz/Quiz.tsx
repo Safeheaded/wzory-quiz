@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { Grid, Paper, Typography, Theme } from '@material-ui/core';
+import { Grid, Paper, Typography, Theme, Button } from '@material-ui/core';
 import { createStyles, withStyles, WithStyles } from '@material-ui/styles';
 import QuizAnswer from './Answer/Answer';
 import { Answer } from '../../../types/General';
@@ -107,7 +107,9 @@ class Quiz extends Component<Props, State> {
     }
 
     clickHandler = (id: string) => {
-        this.setState({ mode: QuizMode.Answered, wrongAnswerId: id });
+        if (this.state.mode === QuizMode.Answering) {
+            this.setState({ mode: QuizMode.Answered, wrongAnswerId: id });
+        }
     };
 
     generateUniqueRandoms(
@@ -127,6 +129,10 @@ class Quiz extends Component<Props, State> {
         }
         return values;
     }
+
+    resetQuiz = () => {
+        this.setFirstEquation();
+    };
 
     render() {
         const answersToDisplay = this.state?.answers?.map((eq, index) => {
@@ -160,19 +166,24 @@ class Quiz extends Component<Props, State> {
             </Fragment>
         );
         const quizResult = (
-            <Grid item xs={12}>
-                <Paper className={this.props.classes.paper}>
-                    <Typography variant="h4">
-                        Wynik:{' '}
-                        {this.props.equations.length -
-                            this.state?.wrongAnswersCount}
-                        /{this.props.equations.length}
-                    </Typography>
-                </Paper>
-            </Grid>
+            <Fragment>
+                <Grid item xs={12}>
+                    <Paper className={this.props.classes.paper}>
+                        <Typography variant="h4">
+                            Wynik:{' '}
+                            {this.props.equations.length -
+                                this.state?.wrongAnswersCount}
+                            /{this.props.equations.length}
+                        </Typography>
+                    </Paper>
+                </Grid>
+                <Grid item xs={12}>
+                    <Button onClick={this.resetQuiz}>Spróbuj ponownie</Button>
+                </Grid>
+            </Fragment>
         );
         return (
-            <Grid container spacing={3}>
+            <Grid justify="center" container spacing={3}>
                 {this.state?.isFinish ? quizResult : quizContent}
             </Grid>
         );
