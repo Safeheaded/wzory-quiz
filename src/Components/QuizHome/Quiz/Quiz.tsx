@@ -1,13 +1,9 @@
 import React, { Component, Fragment } from 'react';
-import { Grid, Paper, Typography, Theme, Button } from '@material-ui/core';
+import { Grid, Paper, Typography, Theme } from '@material-ui/core';
 import { createStyles, withStyles, WithStyles } from '@material-ui/styles';
 import QuizAnswer from './Answer/Answer';
 import { Answer } from '../../../types/General';
-import {
-    ExtendedEquationWithId,
-    Equation,
-    EquationWithId
-} from '../../../store/types/Equations';
+import { ExtendedEquationWithId } from '../../../store/types/Equations';
 import { shuffle } from 'lodash';
 import { sleep } from '../../../utils/general';
 
@@ -40,12 +36,6 @@ export const classes = (theme: Theme) =>
         button: {
             padding: 0,
             width: '100%'
-        },
-        wrongButton: {
-            backgroundColor: 'red'
-        },
-        rightButton: {
-            backgroundColor: 'green'
         }
     });
 

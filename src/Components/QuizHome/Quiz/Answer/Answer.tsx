@@ -4,7 +4,7 @@ import { Answer } from '../../../../types/General';
 import { Grid, Button, Paper, Theme } from '@material-ui/core';
 import MathJax from 'react-mathjax2';
 import { makeStyles, createStyles } from '@material-ui/styles';
-import { classes, QuizMode } from '../Quiz';
+import { QuizMode } from '../Quiz';
 
 interface Props {
     answerType?: Answer;

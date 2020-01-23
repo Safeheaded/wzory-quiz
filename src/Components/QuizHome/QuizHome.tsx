@@ -1,23 +1,11 @@
 import React, { Component, Fragment } from 'react';
-import {
-    Card,
-    CardHeader,
-    Typography,
-    Grid,
-    CardContent,
-    Paper,
-    Button
-} from '@material-ui/core';
-import { Theme, createStyles } from '@material-ui/core/styles';
-import { WithStyles, withStyles, makeStyles } from '@material-ui/styles';
-import MathJax from 'react-mathjax2';
 import Quiz from './Quiz/Quiz';
 import { connect } from 'react-redux';
 import { RootReducer } from '../../store/types/main';
 import { Dispatch } from 'redux';
-import { fetchEquation, fetchEquations } from '../../store/actions/Equations';
+import { fetchEquations } from '../../store/actions/Equations';
 import { ExtendedEquationWithId } from '../../store/types/Equations';
-import { fetchTopics, fetchAllTopics } from '../../store/actions/Topics';
+import { fetchTopics } from '../../store/actions/Topics';
 import { fetchAllSubjects } from '../../store/actions/Subjects';
 import { SubjectWithId } from '../../store/types/Subjects';
 import { ExtendedTopicWithId } from '../../store/types/Topics';
@@ -88,7 +76,7 @@ class QuizHome extends Component<Props, State> {
 
     render() {
         const equations = this.props.equations.filter(
-            equation => equation.topicRef === this.state.topicId
+            equation => equation.topicRef === this.state?.topicId
         );
         const shuffledEquations = shuffle(equations);
         return (
