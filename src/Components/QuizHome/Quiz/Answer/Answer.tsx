@@ -26,7 +26,9 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         button: {
             padding: 0,
-            width: '100%'
+            width: '100%',
+            textTransform: 'none',
+            fontWeight: 'bolder'
         },
         correctAnswer: {
             backgroundColor: 'green'
@@ -52,13 +54,6 @@ const QuizAnswer = (props: Props) => {
                 className={styles.button}
             >
                 <Paper className={style.join(' ')}>
-                    {/* <MathJax.Context
-                        options={{
-                            menuSettings: { inTabOrder: false }
-                        }}
-                    >
-                        <MathJax.Node inline>{props.answer || ''}</MathJax.Node>
-                    </MathJax.Context> */}
                     <Latex displayMode={true}>
                         {props.answer ? `$$${props.answer}$$` : ''}
                     </Latex>
