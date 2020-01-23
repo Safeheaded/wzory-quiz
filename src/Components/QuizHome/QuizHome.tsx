@@ -78,10 +78,9 @@ class QuizHome extends Component<Props, State> {
         const equations = this.props.equations.filter(
             equation => equation.topicRef === this.state?.topicId
         );
-        const shuffledEquations = shuffle(equations);
         return (
             <Fragment>
-                <Quiz equations={shuffledEquations} />
+                <Quiz equations={equations} />
             </Fragment>
         );
     }

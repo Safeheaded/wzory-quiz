@@ -19,6 +19,7 @@ interface State {
     counter: number;
     isFinish: boolean;
     wrongAnswersCount: number;
+    equations: ExtendedEquationWithId[];
 }
 
 export enum QuizMode {
@@ -45,14 +46,25 @@ class Quiz extends Component<Props, State> {
     }
 
     componentDidMount() {
-        this.setFirstEquation();
+        this.questionsSetup();
+    }
+    private questionsSetup() {
+        if (this.props.equations.length !== 0) {
+            this.setShuffledEquations();
+            this.setFirstEquation();
+        }
+    }
+
+    setShuffledEquations() {
+        const shuffledEquations = shuffle(this.props.equations);
+        this.setState({ equations: shuffledEquations });
     }
 
     private setFirstEquation() {
-        if (this.props.equations.length !== 0) {
-            const firstEquation = this.props.equations[0];
+        if (this.state?.equations) {
+            const firstEquation = this.state.equations[0];
             const wrongAnswers = this.generateUniqueRandoms(
-                this.props.equations,
+                this.state.equations,
                 3,
                 firstEquation
             );
@@ -70,6 +82,9 @@ class Quiz extends Component<Props, State> {
 
     async componentDidUpdate(prevProps: Props, prevState: State) {
         if (prevProps.equations !== this.props.equations) {
+            this.questionsSetup();
+        }
+        if (prevState?.equations !== this.state?.equations) {
             this.setFirstEquation();
         }
         if (
@@ -85,10 +100,10 @@ class Quiz extends Component<Props, State> {
             if (equation?.id !== this.state.selectedEquation.id) {
                 wrongAnswersCount++;
             }
-            if (counter < this.props.equations.length) {
-                const newAnswer = this.props.equations[counter];
+            if (counter < this.state.equations.length) {
+                const newAnswer = this.state.equations[counter];
                 const wrongAnswers = this.generateUniqueRandoms(
-                    this.props.equations,
+                    this.state.equations,
                     3,
                     newAnswer
                 );
@@ -131,7 +146,7 @@ class Quiz extends Component<Props, State> {
     }
 
     resetQuiz = () => {
-        this.setFirstEquation();
+        this.questionsSetup();
     };
 
     render() {
