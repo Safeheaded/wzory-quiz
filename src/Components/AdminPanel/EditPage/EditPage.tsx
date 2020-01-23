@@ -109,7 +109,8 @@ export class EditPage extends Component<Props, State> {
             this.setState({
                 subjectRef: equation.subjectRef,
                 explanation: equation.explanation,
-                equation: equation.equation
+                equation: equation.equation,
+                topicRef: equation.topicRef
             });
         }
     }
@@ -124,9 +125,6 @@ export class EditPage extends Component<Props, State> {
         const equationFetched = prevProps.equations !== this.props.equations;
         if (equationFetched && prevState.equationId) {
             this.getEquation(prevState.equationId);
-        }
-        if (prevProps.topics !== this.props.topics) {
-            this.setTopic();
         }
     }
 
@@ -179,15 +177,6 @@ export class EditPage extends Component<Props, State> {
         };
         this.props.addTopic(topic);
     };
-
-    private setTopic() {
-        const equation = this.props.equations.find(
-            equation => equation.id === this.state.equationId
-        );
-        if (equation) {
-            this.setState({ topicRef: equation.topicRef });
-        }
-    }
 
     private setValueOrOpenDialog(
         value: string,
