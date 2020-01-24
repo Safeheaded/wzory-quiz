@@ -39,6 +39,7 @@ import {
 } from '../../../store/types/Topics';
 import { fetchAllSubjects, addSubject } from '../../../store/actions/Subjects';
 import { addTopic, fetchTopics } from '../../../store/actions/Topics';
+import Explanations from './Explanations/Explanations';
 
 export interface Props extends RouteComponentProps, EqStateProps {
     url: string;
@@ -61,7 +62,7 @@ export interface State {
     topicRef: string;
     equationId?: string;
     mode: WriteMode;
-    explanation: string;
+    explanations: string[];
     equation: string;
     name: string;
 }
@@ -76,7 +77,7 @@ export class EditPage extends Component<Props, State> {
         topicDialogState: false,
         mode: WriteMode.Add,
         equation: '',
-        explanation: '',
+        explanations: [],
         name: ''
     };
 
@@ -110,10 +111,10 @@ export class EditPage extends Component<Props, State> {
             this.props.fetchTopics(equation.subjectRef);
             this.setState({
                 subjectRef: equation.subjectRef,
-                explanation: equation.explanation,
                 equation: equation.equation,
                 topicRef: equation.topicRef,
-                name: equation.name
+                name: equation.name,
+                explanations: equation.explanations
             });
         }
     }
@@ -134,12 +135,13 @@ export class EditPage extends Component<Props, State> {
     onSubmitHandler = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = new FormData(event.target as HTMLFormElement);
+        //TODO: Write explanations code
         const equation: ExtendedEquation = {
             name: data.get('name') as string,
             equation: (data.get('equation') as string) || '',
-            explanation: data.get('explanation') as string,
             subjectRef: data.get('subjectRef') as string,
-            topicRef: data.get('topicRef') as string
+            topicRef: data.get('topicRef') as string,
+            explanations: []
         };
         if (this.state.mode === WriteMode.Add) {
             this.props.addEquation(equation);
@@ -292,6 +294,7 @@ export class EditPage extends Component<Props, State> {
                         values={topics}
                         disabled={this.state.subjectRef === '' ? true : false}
                     />
+                    <Explanations explanations={this.state.explanations} />
 
                     <FormActions
                         secondaryButtonAction={this.deleteEquationHandler}

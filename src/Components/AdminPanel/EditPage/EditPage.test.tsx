@@ -145,7 +145,7 @@ describe('<EditPage />', () => {
         it('Should fill inputs with equation data', () => {
             const testEquation: ExtendedEquation = {
                 equation: '2+2=4',
-                explanation: 'testExplanation',
+                explanations: 'testExplanation',
                 subjectRef: 'testSubjectRef',
                 topicRef: 'testTopicRef'
             };

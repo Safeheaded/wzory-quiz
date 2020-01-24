@@ -48,7 +48,7 @@ function* addEquation(action: AddEquation) {
         const addedEquation: EquationWithId = {
             name: action.payload.name,
             equation: action.payload.equation,
-            explanation: action.payload.explanation,
+            explanations: action.payload.explanations,
             id: data.id
         };
         yield put(addEquationSuccess(addedEquation));

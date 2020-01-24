@@ -26,7 +26,7 @@ export interface EquationsState {
 }
 
 export interface Equation {
-    explanation: string;
+    explanations: string[];
     equation: string;
     name: string;
 }

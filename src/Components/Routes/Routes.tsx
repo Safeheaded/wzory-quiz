@@ -6,6 +6,7 @@ import AdminPanel from '../AdminPanel/AdminPanel';
 import LoginForm from '../LoginForm/LoginForm';
 import NotFoundPage from '../NotFoundPage/NotFoundPage';
 import QuizHome from '../QuizHome/QuizHome';
+import isDev from '../../utils/general';
 
 const Routes: React.SFC = () => {
     return (
@@ -15,14 +16,22 @@ const Routes: React.SFC = () => {
                 component={AdminPanel}
                 path="/admin"
                 redirectTo="/login"
-                flow={GuardMode.Authenticated}
+                flow={
+                    isDev()
+                        ? GuardMode.Unauthenticated
+                        : GuardMode.Authenticated
+                }
             />
 
             <GuardedRoute
                 component={LoginForm}
                 path="/login"
                 redirectTo="/admin"
-                flow={GuardMode.Unauthenticated}
+                flow={
+                    isDev()
+                        ? GuardMode.Authenticated
+                        : GuardMode.Unauthenticated
+                }
             />
 
             <Route path="/quiz/:subjectName/:topicName" component={QuizHome} />
