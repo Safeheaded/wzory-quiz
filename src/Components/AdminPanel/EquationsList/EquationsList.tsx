@@ -8,8 +8,9 @@ import {
     EquationWithId
 } from '../../../store/types/Equations';
 import UniversalList from '../UniversalList/UniversalList';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
 
-interface Props {
+interface Props extends RouteComponentProps {
     fetchAllEquations: () => FetchAllEquations;
     equations: EquationWithId[];
     url: string;
@@ -25,8 +26,7 @@ class EquationsList extends Component<Props> {
             <UniversalList
                 actionPath="/equations/add"
                 items={this.props.equations}
-                url={this.props.url}
-                itemPath="edit-equation"
+                url={this.props.match.url}
             />
         );
     }
@@ -40,4 +40,6 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     fetchAllEquations: () => dispatch(fetchAllEquations())
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(EquationsList);
+export default withRouter(
+    connect(mapStateToProps, mapDispatchToProps)(EquationsList)
+);

@@ -32,27 +32,28 @@ const AdminPanel = (props: Props) => {
     return (
         <Fragment>
             <Switch>
-                <Route path={`${path}/topics/edit/:id`}>
-                    <TopicsList url={url} />
-                </Route>
                 <Route path={`${path}/topics/add`}>
                     <TopicsList url={url} mode={WriteMode.Add} />
+                </Route>
+                <Route path={`${path}/topics/:id`}>
+                    <TopicsList url={url} />
                 </Route>
                 <Route path={`${path}/topics`}>
                     <TopicsList url={url} />
                 </Route>
+
                 <Route path={`${path}/equations/add`}>
                     <EditPgae url={url} />
                 </Route>
+                <Route
+                    exact
+                    path={`${path}/equations/:id`}
+                    component={EditPgae}
+                />
                 <Route path={`${path}/equations`}>
                     <EquationsList url={url} />
                 </Route>
-                <Route
-                    exact
-                    path={`${path}/edit-equation/:id`}
-                    component={EditPgae}
-                />
-                <Route path={`${path}/subjects/edit/:id`}>
+                <Route path={`${path}/subjects/:id`}>
                     <SubjectsList url={url} />
                 </Route>
                 <Route path={`${path}/subjects/add`}>

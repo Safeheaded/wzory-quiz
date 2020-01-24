@@ -261,9 +261,7 @@ export class EditPage extends Component<Props, State> {
                     />
                     <FormInput
                         label="Nazwa równania"
-                        rows="5"
                         fullWidth
-                        multiline
                         name="name"
                         onValueChange={(e: onChangeType) =>
                             this.onSelectChange(e)

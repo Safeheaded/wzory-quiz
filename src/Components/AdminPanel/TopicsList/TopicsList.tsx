@@ -92,7 +92,6 @@ export class TopicsList extends EditList<Props, State> {
                 <UniversalList
                     items={this.props.items}
                     actionPath="/add"
-                    itemPath="edit"
                     url={this.props.match.url}
                 />
                 <TopicDialog

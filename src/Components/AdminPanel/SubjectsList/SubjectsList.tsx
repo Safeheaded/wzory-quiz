@@ -51,9 +51,8 @@ class SubjectsList extends EditList<Props, State> {
             <Fragment>
                 <UniversalList
                     items={this.props.items}
-                    url={this.props.url}
+                    url={this.props.match.url}
                     actionPath="/subjects/add"
-                    itemPath="subjects/edit"
                 />
                 <SubjectDialog
                     title={
