@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, ComponentState } from 'react';
 import { TextField, Button, FormControl, Grid } from '@material-ui/core';
 import styles from './LoginForm.module.sass';
 import { connect } from 'react-redux';
@@ -10,9 +10,7 @@ import {
     LogoutActionType,
     AuthState
 } from '../../store/types/Authentication';
-import firebase from 'firebase';
-import { RootReducer } from '../../store/types/main';
-import { Redirect } from 'react-router';
+import SimpleReactValidator from 'simple-react-validator';
 
 interface Props extends RouteComponentProps {
     login: (email: string, password: string) => LoginActionType;
@@ -33,13 +31,23 @@ class LoginForm extends Component<Props, State> {
         password: ''
     };
 
+    validator: SimpleReactValidator;
+
+    constructor(props: Props) {
+        super(props);
+        this.validator = new SimpleReactValidator({
+            element: (message: string) => message
+        });
+    }
+
     onLogin = () => {
         this.props.login(this.state.email, this.state.password);
     };
 
     onInputCHanged = (toChange: textInput, event: React.SyntheticEvent) => {
         const target = event.target as HTMLInputElement;
-        this.setState({ [toChange as 'email']: target.value });
+        this.setState({ [toChange]: target.value } as ComponentState);
+        this.validator.showMessages();
     };
 
     onLogout = () => {
@@ -47,10 +55,20 @@ class LoginForm extends Component<Props, State> {
     };
 
     render() {
+        const emailMessage = this.validator.message(
+            'email',
+            this.state.email,
+            'required|email'
+        );
+        const passwordMessage = this.validator.message(
+            'password',
+            this.state.password,
+            'required|min:8'
+        );
         return (
             <form className={styles.Form}>
-                <Grid alignContent="center" container direction="column">
-                    <Grid item>
+                <Grid spacing={3} direction="column" container>
+                    <Grid>
                         <FormControl fullWidth>
                             <TextField
                                 fullWidth
@@ -58,10 +76,12 @@ class LoginForm extends Component<Props, State> {
                                 type="email"
                                 onChange={e => this.onInputCHanged('email', e)}
                                 value={this.state.email}
+                                helperText={emailMessage}
+                                error={emailMessage ? true : false}
                             />
                         </FormControl>
                     </Grid>
-                    <Grid item>
+                    <Grid>
                         <FormControl fullWidth>
                             <TextField
                                 fullWidth
@@ -71,11 +91,18 @@ class LoginForm extends Component<Props, State> {
                                 }
                                 value={this.state.password}
                                 label="Password"
+                                helperText={passwordMessage}
+                                error={passwordMessage ? true : false}
                             />
                         </FormControl>
                     </Grid>
                     <Grid item>
-                        <Button onClick={this.onLogin}>LogIn</Button>
+                        <Button
+                            disabled={!this.validator.allValid()}
+                            onClick={this.onLogin}
+                        >
+                            LogIn
+                        </Button>
                     </Grid>
                 </Grid>
             </form>
