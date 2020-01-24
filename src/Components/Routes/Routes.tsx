@@ -16,22 +16,14 @@ const Routes: React.SFC = () => {
                 component={AdminPanel}
                 path="/admin"
                 redirectTo="/login"
-                flow={
-                    isDev()
-                        ? GuardMode.Unauthenticated
-                        : GuardMode.Authenticated
-                }
+                flow={GuardMode.Authenticated}
             />
 
             <GuardedRoute
                 component={LoginForm}
                 path="/login"
                 redirectTo="/admin"
-                flow={
-                    isDev()
-                        ? GuardMode.Authenticated
-                        : GuardMode.Unauthenticated
-                }
+                flow={GuardMode.Unauthenticated}
             />
 
             <Route path="/quiz/:subjectName/:topicName" component={QuizHome} />

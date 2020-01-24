@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { TextField, Button } from '@material-ui/core';
+import { TextField, Button, FormControl, Grid } from '@material-ui/core';
 import styles from './LoginForm.module.sass';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
@@ -49,22 +49,35 @@ class LoginForm extends Component<Props, State> {
     render() {
         return (
             <form className={styles.Form}>
-                {/* this.props.isLoggedIn ? <Redirect to="/admin" /> : null */}
-                <TextField
-                    label="E-Mail"
-                    type="email"
-                    onChange={e => this.onInputCHanged('email', e)}
-                    value={this.state.email}
-                />
-                <TextField
-                    type="password"
-                    onChange={e => this.onInputCHanged('password', e)}
-                    value={this.state.password}
-                    label="Password"
-                />
-                <Button onClick={this.onLogin}>LogIn</Button>
-
-                {/* <Button onClick={this.onLogout}>Logout</Button> */}
+                <Grid alignContent="center" container direction="column">
+                    <Grid item>
+                        <FormControl fullWidth>
+                            <TextField
+                                fullWidth
+                                label="E-Mail"
+                                type="email"
+                                onChange={e => this.onInputCHanged('email', e)}
+                                value={this.state.email}
+                            />
+                        </FormControl>
+                    </Grid>
+                    <Grid item>
+                        <FormControl fullWidth>
+                            <TextField
+                                fullWidth
+                                type="password"
+                                onChange={e =>
+                                    this.onInputCHanged('password', e)
+                                }
+                                value={this.state.password}
+                                label="Password"
+                            />
+                        </FormControl>
+                    </Grid>
+                    <Grid item>
+                        <Button onClick={this.onLogin}>LogIn</Button>
+                    </Grid>
+                </Grid>
             </form>
         );
     }
