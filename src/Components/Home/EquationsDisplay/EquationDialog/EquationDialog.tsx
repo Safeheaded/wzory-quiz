@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import {
     Dialog,
     DialogTitle,
@@ -27,15 +27,15 @@ const EquationDialog = (props: Props) => {
         props.history.push(`/${params.subjectName}/${params.topicName}`);
     };
 
-    const explanations = equation?.explanations.map(explanation => (
-        <>
+    const explanations = equation?.explanations.map((explanation, index) => (
+        <Fragment key={index}>
             <ListItem>
                 <Typography>
                     <Latex>{explanation}</Latex>
                 </Typography>
             </ListItem>
             <Divider />
-        </>
+        </Fragment>
     ));
 
     return (
@@ -45,11 +45,7 @@ const EquationDialog = (props: Props) => {
                 <DialogContentText style={{ lineHeight: '120%' }}>
                     <Latex>{equation ? `$${equation.equation}$` : ''}</Latex>
                 </DialogContentText>
-                <DialogContentText>
-                    {equation?.explanations.length !== 0 ? (
-                        <Typography variant="h6">Oznaczenia:</Typography>
-                    ) : null}
-                </DialogContentText>
+                <DialogContentText variant="h6">Oznaczenia:</DialogContentText>
                 <List>{explanations}</List>
             </DialogContent>
         </Dialog>

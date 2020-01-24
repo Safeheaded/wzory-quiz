@@ -26,7 +26,7 @@ class EquationsList extends Component<Props> {
             <UniversalList
                 actionPath="/equations/add"
                 items={this.props.equations}
-                url={this.props.match.url}
+                url={'/admin'}
             />
         );
     }
