@@ -10,6 +10,7 @@ import {
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Latex from 'react-latex';
+import SimpleReactValidator from 'simple-react-validator';
 
 interface Props {
     explanations: string[];
@@ -25,6 +26,15 @@ interface State {
 class Explanations extends Component<Props, State> {
     state: State = { newExplanation: '' };
 
+    validator: SimpleReactValidator;
+
+    constructor(props: Props) {
+        super(props);
+        this.validator = new SimpleReactValidator({
+            element: (message: string) => message
+        });
+    }
+
     onAddExplanation = () => {
         this.props.addExplanationHandler(this.state.newExplanation);
     };
@@ -39,6 +49,12 @@ class Explanations extends Component<Props, State> {
     };
 
     render() {
+        const explanationValidator = this.validator.message(
+            'explanation',
+            this.state.newExplanation,
+            'required'
+        );
+
         const explanations = this.props.explanations.map(
             (explanation, index) => (
                 <ListItem key={index}>
@@ -67,17 +83,23 @@ class Explanations extends Component<Props, State> {
                 <ListItem>
                     <FormControl style={{ width: '50%' }}>
                         <TextField
-                            onChange={e =>
+                            onChange={e => {
+                                this.validator.showMessageFor('explanation');
                                 this.setState({
                                     newExplanation: (e.target as HTMLInputElement)
                                         .value
-                                })
-                            }
+                                });
+                            }}
                             value={this.state.newExplanation}
+                            helperText={explanationValidator}
+                            error={!!explanationValidator}
                         />
                     </FormControl>
                     <FormControl>
-                        <IconButton onClick={this.onAddExplanation}>
+                        <IconButton
+                            disabled={!this.validator.allValid()}
+                            onClick={this.onAddExplanation}
+                        >
                             <AddIcon />
                         </IconButton>
                     </FormControl>

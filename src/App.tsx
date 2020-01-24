@@ -16,6 +16,7 @@ import { RootReducer } from './store/types/main';
 import { Dispatch } from 'redux';
 import { logout } from './store/actions/Authentication';
 import { withStyles, WithStyles, createStyles } from '@material-ui/styles';
+import isDev from './utils/general';
 
 interface Props extends WithStyles<typeof classes> {
     isLoggedIn: boolean;

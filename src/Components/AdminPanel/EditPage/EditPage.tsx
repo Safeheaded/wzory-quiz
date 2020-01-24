@@ -40,6 +40,7 @@ import {
 import { fetchAllSubjects, addSubject } from '../../../store/actions/Subjects';
 import { addTopic, fetchTopics } from '../../../store/actions/Topics';
 import Explanations from './Explanations/Explanations';
+import SimpleReactValidator from 'simple-react-validator';
 
 export interface Props extends RouteComponentProps, EqStateProps {
     url: string;
@@ -80,6 +81,15 @@ export class EditPage extends Component<Props, State> {
         explanations: [],
         name: ''
     };
+
+    validator: SimpleReactValidator;
+
+    constructor(props: Props) {
+        super(props);
+        this.validator = new SimpleReactValidator({
+            element: (message: string) => message
+        });
+    }
 
     componentDidMount() {
         this.props.fetchAllSubjects();
@@ -135,12 +145,13 @@ export class EditPage extends Component<Props, State> {
     onSubmitHandler = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = new FormData(event.target as HTMLFormElement);
+        const explanations = this.sanitizeExplanations();
         const equation: ExtendedEquation = {
             name: data.get('name') as string,
             equation: (data.get('equation') as string) || '',
             subjectRef: data.get('subjectRef') as string,
             topicRef: data.get('topicRef') as string,
-            explanations: this.state.explanations
+            explanations: explanations
         };
         if (this.state.mode === WriteMode.Add) {
             this.props.addEquation(equation);
@@ -159,6 +170,7 @@ export class EditPage extends Component<Props, State> {
     onSelectChange = (event: onChangeType, lastItemValue?: string) => {
         const value = (event.target as inputTypes).value;
         const target = (event.target as inputTypes).name as keyof State;
+        this.validator.showMessageFor(target);
         if (lastItemValue) {
             this.setValueOrOpenDialog(value, lastItemValue, target);
         } else {
@@ -182,6 +194,13 @@ export class EditPage extends Component<Props, State> {
         };
         this.props.addTopic(topic);
     };
+
+    private sanitizeExplanations() {
+        return this.state.explanations.filter(exp => {
+            const newExp = exp.trim();
+            return newExp.length !== 0;
+        }) as string[];
+    }
 
     private setValueOrOpenDialog(
         value: string,
@@ -268,6 +287,27 @@ export class EditPage extends Component<Props, State> {
             topic => topic.subjectRef === this.state.subjectRef
         );
 
+        const equationValidator = this.validator.message(
+            'equation',
+            this.state.equation,
+            'required'
+        );
+        const nameValidator = this.validator.message(
+            'name',
+            this.state.name,
+            'required'
+        );
+        const subjectValidator = this.validator.message(
+            'subjectRef',
+            this.state.subjectRef,
+            'required'
+        );
+        const topicValidator = this.validator.message(
+            'topicRef',
+            this.state.topicRef,
+            'required'
+        );
+
         return (
             <Fragment>
                 <form
@@ -281,6 +321,7 @@ export class EditPage extends Component<Props, State> {
                                 onValueChange={(e: onChangeType) =>
                                     this.onSelectChange(e)
                                 }
+                                helperText={equationValidator}
                             />
                         </Grid>
                         <Grid item xs={12} sm={6} md={5} lg={3}>
@@ -292,6 +333,7 @@ export class EditPage extends Component<Props, State> {
                                     this.onSelectChange(e)
                                 }
                                 value={this.state.name}
+                                helperText={nameValidator}
                             />
                         </Grid>
                         <Grid item xs={12} sm={3} md={3} lg={3}>
@@ -305,6 +347,7 @@ export class EditPage extends Component<Props, State> {
                                     this.onSelectChange(e, 'add_subject')
                                 }
                                 values={this.props.subjects}
+                                helperText={subjectValidator}
                             />
                         </Grid>
 
@@ -322,6 +365,7 @@ export class EditPage extends Component<Props, State> {
                                 disabled={
                                     this.state.subjectRef === '' ? true : false
                                 }
+                                helperText={topicValidator}
                             />
                         </Grid>
                         <Grid md={6} sm={6} item xs={12} lg={12}>
@@ -341,6 +385,7 @@ export class EditPage extends Component<Props, State> {
 
                         <Grid item>
                             <FormActions
+                                mainDisabled={!this.validator.allValid()}
                                 secondaryButtonAction={
                                     this.deleteEquationHandler
                                 }

@@ -12,6 +12,7 @@ export interface FormInputProps {
     rows?: string;
     disabled?: boolean;
     onValueChange: Function;
+    onBlur?: () => void;
     value: string;
     helperText?: string;
 }

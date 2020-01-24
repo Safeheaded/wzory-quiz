@@ -6,6 +6,8 @@ import styles from './MathInput.module.sass';
 interface Props {
     value: string;
     onValueChange: Function;
+    onBlur?: () => void;
+    helperText?: string;
 }
 
 const MathInput: React.FC<Props> = (props: Props) => {
@@ -17,6 +19,9 @@ const MathInput: React.FC<Props> = (props: Props) => {
                 name="equation"
                 value={props.value}
                 onChange={e => props.onValueChange(e)}
+                error={!!props.helperText}
+                helperText={props.helperText}
+                onBlur={props.onBlur}
             />
             <Latex displayMode={true}>{displayValue}</Latex>
         </FormControl>

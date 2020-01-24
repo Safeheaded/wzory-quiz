@@ -15,6 +15,8 @@ const FormInput: React.SFC<FormInputProps> = (props: FormInputProps) => {
                 rows={props.rows}
                 value={props.value}
                 helperText={props.helperText}
+                error={!!props.helperText}
+                onBlur={props.onBlur}
             />
         </FormControl>
     );

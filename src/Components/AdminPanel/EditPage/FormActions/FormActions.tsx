@@ -5,6 +5,7 @@ import { FormControl, Button } from '@material-ui/core';
 interface Props {
     mode: WriteMode;
     secondaryButtonAction: Function;
+    mainDisabled: boolean;
 }
 
 const FormActions: React.FC<Props> = (props: Props) => {
@@ -20,7 +21,12 @@ const FormActions: React.FC<Props> = (props: Props) => {
     return (
         <Fragment>
             <FormControl>
-                <Button variant="contained" color="primary" type="submit">
+                <Button
+                    disabled={props.mainDisabled}
+                    variant="contained"
+                    color="primary"
+                    type="submit"
+                >
                     {props.mode === WriteMode.Add ? 'Dodaj' : 'Edytuj'}
                 </Button>
             </FormControl>

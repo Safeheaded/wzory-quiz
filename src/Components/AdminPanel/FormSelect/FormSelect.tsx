@@ -21,6 +21,8 @@ interface Props {
     disabled?: boolean;
     values: SubjectWithId[];
     value: string;
+    onBlur?: () => void;
+    helperText?: string;
 }
 
 const FormSelect: React.SFC<Props> = (props: Props) => {
@@ -42,6 +44,8 @@ const FormSelect: React.SFC<Props> = (props: Props) => {
                 name={props.name}
                 labelId={labelId}
                 id={props.id}
+                error={!!props.helperText}
+                onBlur={props.onBlur}
             >
                 {items}
                 {LastItem}
