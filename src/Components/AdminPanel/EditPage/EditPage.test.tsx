@@ -22,7 +22,7 @@ function prepareTests(path: string, params: object = {}) {
         addTopic: jest.fn(),
         deleteEquation: jest.fn(),
         fetchAllSubjects: jest.fn(),
-        fetchAllTopics: jest.fn(),
+        fetchTopics: jest.fn(),
         fetchEquation: jest.fn(),
         updateEquation: jest.fn(),
         subjects: [],

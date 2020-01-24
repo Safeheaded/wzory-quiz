@@ -135,13 +135,12 @@ export class EditPage extends Component<Props, State> {
     onSubmitHandler = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = new FormData(event.target as HTMLFormElement);
-        //TODO: Write explanations code
         const equation: ExtendedEquation = {
             name: data.get('name') as string,
             equation: (data.get('equation') as string) || '',
             subjectRef: data.get('subjectRef') as string,
             topicRef: data.get('topicRef') as string,
-            explanations: []
+            explanations: this.state.explanations
         };
         if (this.state.mode === WriteMode.Add) {
             this.props.addEquation(equation);
@@ -233,6 +232,25 @@ export class EditPage extends Component<Props, State> {
         this.props.history.replace('/admin');
     };
 
+    private addExplanationHandler = (explanation: string) => {
+        this.setState({
+            explanations: [...this.state.explanations, explanation]
+        });
+    };
+
+    private deleteExplanationHandler = (index: number) => {
+        const newExplanations = this.state.explanations.filter(
+            (explanation, eqIndex) => index !== eqIndex
+        );
+        this.setState({ explanations: newExplanations });
+    };
+
+    explanationChangeHandler = (value: string, index: number) => {
+        const newExplanations = [...this.state.explanations];
+        newExplanations[index] = value;
+        this.setState({ explanations: newExplanations });
+    };
+
     render() {
         const subjectLastItem = (
             <MenuItem value="add_subject">
@@ -249,6 +267,7 @@ export class EditPage extends Component<Props, State> {
         const topics = this.props.topics.filter(
             topic => topic.subjectRef === this.state.subjectRef
         );
+
         return (
             <Fragment>
                 <form
@@ -294,7 +313,12 @@ export class EditPage extends Component<Props, State> {
                         values={topics}
                         disabled={this.state.subjectRef === '' ? true : false}
                     />
-                    <Explanations explanations={this.state.explanations} />
+                    <Explanations
+                        deleteExplanationHandler={this.deleteExplanationHandler}
+                        addExplanationHandler={this.addExplanationHandler}
+                        explanations={this.state.explanations}
+                        changeExplanationHandler={this.explanationChangeHandler}
+                    />
 
                     <FormActions
                         secondaryButtonAction={this.deleteEquationHandler}
