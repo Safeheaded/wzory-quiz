@@ -95,7 +95,11 @@ class EquationsDisplay extends Component<Props, State> {
 
         return (
             <Fragment>
-                <ListDisplay url={this.props.match.url} items={equations} />
+                <ListDisplay
+                    equationMode={true}
+                    url={this.props.match.url}
+                    items={equations}
+                />
                 <EquationDialog equation={equation} />
                 <Link
                     className={styles.FabLink}

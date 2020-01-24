@@ -13,6 +13,7 @@ import { makeStyles, createStyles } from '@material-ui/styles';
 interface Props {
     items: ItemOfList[];
     url?: string;
+    equationMode?: boolean;
 }
 
 const useStyles = makeStyles(() =>
@@ -35,9 +36,7 @@ const ListDisplay: React.FC<Props> = (props: Props) => {
     const styles = useStyles();
     const cardsList = props.items.map((item: ItemOfList) => {
         const baseUrl = props.url || '';
-        const url = item.explanation
-            ? item.id
-            : ((item.explanation || item.name) as string).toLowerCase();
+        const url = props.equationMode ? item.id : item?.name?.toLowerCase();
         return (
             <ListItem
                 key={item.id}

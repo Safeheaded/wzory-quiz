@@ -63,6 +63,7 @@ export interface State {
     mode: WriteMode;
     explanation: string;
     equation: string;
+    name: string;
 }
 
 type inputTypes = HTMLSelectElement | HTMLInputElement | HTMLTextAreaElement;
@@ -75,7 +76,8 @@ export class EditPage extends Component<Props, State> {
         topicDialogState: false,
         mode: WriteMode.Add,
         equation: '',
-        explanation: ''
+        explanation: '',
+        name: ''
     };
 
     componentDidMount() {
@@ -110,7 +112,8 @@ export class EditPage extends Component<Props, State> {
                 subjectRef: equation.subjectRef,
                 explanation: equation.explanation,
                 equation: equation.equation,
-                topicRef: equation.topicRef
+                topicRef: equation.topicRef,
+                name: equation.name
             });
         }
     }
@@ -132,7 +135,8 @@ export class EditPage extends Component<Props, State> {
         event.preventDefault();
         const data = new FormData(event.target as HTMLFormElement);
         const equation: ExtendedEquation = {
-            equation: data.get('equation') as string,
+            name: data.get('name') as string,
+            equation: (data.get('equation') as string) || '',
             explanation: data.get('explanation') as string,
             subjectRef: data.get('subjectRef') as string,
             topicRef: data.get('topicRef') as string
@@ -256,15 +260,15 @@ export class EditPage extends Component<Props, State> {
                         }
                     />
                     <FormInput
-                        label="Znaczenie równania"
+                        label="Nazwa równania"
                         rows="5"
                         fullWidth
                         multiline
-                        name="explanation"
+                        name="name"
                         onValueChange={(e: onChangeType) =>
                             this.onSelectChange(e)
                         }
-                        value={this.state.explanation}
+                        value={this.state.name}
                     />
                     <FormSelect
                         value={this.state.subjectRef}

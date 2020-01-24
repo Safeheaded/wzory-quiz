@@ -173,7 +173,7 @@ class Quiz extends Component<Props, State> {
                 <Grid item xs={12}>
                     <Paper className={this.props.classes.paper}>
                         <Typography variant="h4">
-                            {this.state?.selectedEquation?.explanation}
+                            {this.state?.selectedEquation?.name}
                         </Typography>
                     </Paper>
                 </Grid>

@@ -26,7 +26,7 @@ const EquationDialog = (props: Props) => {
 
     return (
         <Dialog onClose={onCloseHandler} open={equation ? true : false}>
-            <DialogTitle>{equation ? equation.explanation : ''}</DialogTitle>
+            <DialogTitle>{equation?.name || ''}</DialogTitle>
             <DialogContent>
                 <DialogContentText style={{ lineHeight: '120%' }}>
                     <Latex>{equation ? `$${equation.equation}$` : ''}</Latex>

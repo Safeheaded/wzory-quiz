@@ -28,6 +28,7 @@ export interface EquationsState {
 export interface Equation {
     explanation: string;
     equation: string;
+    name: string;
 }
 
 export interface ExtendedEquation extends Equation {

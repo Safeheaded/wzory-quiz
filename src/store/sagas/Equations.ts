@@ -46,6 +46,7 @@ function* addEquation(action: AddEquation) {
             action.payload
         );
         const addedEquation: EquationWithId = {
+            name: action.payload.name,
             equation: action.payload.equation,
             explanation: action.payload.explanation,
             id: data.id
