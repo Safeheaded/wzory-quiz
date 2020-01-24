@@ -4,7 +4,10 @@ import {
     DialogTitle,
     DialogContent,
     DialogContentText,
-    Typography
+    Typography,
+    ListItem,
+    List,
+    Divider
 } from '@material-ui/core';
 import { ExtendedEquationWithId } from '../../../../store/types/Equations';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
@@ -24,6 +27,17 @@ const EquationDialog = (props: Props) => {
         props.history.push(`/${params.subjectName}/${params.topicName}`);
     };
 
+    const explanations = equation?.explanations.map(explanation => (
+        <>
+            <ListItem>
+                <Typography>
+                    <Latex>{explanation}</Latex>
+                </Typography>
+            </ListItem>
+            <Divider />
+        </>
+    ));
+
     return (
         <Dialog onClose={onCloseHandler} open={equation ? true : false}>
             <DialogTitle>{equation?.name || ''}</DialogTitle>
@@ -31,6 +45,12 @@ const EquationDialog = (props: Props) => {
                 <DialogContentText style={{ lineHeight: '120%' }}>
                     <Latex>{equation ? `$${equation.equation}$` : ''}</Latex>
                 </DialogContentText>
+                <DialogContentText>
+                    {equation?.explanations.length !== 0 ? (
+                        <Typography variant="h6">Oznaczenia:</Typography>
+                    ) : null}
+                </DialogContentText>
+                <List>{explanations}</List>
             </DialogContent>
         </Dialog>
     );
