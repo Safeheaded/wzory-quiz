@@ -14,6 +14,7 @@ const FormInput: React.SFC<FormInputProps> = (props: FormInputProps) => {
                 fullWidth={props.fullWidth}
                 rows={props.rows}
                 value={props.value}
+                helperText={props.helperText}
             />
         </FormControl>
     );

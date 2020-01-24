@@ -13,6 +13,7 @@ export interface FormInputProps {
     disabled?: boolean;
     onValueChange: Function;
     value: string;
+    helperText?: string;
 }
 
 export enum Answer {
