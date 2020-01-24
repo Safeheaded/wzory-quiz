@@ -26,16 +26,10 @@ const EquationDialog = (props: Props) => {
 
     return (
         <Dialog onClose={onCloseHandler} open={equation ? true : false}>
-            <DialogTitle>Równanie</DialogTitle>
+            <DialogTitle>{equation ? equation.explanation : ''}</DialogTitle>
             <DialogContent>
-                <DialogContentText>
-                    <Latex displayMode={true}>
-                        {equation ? `$$${equation.equation}$$` : ''}
-                    </Latex>
-                </DialogContentText>
-                <Typography>Wyjaśnienie:</Typography>
-                <DialogContentText>
-                    {equation ? equation.explanation : ''}
+                <DialogContentText style={{ lineHeight: '120%' }}>
+                    <Latex>{equation ? `$${equation.equation}$` : ''}</Latex>
                 </DialogContentText>
             </DialogContent>
         </Dialog>
