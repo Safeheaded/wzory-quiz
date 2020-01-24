@@ -42,7 +42,7 @@ class Explanations extends Component<Props, State> {
         const explanations = this.props.explanations.map(
             (explanation, index) => (
                 <ListItem key={index}>
-                    <FormControl>
+                    <FormControl style={{ width: '50%' }}>
                         <TextField
                             onChange={e => this.onValueChange(e, index)}
                             value={explanation}
@@ -55,7 +55,9 @@ class Explanations extends Component<Props, State> {
                             <DeleteIcon />
                         </IconButton>
                     </FormControl>
-                    <Latex>{explanation}</Latex>
+                    <div>
+                        <Latex>{explanation}</Latex>
+                    </div>
                 </ListItem>
             )
         );
@@ -63,7 +65,7 @@ class Explanations extends Component<Props, State> {
         return (
             <List>
                 <ListItem>
-                    <FormControl>
+                    <FormControl style={{ width: '50%' }}>
                         <TextField
                             onChange={e =>
                                 this.setState({

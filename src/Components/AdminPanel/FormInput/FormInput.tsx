@@ -5,7 +5,7 @@ import { FormInputProps } from '../../../types/General';
 
 const FormInput: React.SFC<FormInputProps> = (props: FormInputProps) => {
     return (
-        <FormControl disabled={props.disabled}>
+        <FormControl fullWidth disabled={props.disabled}>
             <TextField
                 onChange={(e: onChangeType) => props.onValueChange(e)}
                 name={props.name}

@@ -34,7 +34,7 @@ const FormSelect: React.SFC<Props> = (props: Props) => {
     ));
 
     return (
-        <FormControl disabled={props.disabled}>
+        <FormControl fullWidth disabled={props.disabled}>
             <InputLabel id={labelId}>{props.label}</InputLabel>
             <Select
                 value={props.value}

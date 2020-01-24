@@ -1,6 +1,6 @@
 import React, { Component, Fragment, ComponentState } from 'react';
 import MathInput from '../MathInput/MathInput';
-import { MenuItem } from '@material-ui/core';
+import { MenuItem, Grid } from '@material-ui/core';
 import { Dispatch } from 'redux';
 import {
     AddEquation,
@@ -274,56 +274,80 @@ export class EditPage extends Component<Props, State> {
                     className={styles.Form}
                     onSubmit={e => this.onSubmitHandler(e)}
                 >
-                    <MathInput
-                        value={this.state.equation}
-                        onValueChange={(e: onChangeType) =>
-                            this.onSelectChange(e)
-                        }
-                    />
-                    <FormInput
-                        label="Nazwa równania"
-                        fullWidth
-                        name="name"
-                        onValueChange={(e: onChangeType) =>
-                            this.onSelectChange(e)
-                        }
-                        value={this.state.name}
-                    />
-                    <FormSelect
-                        value={this.state.subjectRef}
-                        name="subjectRef"
-                        id="subject"
-                        lastItem={subjectLastItem}
-                        label="Przedmioty"
-                        onValueChange={(e: onChangeType) =>
-                            this.onSelectChange(e, 'add_subject')
-                        }
-                        values={this.props.subjects}
-                    />
+                    <Grid container spacing={3}>
+                        <Grid item sm={6} xs={12} md={5} lg={3}>
+                            <MathInput
+                                value={this.state.equation}
+                                onValueChange={(e: onChangeType) =>
+                                    this.onSelectChange(e)
+                                }
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6} md={5} lg={3}>
+                            <FormInput
+                                label="Nazwa równania"
+                                fullWidth
+                                name="name"
+                                onValueChange={(e: onChangeType) =>
+                                    this.onSelectChange(e)
+                                }
+                                value={this.state.name}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={3} md={3} lg={3}>
+                            <FormSelect
+                                value={this.state.subjectRef}
+                                name="subjectRef"
+                                id="subject"
+                                lastItem={subjectLastItem}
+                                label="Przedmioty"
+                                onValueChange={(e: onChangeType) =>
+                                    this.onSelectChange(e, 'add_subject')
+                                }
+                                values={this.props.subjects}
+                            />
+                        </Grid>
 
-                    <FormSelect
-                        value={this.state.topicRef}
-                        name="topicRef"
-                        id="topic"
-                        lastItem={topicLastItem}
-                        label="Tematy"
-                        onValueChange={(e: onChangeType) =>
-                            this.onSelectChange(e, 'add_topic')
-                        }
-                        values={topics}
-                        disabled={this.state.subjectRef === '' ? true : false}
-                    />
-                    <Explanations
-                        deleteExplanationHandler={this.deleteExplanationHandler}
-                        addExplanationHandler={this.addExplanationHandler}
-                        explanations={this.state.explanations}
-                        changeExplanationHandler={this.explanationChangeHandler}
-                    />
+                        <Grid item xs={12} sm={3} md={3} lg={3}>
+                            <FormSelect
+                                value={this.state.topicRef}
+                                name="topicRef"
+                                id="topic"
+                                lastItem={topicLastItem}
+                                label="Tematy"
+                                onValueChange={(e: onChangeType) =>
+                                    this.onSelectChange(e, 'add_topic')
+                                }
+                                values={topics}
+                                disabled={
+                                    this.state.subjectRef === '' ? true : false
+                                }
+                            />
+                        </Grid>
+                        <Grid md={6} sm={6} item xs={12} lg={12}>
+                            <Explanations
+                                deleteExplanationHandler={
+                                    this.deleteExplanationHandler
+                                }
+                                addExplanationHandler={
+                                    this.addExplanationHandler
+                                }
+                                explanations={this.state.explanations}
+                                changeExplanationHandler={
+                                    this.explanationChangeHandler
+                                }
+                            />
+                        </Grid>
 
-                    <FormActions
-                        secondaryButtonAction={this.deleteEquationHandler}
-                        mode={this.state.mode}
-                    />
+                        <Grid item>
+                            <FormActions
+                                secondaryButtonAction={
+                                    this.deleteEquationHandler
+                                }
+                                mode={this.state.mode}
+                            />
+                        </Grid>
+                    </Grid>
                 </form>
 
                 <AddDialog
