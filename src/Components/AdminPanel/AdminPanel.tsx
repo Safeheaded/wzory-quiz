@@ -5,7 +5,8 @@ import {
     Redirect,
     Switch,
     withRouter,
-    useRouteMatch
+    useRouteMatch,
+    useHistory
 } from 'react-router';
 import { Dispatch } from 'redux';
 import { logout } from '../../store/actions/Authentication';
@@ -53,11 +54,11 @@ const AdminPanel = (props: Props) => {
                 <Route path={`${path}/equations`}>
                     <EquationsList url={url} />
                 </Route>
-                <Route path={`${path}/subjects/:id`}>
-                    <SubjectsList url={url} />
-                </Route>
                 <Route path={`${path}/subjects/add`}>
                     <SubjectsList url={url} mode={WriteMode.Add} />
+                </Route>
+                <Route path={`${path}/subjects/:id`}>
+                    <SubjectsList url={url} />
                 </Route>
                 <Route path={`${path}/subjects`}>
                     <SubjectsList url={url} />

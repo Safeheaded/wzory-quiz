@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, SyntheticEvent } from 'react';
 import { SubjectWithId, Subject } from '../../../store/types/Subjects';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
@@ -16,6 +16,7 @@ import { WriteMode } from '../../../types/admin';
 import EditList from '../EditList/EditList';
 import { State } from '../EditList/EditList';
 import { Button } from '@material-ui/core';
+import SimpleReactValidator from 'simple-react-validator';
 
 interface Props extends RouteComponentProps {
     fetchAllSubjects: typeof fetchAllSubjects;
@@ -27,14 +28,37 @@ interface Props extends RouteComponentProps {
     mode?: WriteMode;
 }
 
+type Params = { id: string };
+
 class SubjectsList extends EditList<Props, State> {
+    validator: SimpleReactValidator;
+
+    constructor(props: Props) {
+        super(props);
+        this.validator = new SimpleReactValidator({
+            element: (message: string) => message
+        });
+    }
+
     componentDidMount() {
         this.baseComponentDidMount(this.props.fetchAllSubjects);
     }
 
     componentDidUpdate(prevProps: Props) {
         this.baseComponentDidUpdate(prevProps);
+        const params = this.props.match.params as Params;
+        const prevParams = prevProps.match.params as Params;
+        if (prevParams !== params) {
+            this.validator = new SimpleReactValidator({
+                element: (message: string) => message
+            });
+        }
     }
+
+    onChangeHandler = (value: string) => {
+        this.validator.showMessageFor('subject');
+        this.setState({ value });
+    };
 
     render() {
         const item = this.getItem(this.state.itemId);
@@ -47,12 +71,17 @@ class SubjectsList extends EditList<Props, State> {
                 Usuń
             </Button>
         );
+        const subjectValidator = this.validator.message(
+            'subject',
+            this.state.value,
+            'required|alpha'
+        );
         return (
             <Fragment>
                 <UniversalList
                     items={this.props.items}
                     url={this.props.match.url}
-                    actionPath="/subjects/add"
+                    actionPath="/add"
                 />
                 <SubjectDialog
                     title={
@@ -68,6 +97,9 @@ class SubjectsList extends EditList<Props, State> {
                     isDialogOpen={this.state.isDialogOpen}
                     primaryAction={primaryAction}
                     secondaryActionButton={secondaryActionButton}
+                    helperText={subjectValidator}
+                    onChange={this.onChangeHandler}
+                    validity={!this.validator.allValid()}
                 />
             </Fragment>
         );

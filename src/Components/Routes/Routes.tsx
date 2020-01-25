@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import Home from '../Home/Home';
 import GuardedRoute, { GuardMode } from '../../HOCs/GuardedRoute/GuardedRoute';
@@ -8,15 +8,17 @@ import NotFoundPage from '../NotFoundPage/NotFoundPage';
 import QuizHome from '../QuizHome/QuizHome';
 import isDev from '../../utils/general';
 
+const AdminPage = lazy(() => import('../AdminPanel/AdminPanel'));
+
 const Routes: React.SFC = () => {
     return (
         <Switch>
             <Route path="/" exact component={Home} />
             <GuardedRoute
-                component={AdminPanel}
                 path="/admin"
                 redirectTo="/login"
                 flow={GuardMode.Authenticated}
+                component={AdminPage}
             />
 
             <GuardedRoute

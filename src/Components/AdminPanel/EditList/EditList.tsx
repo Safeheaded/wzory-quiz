@@ -13,9 +13,10 @@ export interface State {
     itemId: string;
     isDialogOpen: boolean;
     mode: WriteMode;
+    value?: string;
 }
 
-type Params = { id: string };
+export type Params = { id: string };
 
 abstract class EditList<
     ExternalProps extends Props,

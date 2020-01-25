@@ -23,6 +23,7 @@ import FormSelect from '../FormSelect/FormSelect';
 import { fetchAllSubjects } from '../../../store/actions/Subjects';
 import { SubjectWithId } from '../../../store/types/Subjects';
 import { Button } from '@material-ui/core';
+import SimpleReactValidator from 'simple-react-validator';
 
 interface Props extends RouteComponentProps {
     fetchAllTopics: typeof fetchAllTopics;
@@ -41,6 +42,15 @@ interface State extends BaseState {
 }
 
 export class TopicsList extends EditList<Props, State> {
+    validator: SimpleReactValidator;
+
+    constructor(props: Props) {
+        super(props);
+        this.validator = new SimpleReactValidator({
+            element: (message: string) => message
+        });
+    }
+
     componentDidMount() {
         this.baseComponentDidMount(this.props.fetchAllTopics);
         this.props.fetchAllSubjects();
@@ -50,6 +60,9 @@ export class TopicsList extends EditList<Props, State> {
     componentDidUpdate(prevProps: Props) {
         this.baseComponentDidUpdate(prevProps);
         if (prevProps.match.params !== this.props.match.params) {
+            this.validator = new SimpleReactValidator({
+                element: (message: string) => message
+            });
             const itemId = (this.props.match.params as { id: string }).id || '';
             this.prepareSubjectRef(itemId);
         }
@@ -57,6 +70,7 @@ export class TopicsList extends EditList<Props, State> {
 
     valueChangeHandler = (e: React.SyntheticEvent<HTMLSelectElement>) => {
         const value = (e.target as HTMLSelectElement).value;
+        this.validator.showMessageFor('subjectRef');
         this.setState({ subjectRef: value });
     };
 
@@ -67,6 +81,8 @@ export class TopicsList extends EditList<Props, State> {
                 subject => subject.id === item.subjectRef
             );
             this.setSubjectRef(subject);
+        } else {
+            this.setState({ subjectRef: '' });
         }
     }
 
@@ -76,12 +92,27 @@ export class TopicsList extends EditList<Props, State> {
         }
     }
 
+    onChangeHandler = (value: string) => {
+        this.validator.showMessageFor('topic');
+        this.setState({ value: value });
+    };
+
     render() {
         const item = this.getItem(this.state.itemId);
         const primaryAction =
             this.state.mode === WriteMode.Add
                 ? this.props.addTopic
                 : this.props.updateTopic;
+        const topicValidator = this.validator.message(
+            'topic',
+            this.state.value,
+            'required|alpha'
+        );
+        const subjectValidator = this.validator.message(
+            'subjectRef',
+            this.state.subjectRef,
+            'required'
+        );
         const secondaryActionButton = (
             <Button onClick={() => this.props.deleteTopic(this.state.itemId)}>
                 Usuń
@@ -108,6 +139,9 @@ export class TopicsList extends EditList<Props, State> {
                     isDialogOpen={this.state.isDialogOpen}
                     primaryAction={primaryAction}
                     secondaryActionButton={secondaryActionButton}
+                    helperText={topicValidator}
+                    onChange={this.onChangeHandler}
+                    validity={!this.validator.allValid()}
                 >
                     <FormSelect
                         label="Przedmiot"
@@ -118,6 +152,7 @@ export class TopicsList extends EditList<Props, State> {
                             e: React.SyntheticEvent<HTMLSelectElement>
                         ) => this.valueChangeHandler(e)}
                         values={this.props.subjects}
+                        helperText={subjectValidator}
                     />
                 </TopicDialog>
             </Fragment>

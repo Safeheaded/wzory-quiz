@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense, Component } from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
@@ -19,15 +19,21 @@ const theme = createMuiTheme({
     }
 });
 
+const Loading: React.FC<any> = () => {
+    return <p>Loading...</p>;
+};
+
 const store = configureStore();
 
 const app = (
     <Provider store={store}>
         <ThemeProvider theme={theme}>
-            <BrowserRouter>
-                <CssBaseline />
-                <App />
-            </BrowserRouter>
+            <Suspense fallback={<Loading />}>
+                <BrowserRouter>
+                    <CssBaseline />
+                    <App />
+                </BrowserRouter>
+            </Suspense>
         </ThemeProvider>
     </Provider>
 );

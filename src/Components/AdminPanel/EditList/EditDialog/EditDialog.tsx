@@ -8,7 +8,7 @@ import {
 } from '@material-ui/core';
 import FormInput from '../../FormInput/FormInput';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
-import { ItemOfList } from '../../../../types/General';
+import { ItemOfList, FormInputProps } from '../../../../types/General';
 import { WriteMode } from '../../../../types/admin';
 import { SubjectWithId } from '../../../../store/types/Subjects';
 import {
@@ -29,6 +29,9 @@ interface Props<T> extends RouteComponentProps {
     isDialogOpen: boolean;
     primaryAction: (item: T) => void;
     secondaryActionButton?: JSX.Element;
+    onChange?: (val: string) => void;
+    helperText?: string;
+    validity?: boolean;
 }
 
 interface State {
@@ -46,11 +49,15 @@ abstract class EditDialog<
             const name = (this.props.name
                 ? this.props.item.name
                 : this.props.item.explanation) as string;
+            //TODO: Add showing message in here
+
+            this.props.onChange && this.props.onChange(name);
             this.setState({ inputValue: name, id: this.props.item.id });
         }
     }
 
     onValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        this.props.onChange && this.props.onChange(event.target.value);
         this.setState({ inputValue: event.target.value });
     };
 
@@ -94,13 +101,16 @@ abstract class EditDialog<
                             onValueChange={(
                                 e: React.ChangeEvent<HTMLInputElement>
                             ) => this.onValueChange(e)}
+                            helperText={this.props.helperText}
                         />
                     </DialogContent>
                     <DialogActions>
-                        <Button type="submit">
+                        <Button disabled={!!this.props.validity} type="submit">
                             {id.length === 0 ? 'Dodaj' : 'Edytuj'}
                         </Button>
-                        {this.props.secondaryActionButton}
+                        {id.length !== 0
+                            ? this.props.secondaryActionButton
+                            : null}
                     </DialogActions>
                 </form>
             </Dialog>

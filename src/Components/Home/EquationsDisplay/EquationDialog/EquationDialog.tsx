@@ -45,7 +45,11 @@ const EquationDialog = (props: Props) => {
                 <DialogContentText style={{ lineHeight: '120%' }}>
                     <Latex>{equation ? `$${equation.equation}$` : ''}</Latex>
                 </DialogContentText>
-                <DialogContentText variant="h6">Oznaczenia:</DialogContentText>
+                {equation?.explanations.length !== 0 ? (
+                    <DialogContentText variant="h6">
+                        Oznaczenia:
+                    </DialogContentText>
+                ) : null}
                 <List>{explanations}</List>
             </DialogContent>
         </Dialog>

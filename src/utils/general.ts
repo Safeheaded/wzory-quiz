@@ -9,3 +9,7 @@ const development: boolean =
 export default function isDev(): boolean {
     return development;
 }
+
+export function getParams<T extends object>(params: object): T {
+    return params as T;
+}
