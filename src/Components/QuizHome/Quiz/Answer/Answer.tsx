@@ -1,7 +1,7 @@
 /* eslint-disable react/display-name */
 import React from 'react';
 import { Answer } from '../../../../types/General';
-import { Grid, Button, Paper, Theme } from '@material-ui/core';
+import { Grid, Button, Paper, Theme, ButtonBase } from '@material-ui/core';
 import { makeStyles, createStyles } from '@material-ui/styles';
 import { QuizMode } from '../Quiz';
 import Latex from 'react-latex';
@@ -20,15 +20,17 @@ const smSize = 6;
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         paper: {
-            padding: `${theme.spacing(3)}px`,
+            padding: `${theme.spacing(0)}px`,
             textAlign: 'center',
-            width: '100%'
+            width: '100%',
+            height: '100%'
         },
         button: {
-            padding: 0,
+            padding: `${theme.spacing(3)}px`,
             width: '100%',
             textTransform: 'none',
-            fontWeight: 'bolder'
+            fontWeight: 'bolder',
+            height: '100%'
         },
         correctAnswer: {
             backgroundColor: 'green'
@@ -47,18 +49,16 @@ const QuizAnswer = (props: Props) => {
     }
     return (
         <Grid xs={xsSize} sm={smSize} item>
-            <Button
-                variant="contained"
-                color="secondary"
-                onClick={() => props.onClick(props.id)}
-                className={styles.button}
-            >
-                <Paper className={style.join(' ')}>
+            <Paper className={style.join(' ')}>
+                <ButtonBase
+                    onClick={() => props.onClick(props.id)}
+                    className={styles.button}
+                >
                     <Latex displayMode={true}>
                         {props.answer ? `$$${props.answer}$$` : ''}
                     </Latex>
-                </Paper>
-            </Button>
+                </ButtonBase>
+            </Paper>
         </Grid>
     );
 };

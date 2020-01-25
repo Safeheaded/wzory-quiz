@@ -198,7 +198,7 @@ class Quiz extends Component<Props, State> {
             </Fragment>
         );
         return (
-            <Grid justify="center" container spacing={3}>
+            <Grid container spacing={3}>
                 {this.state?.isFinish ? quizResult : quizContent}
             </Grid>
         );
