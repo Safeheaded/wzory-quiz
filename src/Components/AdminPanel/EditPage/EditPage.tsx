@@ -329,9 +329,7 @@ export class EditPage extends Component<Props, State> {
                                 label="Nazwa równania"
                                 fullWidth
                                 name="name"
-                                onValueChange={(e: onChangeType) =>
-                                    this.onSelectChange(e)
-                                }
+                                onChange={e => this.onSelectChange(e)}
                                 value={this.state.name}
                                 helperText={nameValidator}
                             />

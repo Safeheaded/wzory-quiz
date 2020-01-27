@@ -1,23 +1,16 @@
 import React from 'react';
-import { FormControl, TextField } from '@material-ui/core';
-import { onChangeType } from '../../../types/admin';
-import { FormInputProps } from '../../../types/General';
+import {
+    FormControl,
+    TextField,
+    StandardTextFieldProps
+} from '@material-ui/core';
 
-const FormInput: React.SFC<FormInputProps> = (props: FormInputProps) => {
+const FormInput: React.SFC<StandardTextFieldProps> = (
+    props: StandardTextFieldProps
+) => {
     return (
-        <FormControl fullWidth disabled={props.disabled}>
-            <TextField
-                onChange={(e: onChangeType) => props.onValueChange(e)}
-                name={props.name}
-                label={props.label}
-                multiline={props.multiline}
-                fullWidth={props.fullWidth}
-                rows={props.rows}
-                value={props.value}
-                helperText={props.helperText}
-                error={!!props.helperText}
-                onBlur={props.onBlur}
-            />
+        <FormControl fullWidth={!!props.fullWidth}>
+            <TextField {...props} />
         </FormControl>
     );
 };

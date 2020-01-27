@@ -1,20 +1,9 @@
+import { TextFieldProps, StandardTextFieldProps } from '@material-ui/core';
+
 export interface ItemOfList {
     name?: string;
     explanation?: string;
     id: string;
-}
-
-export interface FormInputProps {
-    name: string;
-    label: string;
-    multiline?: boolean;
-    fullWidth?: boolean;
-    rows?: string;
-    disabled?: boolean;
-    onValueChange: Function;
-    onBlur?: () => void;
-    value: string;
-    helperText?: string;
 }
 
 export enum Answer {

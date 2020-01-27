@@ -8,7 +8,7 @@ import {
 } from '@material-ui/core';
 import FormInput from '../../FormInput/FormInput';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
-import { ItemOfList, FormInputProps } from '../../../../types/General';
+import { ItemOfList } from '../../../../types/General';
 import { WriteMode } from '../../../../types/admin';
 import { SubjectWithId } from '../../../../store/types/Subjects';
 import {
@@ -56,7 +56,9 @@ abstract class EditDialog<
         }
     }
 
-    onValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    onValueChange = (
+        event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    ) => {
         this.props.onChange && this.props.onChange(event.target.value);
         this.setState({ inputValue: event.target.value });
     };
@@ -98,9 +100,7 @@ abstract class EditDialog<
                             label={this.props.label}
                             name={this.props.name}
                             value={this.state.inputValue}
-                            onValueChange={(
-                                e: React.ChangeEvent<HTMLInputElement>
-                            ) => this.onValueChange(e)}
+                            onChange={e => this.onValueChange(e)}
                             helperText={this.props.helperText}
                         />
                     </DialogContent>
