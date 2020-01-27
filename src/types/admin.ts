@@ -1,9 +1,7 @@
-export type onChangeType =
-    | React.ChangeEvent<{
-          name?: string | undefined;
-          value: unknown;
-      }>
-    | React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>;
+export type SelectChangeEvent = React.ChangeEvent<{
+    name?: string | undefined;
+    value: unknown;
+}>;
 
 export enum WriteMode {
     Edit,

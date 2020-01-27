@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, SyntheticEvent } from 'react';
 import UniversalList from '../UniversalList/UniversalList';
 import { connect } from 'react-redux';
 import { RootReducer } from '../../../store/types/main';
@@ -16,7 +16,7 @@ import {
 import { RouteComponentProps } from 'react-router-dom';
 import { withRouter } from 'react-router-dom';
 import TopicDialog from './TopicDialog/TopicDialog';
-import { WriteMode } from '../../../types/admin';
+import { WriteMode, SelectChangeEvent } from '../../../types/admin';
 import EditList from '../EditList/EditList';
 import { State as BaseState } from '../EditList/EditList';
 import FormSelect from '../FormSelect/FormSelect';
@@ -68,7 +68,7 @@ export class TopicsList extends EditList<Props, State> {
         }
     }
 
-    valueChangeHandler = (e: React.SyntheticEvent<HTMLSelectElement>) => {
+    valueChangeHandler = (e: SelectChangeEvent) => {
         const value = (e.target as HTMLSelectElement).value;
         this.validator.showMessageFor('subjectRef');
         this.setState({ subjectRef: value });
@@ -148,11 +148,9 @@ export class TopicsList extends EditList<Props, State> {
                         name="subjectRef"
                         value={this.state.subjectRef}
                         id="topic"
-                        onValueChange={(
-                            e: React.SyntheticEvent<HTMLSelectElement>
-                        ) => this.valueChangeHandler(e)}
+                        onChange={e => this.valueChangeHandler(e)}
                         values={this.props.subjects}
-                        helperText={subjectValidator}
+                        error={subjectValidator}
                     />
                 </TopicDialog>
             </Fragment>

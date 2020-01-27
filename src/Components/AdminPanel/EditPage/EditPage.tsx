@@ -21,7 +21,7 @@ import styles from './MainPage.module.sass';
 import AddIcon from '@material-ui/icons/Add';
 import FormInput from '../FormInput/FormInput';
 import FormSelect from '../FormSelect/FormSelect';
-import { onChangeType, WriteMode } from '../../../types/admin';
+import { SelectChangeEvent, WriteMode } from '../../../types/admin';
 import AddDialog from '../AddDialog/AddDialog';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { mapEqState, EqStateProps } from '../../../utils/StatesPropsToMap';
@@ -167,7 +167,7 @@ export class EditPage extends Component<Props, State> {
         this.setState({ subjectDialogState: true });
     };
 
-    onSelectChange = (event: onChangeType, lastItemValue?: string) => {
+    onSelectChange = (event: SelectChangeEvent, lastItemValue?: string) => {
         const value = (event.target as inputTypes).value;
         const target = (event.target as inputTypes).name as keyof State;
         this.validator.showMessageFor(target);
@@ -318,7 +318,7 @@ export class EditPage extends Component<Props, State> {
                         <Grid item sm={6} xs={12} md={5} lg={3}>
                             <MathInput
                                 value={this.state.equation}
-                                onValueChange={(e: onChangeType) =>
+                                onValueChange={(e: SelectChangeEvent) =>
                                     this.onSelectChange(e)
                                 }
                                 helperText={equationValidator}
@@ -341,11 +341,11 @@ export class EditPage extends Component<Props, State> {
                                 id="subject"
                                 lastItem={subjectLastItem}
                                 label="Przedmioty"
-                                onValueChange={(e: onChangeType) =>
+                                onChange={e =>
                                     this.onSelectChange(e, 'add_subject')
                                 }
                                 values={this.props.subjects}
-                                helperText={subjectValidator}
+                                error={subjectValidator}
                             />
                         </Grid>
 
@@ -356,14 +356,14 @@ export class EditPage extends Component<Props, State> {
                                 id="topic"
                                 lastItem={topicLastItem}
                                 label="Tematy"
-                                onValueChange={(e: onChangeType) =>
+                                onChange={e =>
                                     this.onSelectChange(e, 'add_topic')
                                 }
                                 values={topics}
                                 disabled={
                                     this.state.subjectRef === '' ? true : false
                                 }
-                                helperText={topicValidator}
+                                error={topicValidator}
                             />
                         </Grid>
                         <Grid md={6} sm={6} item xs={12} lg={12}>

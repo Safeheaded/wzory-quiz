@@ -4,51 +4,32 @@ import {
     InputLabel,
     Select,
     MenuItem,
-    MenuItemProps
+    MenuItemProps,
+    SelectProps
 } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
-import { OverridableComponent } from '@material-ui/core/OverridableComponent';
-import { onChangeType } from '../../../types/admin';
 import { SubjectWithId } from '../../../store/types/Subjects';
 
-interface Props {
-    name: string;
-    defaultValue?: string;
+interface Props extends SelectProps {
     lastItem?: React.ComponentElement<MenuItemProps, any>;
-    id: string;
-    label: string;
-    onValueChange: Function;
-    disabled?: boolean;
     values: SubjectWithId[];
-    value: string;
-    onBlur?: () => void;
-    helperText?: string;
+    label: string;
 }
 
 const FormSelect: React.SFC<Props> = (props: Props) => {
-    const LastItem = props.lastItem ? props.lastItem : null;
-    const labelId = `${props.id}-label`;
+    const { lastItem, values, label, ...defaultProps } = props;
 
-    const items = props.values.map((subject: SubjectWithId) => (
+    const items = values.map((subject: SubjectWithId) => (
         <MenuItem key={subject.id} value={subject.id}>
             {subject.name}
         </MenuItem>
     ));
 
     return (
-        <FormControl fullWidth disabled={props.disabled}>
-            <InputLabel id={labelId}>{props.label}</InputLabel>
-            <Select
-                value={props.value}
-                onChange={(e: onChangeType) => props.onValueChange(e)}
-                name={props.name}
-                labelId={labelId}
-                id={props.id}
-                error={!!props.helperText}
-                onBlur={props.onBlur}
-            >
+        <FormControl fullWidth={props.fullWidth} disabled={props.disabled}>
+            <InputLabel id={props.labelId}>{label}</InputLabel>
+            <Select {...defaultProps}>
                 {items}
-                {LastItem}
+                {lastItem}
             </Select>
         </FormControl>
     );
