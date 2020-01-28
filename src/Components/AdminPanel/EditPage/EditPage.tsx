@@ -332,10 +332,12 @@ export class EditPage extends Component<Props, State> {
                                 onChange={e => this.onSelectChange(e)}
                                 value={this.state.name}
                                 helperText={nameValidator}
+                                error={!!nameValidator}
                             />
                         </Grid>
                         <Grid item xs={12} sm={3} md={3} lg={3}>
                             <FormSelect
+                                fullWidth
                                 value={this.state.subjectRef}
                                 name="subjectRef"
                                 id="subject"
@@ -351,6 +353,7 @@ export class EditPage extends Component<Props, State> {
 
                         <Grid item xs={12} sm={3} md={3} lg={3}>
                             <FormSelect
+                                fullWidth
                                 value={this.state.topicRef}
                                 name="topicRef"
                                 id="topic"
