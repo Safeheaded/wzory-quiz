@@ -146,9 +146,7 @@ export class TopicsList extends EditList<Props, State> {
                     <FormSelect
                         label="Przedmiot"
                         name="subjectRef"
-                        value={this.state.subjectRef}
                         id="topic"
-                        onChange={e => this.valueChangeHandler(e)}
                         values={this.props.subjects}
                         error={subjectValidator}
                     />

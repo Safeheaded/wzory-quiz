@@ -99,9 +99,6 @@ abstract class EditDialog<
                         <FormInput
                             label={this.props.label}
                             name={this.props.name}
-                            value={this.state.inputValue}
-                            onChange={e => this.onValueChange(e)}
-                            helperText={this.props.helperText}
                         />
                     </DialogContent>
                     <DialogActions>

@@ -1,28 +1,18 @@
-import React, { Component, Fragment } from 'react';
-import { TextField, FormControl } from '@material-ui/core';
+import React from 'react';
+import { FormControl } from '@material-ui/core';
+import { TextField, TextFieldProps } from 'formik-material-ui';
 import Latex from 'react-latex';
-import styles from './MathInput.module.sass';
 
-interface Props {
-    value: string;
-    onValueChange: Function;
-    onBlur?: () => void;
-    helperText?: string;
+interface Props extends TextFieldProps {
+    value?: string;
 }
 
 const MathInput: React.FC<Props> = (props: Props) => {
-    const displayValue = props.value.length !== 0 ? `$$${props.value}$$` : '';
+    const { value: mathValue, ...defaultProps } = props;
+    const displayValue = mathValue?.length !== 0 ? `$$${mathValue}$$` : '';
     return (
         <FormControl fullWidth>
-            <TextField
-                label="Równanie"
-                name="equation"
-                value={props.value}
-                onChange={e => props.onValueChange(e)}
-                error={!!props.helperText}
-                helperText={props.helperText}
-                onBlur={props.onBlur}
-            />
+            <TextField {...defaultProps} />
             <Latex displayMode={true}>{displayValue}</Latex>
         </FormControl>
     );

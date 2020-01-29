@@ -1,14 +1,10 @@
 import React, { Component, Fragment, ComponentState } from 'react';
 import MathInput from '../MathInput/MathInput';
-import { MenuItem, Grid } from '@material-ui/core';
+import { MenuItem, Grid, CircularProgress } from '@material-ui/core';
 import { Dispatch } from 'redux';
 import {
-    AddEquation,
     ExtendedEquation,
-    ExtendedEquationWithId,
-    FetchEquation,
-    UpdateEquation,
-    DeleteEquation
+    ExtendedEquationWithId
 } from '../../../store/types/Equations';
 import {
     fetchEquation,
@@ -26,46 +22,34 @@ import AddDialog from '../AddDialog/AddDialog';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { mapEqState, EqStateProps } from '../../../utils/StatesPropsToMap';
 import FormActions from './FormActions/FormActions';
-import {
-    SubjectWithId,
-    FetchAllSubjects,
-    Subject,
-    AddSubject
-} from '../../../store/types/Subjects';
-import {
-    ExtendedTopic,
-    AddTopic,
-    FetchTopics
-} from '../../../store/types/Topics';
+import { SubjectWithId, Subject } from '../../../store/types/Subjects';
+import { ExtendedTopic } from '../../../store/types/Topics';
 import { fetchAllSubjects, addSubject } from '../../../store/actions/Subjects';
 import { addTopic, fetchTopics } from '../../../store/actions/Topics';
 import Explanations from './Explanations/Explanations';
 import SimpleReactValidator from 'simple-react-validator';
+import { Formik, FormikProps, Form } from 'formik';
+import { EditValues, editSchema } from '../../../utils/validationSchemas';
 
 export interface Props extends RouteComponentProps, EqStateProps {
     url: string;
-    addEquation: (equation: ExtendedEquation) => AddEquation;
-    fetchAllSubjects: () => FetchAllSubjects;
-    addSubject: (subject: Subject) => AddSubject;
-    fetchTopics: (subjectRef: string) => FetchTopics;
-    addTopic: (topic: ExtendedTopic) => AddTopic;
-    fetchEquation: (id: string) => FetchEquation;
-    updateEquation: (equation: ExtendedEquationWithId) => UpdateEquation;
-    deleteEquation: (id: string) => DeleteEquation;
+    addEquation: typeof addEquation;
+    fetchAllSubjects: typeof fetchAllSubjects;
+    addSubject: typeof addSubject;
+    fetchTopics: typeof fetchTopics;
+    addTopic: typeof addTopic;
+    fetchEquation: typeof fetchEquation;
+    updateEquation: typeof updateEquation;
+    deleteEquation: typeof deleteEquation;
 }
 
-type params = { id: string };
+type Params = { id?: string };
 
 export interface State {
     subjectDialogState: boolean;
     topicDialogState: boolean;
-    subjectRef: string;
-    topicRef: string;
-    equationId?: string;
+    equation?: ExtendedEquationWithId;
     mode: WriteMode;
-    explanations: string[];
-    equation: string;
-    name: string;
 }
 
 type inputTypes = HTMLSelectElement | HTMLInputElement | HTMLTextAreaElement;
@@ -73,77 +57,64 @@ type inputTypes = HTMLSelectElement | HTMLInputElement | HTMLTextAreaElement;
 export class EditPage extends Component<Props, State> {
     state: State = {
         subjectDialogState: false,
-        subjectRef: '',
-        topicRef: '',
         topicDialogState: false,
-        mode: WriteMode.Add,
-        equation: '',
-        explanations: [],
-        name: ''
+        mode: WriteMode.Add
     };
-
-    validator: SimpleReactValidator;
-
-    constructor(props: Props) {
-        super(props);
-        this.validator = new SimpleReactValidator({
-            element: (message: string) => message
-        });
-    }
 
     componentDidMount() {
         this.props.fetchAllSubjects();
-        const equationId = (this.props.match.params as params).id;
+        this.provideEquation(this.props.equations);
+    }
+
+    private provideEquation(equations: ExtendedEquationWithId[]) {
+        const equationId = this.getId();
         if (equationId) {
-            this.setState({
-                mode: WriteMode.Edit,
-                equationId
-            });
-            this.extractEquation(equationId);
+            const equation = equations.find(eq => eq.id === equationId);
+            this.getEquationAndFetchTopics(equation, equationId);
         }
     }
 
-    private extractEquation(equationId: string) {
-        if (this.props.equations.length === 0) {
-            this.props.fetchEquation(equationId);
-        } else {
-            this.getEquation(equationId);
-        }
-    }
-
-    private getEquation(equationId: string) {
-        const equation = this.findEquation(equationId);
-        this.handleEquationData(equation);
-    }
-
-    private handleEquationData(equation: ExtendedEquationWithId | undefined) {
+    private getEquationAndFetchTopics(
+        equation: ExtendedEquationWithId | undefined,
+        equationId: string
+    ) {
         if (equation) {
             this.props.fetchTopics(equation.subjectRef);
-            this.setState({
-                subjectRef: equation.subjectRef,
-                equation: equation.equation,
-                topicRef: equation.topicRef,
-                name: equation.name,
-                explanations: equation.explanations
-            });
+            this.setState({ equation });
+        } else {
+            this.props.fetchEquation(equationId);
         }
     }
 
-    private findEquation(equationId: string) {
-        return this.props.equations.find(
-            equation => equation.id === equationId
-        );
+    private getId() {
+        return (this.props.match.params as Params).id;
+    }
+
+    private getEditMode() {
+        return this.getId() ? WriteMode.Edit : WriteMode.Add;
     }
 
     componentDidUpdate(prevProps: Props, prevState: State) {
-        const equationFetched = prevProps.equations !== this.props.equations;
-        if (equationFetched && prevState.equationId) {
-            this.getEquation(prevState.equationId);
+        if (prevProps.equations !== this.props.equations) {
+            this.provideEquation(this.props.equations);
         }
     }
 
     onSubmitHandler = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        const equation: ExtendedEquation = this.gatherEquationData(event);
+        const editMode = this.getEditMode();
+        if (editMode === WriteMode.Add) {
+            this.props.addEquation(equation);
+        } else {
+            this.props.updateEquation({
+                ...equation,
+                id: this.state.equation?.id as string
+            });
+        }
+    };
+
+    private gatherEquationData(event: React.FormEvent<HTMLFormElement>) {
         const data = new FormData(event.target as HTMLFormElement);
         const explanations = this.sanitizeExplanations();
         const equation: ExtendedEquation = {
@@ -153,29 +124,18 @@ export class EditPage extends Component<Props, State> {
             topicRef: data.get('topicRef') as string,
             explanations: explanations
         };
-        if (this.state.mode === WriteMode.Add) {
-            this.props.addEquation(equation);
-        } else {
-            this.props.updateEquation({
-                ...equation,
-                id: this.state.equationId as string
-            });
-        }
-    };
+        return equation;
+    }
+
+    private sanitizeExplanations() {
+        return this.state.equation?.explanations.filter(exp => {
+            const newExp = exp.trim();
+            return newExp.length !== 0;
+        }) as string[];
+    }
 
     addSubjectHandler = () => {
         this.setState({ subjectDialogState: true });
-    };
-
-    onSelectChange = (event: SelectChangeEvent, lastItemValue?: string) => {
-        const value = (event.target as inputTypes).value;
-        const target = (event.target as inputTypes).name as keyof State;
-        this.validator.showMessageFor(target);
-        if (lastItemValue) {
-            this.setValueOrOpenDialog(value, lastItemValue, target);
-        } else {
-            this.setState({ [target]: value } as ComponentState);
-        }
     };
 
     onAddSubject = (event: React.FormEvent<HTMLFormElement>) => {
@@ -188,53 +148,13 @@ export class EditPage extends Component<Props, State> {
     onAddTopic = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = new FormData(event.target as HTMLFormElement);
+        //TODO: Add check if this.state.equation exists
         const topic: ExtendedTopic = {
             name: data.get('name') as string,
-            subjectRef: this.state.subjectRef
+            subjectRef: this.state.equation?.subjectRef || ''
         };
         this.props.addTopic(topic);
     };
-
-    private sanitizeExplanations() {
-        return this.state.explanations.filter(exp => {
-            const newExp = exp.trim();
-            return newExp.length !== 0;
-        }) as string[];
-    }
-
-    private setValueOrOpenDialog(
-        value: string,
-        lastItemValue: string | undefined,
-        fieldToUpdate: keyof State
-    ) {
-        const dialog =
-            lastItemValue === 'add_subject'
-                ? 'subjectDialogState'
-                : 'topicDialogState';
-        if (value === lastItemValue) {
-            this.setState({ [dialog]: true } as ComponentState);
-        } else {
-            this.setSubjectOrTopic(fieldToUpdate, value);
-        }
-    }
-
-    private setSubjectOrTopic(fieldToUpdate: string, value: string) {
-        if (fieldToUpdate === 'subjectRef') {
-            this.updateSubject(value);
-        } else {
-            this.setState({ topicRef: value });
-        }
-    }
-
-    private updateSubject(value: string) {
-        const subject: SubjectWithId | undefined = this.props.subjects.find(
-            subject => subject.id === value
-        );
-        if (subject) {
-            this.props.fetchTopics(subject.id);
-        }
-        this.setState({ subjectRef: value });
-    }
 
     toggleDialog = (field: string) => {
         const fieldToUpdate = field as keyof State;
@@ -247,27 +167,43 @@ export class EditPage extends Component<Props, State> {
     };
 
     deleteEquationHandler = () => {
-        this.props.deleteEquation(this.state.equationId as string);
+        this.props.deleteEquation(this.state.equation?.id as string);
         this.props.history.replace('/admin');
     };
 
     private addExplanationHandler = (explanation: string) => {
         this.setState({
-            explanations: [...this.state.explanations, explanation]
+            equation: {
+                ...this.state.equation,
+                explanations: [
+                    ...this.state.equation?.explanations,
+                    explanation
+                ]
+            } as ExtendedEquationWithId
         });
     };
 
     private deleteExplanationHandler = (index: number) => {
-        const newExplanations = this.state.explanations.filter(
+        const newExplanations = this.state.equation?.explanations.filter(
             (explanation, eqIndex) => index !== eqIndex
         );
-        this.setState({ explanations: newExplanations });
+        this.setState({
+            equation: {
+                ...this.state.equation,
+                explanations: newExplanations
+            } as ExtendedEquationWithId
+        });
     };
 
     explanationChangeHandler = (value: string, index: number) => {
-        const newExplanations = [...this.state.explanations];
+        const newExplanations = [...this.state.equation?.explanations];
         newExplanations[index] = value;
-        this.setState({ explanations: newExplanations });
+        this.setState({
+            equation: {
+                ...this.state.equation,
+                explanations: newExplanations
+            } as ExtendedEquationWithId
+        });
     };
 
     render() {
@@ -283,118 +219,110 @@ export class EditPage extends Component<Props, State> {
             </MenuItem>
         );
 
+        const editMode = this.getEditMode();
+
+        const subjects = this.props.subjects;
+
         const topics = this.props.topics.filter(
-            topic => topic.subjectRef === this.state.subjectRef
+            topic => topic.subjectRef === this.state.equation?.subjectRef
         );
 
-        const equationValidator = this.validator.message(
-            'equation',
-            this.state.equation,
-            'required'
-        );
-        const nameValidator = this.validator.message(
-            'name',
-            this.state.name,
-            'required'
-        );
-        const subjectValidator = this.validator.message(
-            'subjectRef',
-            this.state.subjectRef,
-            'required'
-        );
-        const topicValidator = this.validator.message(
-            'topicRef',
-            this.state.topicRef,
-            'required'
-        );
+        const initValues = {
+            name: this.state.equation?.name || '',
+            equation: this.state.equation?.equation || '',
+            topicRef: this.state.equation?.topicRef || '',
+            subjectRef: this.state.equation?.subjectRef || ''
+        };
+
+        const areThingsLoading =
+            this.state.equation && subjects.length !== 0 && topics.length !== 0
+                ? false
+                : true;
+
+        const isLoading =
+            areThingsLoading && editMode === WriteMode.Edit ? true : false;
 
         return (
             <Fragment>
-                <form
-                    className={styles.Form}
-                    onSubmit={e => this.onSubmitHandler(e)}
-                >
-                    <Grid container spacing={3}>
-                        <Grid item sm={6} xs={12} md={5} lg={3}>
-                            <MathInput
-                                value={this.state.equation}
-                                onValueChange={(e: SelectChangeEvent) =>
-                                    this.onSelectChange(e)
-                                }
-                                helperText={equationValidator}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={5} lg={3}>
-                            <FormInput
-                                label="Nazwa równania"
-                                fullWidth
-                                name="name"
-                                onChange={e => this.onSelectChange(e)}
-                                value={this.state.name}
-                                helperText={nameValidator}
-                                error={!!nameValidator}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={3} md={3} lg={3}>
-                            <FormSelect
-                                fullWidth
-                                value={this.state.subjectRef}
-                                name="subjectRef"
-                                id="subject"
-                                lastItem={subjectLastItem}
-                                label="Przedmioty"
-                                onChange={e =>
-                                    this.onSelectChange(e, 'add_subject')
-                                }
-                                values={this.props.subjects}
-                                error={subjectValidator}
-                            />
-                        </Grid>
+                {isLoading ? (
+                    <CircularProgress />
+                ) : (
+                    <Formik
+                        initialValues={initValues}
+                        onSubmit={() => {}}
+                        validationSchema={editSchema()}
+                        enableReinitialize={true}
+                    >
+                        {(formProps: FormikProps<EditValues>) => (
+                            <Form onSubmit={e => this.onSubmitHandler(e)}>
+                                <Grid container spacing={3}>
+                                    <Grid item sm={6} xs={12} md={5} lg={3}>
+                                        <MathInput
+                                            name="equation"
+                                            label="Równanie"
+                                            value={formProps.values.equation}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={6} md={5} lg={3}>
+                                        <FormInput
+                                            label="Nazwa równania"
+                                            fullWidth
+                                            name="name"
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={3} md={3} lg={3}>
+                                        <FormSelect
+                                            fullWidth
+                                            name="subjectRef"
+                                            id="subject"
+                                            lastItem={subjectLastItem}
+                                            label="Przedmioty"
+                                            values={this.props.subjects}
+                                        />
+                                    </Grid>
 
-                        <Grid item xs={12} sm={3} md={3} lg={3}>
-                            <FormSelect
-                                fullWidth
-                                value={this.state.topicRef}
-                                name="topicRef"
-                                id="topic"
-                                lastItem={topicLastItem}
-                                label="Tematy"
-                                onChange={e =>
-                                    this.onSelectChange(e, 'add_topic')
-                                }
-                                values={topics}
-                                disabled={
-                                    this.state.subjectRef === '' ? true : false
-                                }
-                                error={topicValidator}
-                            />
-                        </Grid>
-                        <Grid md={6} sm={6} item xs={12} lg={12}>
-                            <Explanations
-                                deleteExplanationHandler={
-                                    this.deleteExplanationHandler
-                                }
-                                addExplanationHandler={
-                                    this.addExplanationHandler
-                                }
-                                explanations={this.state.explanations}
-                                changeExplanationHandler={
-                                    this.explanationChangeHandler
-                                }
-                            />
-                        </Grid>
+                                    <Grid item xs={12} sm={3} md={3} lg={3}>
+                                        <FormSelect
+                                            fullWidth
+                                            name="topicRef"
+                                            id="topic"
+                                            lastItem={topicLastItem}
+                                            label="Tematy"
+                                            values={topics}
+                                        />
+                                    </Grid>
+                                    <Grid md={6} sm={6} item xs={12} lg={12}>
+                                        <Explanations
+                                            deleteExplanationHandler={
+                                                this.deleteExplanationHandler
+                                            }
+                                            addExplanationHandler={
+                                                this.addExplanationHandler
+                                            }
+                                            explanations={
+                                                this.state.equation
+                                                    ?.explanations || []
+                                            }
+                                            changeExplanationHandler={
+                                                this.explanationChangeHandler
+                                            }
+                                        />
+                                    </Grid>
 
-                        <Grid item>
-                            <FormActions
-                                mainDisabled={!this.validator.allValid()}
-                                secondaryButtonAction={
-                                    this.deleteEquationHandler
-                                }
-                                mode={this.state.mode}
-                            />
-                        </Grid>
-                    </Grid>
-                </form>
+                                    <Grid item>
+                                        <FormActions
+                                            mainDisabled={!formProps.isValid}
+                                            secondaryButtonAction={
+                                                this.deleteEquationHandler
+                                            }
+                                            mode={editMode}
+                                        />
+                                    </Grid>
+                                </Grid>
+                            </Form>
+                        )}
+                    </Formik>
+                )}
 
                 <AddDialog
                     label="Przedmiot"
