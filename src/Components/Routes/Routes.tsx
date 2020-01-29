@@ -11,13 +11,25 @@ import isDev from '../../utils/general';
 const AdminPage = lazy(() => import('../AdminPanel/AdminPanel'));
 
 const Routes: React.SFC = () => {
+    let devSecurityOverride = true;
+
+    devSecurityOverride = isDev() ? devSecurityOverride : false;
+
+    const adminMode = devSecurityOverride
+        ? GuardMode.Unauthenticated
+        : GuardMode.Authenticated;
+
+    const loginMode = devSecurityOverride
+        ? GuardMode.Authenticated
+        : GuardMode.Unauthenticated;
+
     return (
         <Switch>
             <Route path="/" exact component={Home} />
             <GuardedRoute
                 path="/admin"
                 redirectTo="/login"
-                flow={GuardMode.Authenticated}
+                flow={adminMode}
                 component={AdminPage}
             />
 
@@ -25,7 +37,7 @@ const Routes: React.SFC = () => {
                 component={LoginForm}
                 path="/login"
                 redirectTo="/admin"
-                flow={GuardMode.Unauthenticated}
+                flow={loginMode}
             />
 
             <Route path="/quiz/:subjectName/:topicName" component={QuizHome} />
