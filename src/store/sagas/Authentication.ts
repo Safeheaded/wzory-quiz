@@ -11,24 +11,37 @@ import {
 } from '../actions/Authentication';
 import { createBrowserHistory } from 'history';
 import { ADD_EQUATION } from '../constants/Equations';
+import isDev from '../../utils/general';
 
 const rsf = firebaseHandler.getRSF();
 
 function* login(action: LoginActionType) {
+    if (isDev()) {
+        yield* loginSuccessfull('test@test.com');
+        return;
+    }
     try {
         const user = yield call(
             rsf.auth.signInWithEmailAndPassword,
             action.payload.email,
             action.payload.password
         );
-        yield createBrowserHistory().push('/login');
-        yield put(loginSuccess(user.email));
+        yield* loginSuccessfull(user);
     } catch (error) {
         yield put(loginError(error));
     }
 }
 
+function* loginSuccessfull(user: any) {
+    yield createBrowserHistory().push('/login');
+    yield put(loginSuccess(user.email));
+}
+
 function* logout(action: LogoutActionType) {
+    if (isDev()) {
+        yield put(logoutSuccess());
+        return;
+    }
     try {
         yield call(rsf.auth.signOut);
         yield put(logoutSuccess());

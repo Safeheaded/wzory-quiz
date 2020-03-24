@@ -100,9 +100,8 @@ export class EditPage extends Component<Props, State> {
         }
     }
 
-    onSubmitHandler = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        const equation: ExtendedEquation = this.gatherEquationData(event);
+    onSubmitHandler = (values: EditValues) => {
+        const equation: ExtendedEquation = { ...values };
         const editMode = this.getEditMode();
         if (editMode === WriteMode.Add) {
             this.props.addEquation(equation);
@@ -113,26 +112,6 @@ export class EditPage extends Component<Props, State> {
             });
         }
     };
-
-    private gatherEquationData(event: React.FormEvent<HTMLFormElement>) {
-        const data = new FormData(event.target as HTMLFormElement);
-        const explanations = this.sanitizeExplanations();
-        const equation: ExtendedEquation = {
-            name: data.get('name') as string,
-            equation: (data.get('equation') as string) || '',
-            subjectRef: data.get('subjectRef') as string,
-            topicRef: data.get('topicRef') as string,
-            explanations: explanations
-        };
-        return equation;
-    }
-
-    private sanitizeExplanations() {
-        return this.state.equation?.explanations.filter(exp => {
-            const newExp = exp.trim();
-            return newExp.length !== 0;
-        }) as string[];
-    }
 
     addSubjectHandler = () => {
         this.setState({ subjectDialogState: true });
@@ -148,12 +127,13 @@ export class EditPage extends Component<Props, State> {
     onAddTopic = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = new FormData(event.target as HTMLFormElement);
-        //TODO: Add check if this.state.equation exists
-        const topic: ExtendedTopic = {
-            name: data.get('name') as string,
-            subjectRef: this.state.equation?.subjectRef || ''
-        };
-        this.props.addTopic(topic);
+        if (this.state.equation) {
+            const topic: ExtendedTopic = {
+                name: data.get('name') as string,
+                subjectRef: this.state.equation?.subjectRef
+            };
+            this.props.addTopic(topic);
+        }
     };
 
     toggleDialog = (field: string) => {
@@ -171,39 +151,33 @@ export class EditPage extends Component<Props, State> {
         this.props.history.replace('/admin');
     };
 
-    private addExplanationHandler = (explanation: string) => {
-        this.setState({
-            equation: {
-                ...this.state.equation,
-                explanations: [
-                    ...this.state.equation?.explanations,
-                    explanation
-                ]
-            } as ExtendedEquationWithId
-        });
-    };
-
-    private deleteExplanationHandler = (index: number) => {
-        const newExplanations = this.state.equation?.explanations.filter(
-            (explanation, eqIndex) => index !== eqIndex
-        );
-        this.setState({
-            equation: {
-                ...this.state.equation,
-                explanations: newExplanations
-            } as ExtendedEquationWithId
-        });
-    };
-
-    explanationChangeHandler = (value: string, index: number) => {
-        const newExplanations = [...this.state.equation?.explanations];
-        newExplanations[index] = value;
-        this.setState({
-            equation: {
-                ...this.state.equation,
-                explanations: newExplanations
-            } as ExtendedEquationWithId
-        });
+    changeHandler = (
+        e: React.ChangeEvent<any>,
+        callback: (e: React.ChangeEvent<any>) => void,
+        props: FormikProps<EditValues>
+    ) => {
+        const { name, value } = e.target as HTMLSelectElement;
+        if (name === 'subjectRef' && value === 'add_subject') {
+            this.setState({
+                subjectDialogState: true
+            });
+        } else if (name === 'subjectRef') {
+            props.setFieldValue('topicRef', '');
+            this.props.fetchTopics(value);
+            this.setState({
+                equation: {
+                    ...this.state.equation,
+                    subjectRef: value
+                } as ExtendedEquationWithId
+            });
+            callback(e);
+        } else if (name === 'topicRef' && value === 'add_topic') {
+            this.setState({
+                topicDialogState: true
+            });
+        } else {
+            callback(e);
+        }
     };
 
     render() {
@@ -231,13 +205,12 @@ export class EditPage extends Component<Props, State> {
             name: this.state.equation?.name || '',
             equation: this.state.equation?.equation || '',
             topicRef: this.state.equation?.topicRef || '',
-            subjectRef: this.state.equation?.subjectRef || ''
+            subjectRef: this.state.equation?.subjectRef || '',
+            explanations: this.state.equation?.explanations || []
         };
 
         const areThingsLoading =
-            this.state.equation && subjects.length !== 0 && topics.length !== 0
-                ? false
-                : true;
+            this.state.equation && subjects.length !== 0 ? false : true;
 
         const isLoading =
             areThingsLoading && editMode === WriteMode.Edit ? true : false;
@@ -249,18 +222,22 @@ export class EditPage extends Component<Props, State> {
                 ) : (
                     <Formik
                         initialValues={initValues}
-                        onSubmit={() => {}}
+                        onSubmit={e => this.onSubmitHandler(e)}
                         validationSchema={editSchema()}
-                        enableReinitialize={true}
                     >
                         {(formProps: FormikProps<EditValues>) => (
-                            <Form onSubmit={e => this.onSubmitHandler(e)}>
+                            <Form>
                                 <Grid container spacing={3}>
                                     <Grid item sm={6} xs={12} md={5} lg={3}>
                                         <MathInput
                                             name="equation"
                                             label="Równanie"
+                                            onChange={formProps.handleChange}
+                                            onBlur={formProps.handleBlur}
                                             value={formProps.values.equation}
+                                            helperText={
+                                                formProps.errors.equation
+                                            }
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={6} md={5} lg={3}>
@@ -268,6 +245,10 @@ export class EditPage extends Component<Props, State> {
                                             label="Nazwa równania"
                                             fullWidth
                                             name="name"
+                                            onChange={formProps.handleChange}
+                                            onBlur={formProps.handleBlur}
+                                            value={formProps.values.name}
+                                            helperText={formProps.errors.name}
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={3} md={3} lg={3}>
@@ -278,6 +259,18 @@ export class EditPage extends Component<Props, State> {
                                             lastItem={subjectLastItem}
                                             label="Przedmioty"
                                             values={this.props.subjects}
+                                            value={formProps.values.subjectRef}
+                                            onChange={e =>
+                                                this.changeHandler(
+                                                    e,
+                                                    formProps.handleChange,
+                                                    formProps
+                                                )
+                                            }
+                                            onBlur={formProps.handleBlur}
+                                            error={
+                                                !!formProps.errors.subjectRef
+                                            }
                                         />
                                     </Grid>
 
@@ -289,23 +282,29 @@ export class EditPage extends Component<Props, State> {
                                             lastItem={topicLastItem}
                                             label="Tematy"
                                             values={topics}
+                                            disabled={
+                                                formProps.values.subjectRef
+                                                    .length === 0
+                                            }
+                                            onChange={e =>
+                                                this.changeHandler(
+                                                    e,
+                                                    formProps.handleChange,
+                                                    formProps
+                                                )
+                                            }
+                                            onBlur={formProps.handleBlur}
+                                            value={formProps.values.topicRef}
+                                            error={!!formProps.errors.topicRef}
                                         />
                                     </Grid>
                                     <Grid md={6} sm={6} item xs={12} lg={12}>
                                         <Explanations
-                                            deleteExplanationHandler={
-                                                this.deleteExplanationHandler
+                                            values={
+                                                formProps.values.explanations
                                             }
-                                            addExplanationHandler={
-                                                this.addExplanationHandler
-                                            }
-                                            explanations={
-                                                this.state.equation
-                                                    ?.explanations || []
-                                            }
-                                            changeExplanationHandler={
-                                                this.explanationChangeHandler
-                                            }
+                                            onChange={formProps.handleChange}
+                                            onBlur={formProps.handleBlur}
                                         />
                                     </Grid>
 

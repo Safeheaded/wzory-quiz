@@ -13,7 +13,9 @@ import {
     UPDATE_EQUATION_ERROR,
     UPDATE_EQUATION_SUCCESS,
     DELETE_EQUATION_SUCCESS,
-    FETCH_EQUATIONS_SUCCESS
+    FETCH_EQUATIONS_SUCCESS,
+    FETCH_EQUATIONS_ERROR,
+    FETCH_ALL_EQUATIONS_ERROR
 } from '../constants/Equations';
 
 const initState: EquationsState = { equations: [] };
@@ -27,11 +29,17 @@ const EquationsReducer = (
             return addEquationSuccessHandler(state, action);
         case FETCH_ALL_EQUATIONS_SUCCESS:
             return { ...state, equations: action.payload };
+        case FETCH_ALL_EQUATIONS_ERROR:
+            console.log(action.payload);
+            return { ...state };
         case FETCH_EQUATION_SUCCESS:
             return {
                 ...state,
                 equations: [...state.equations, action.payload]
             };
+        case FETCH_EQUATIONS_ERROR:
+            console.log(action.payload);
+            return { ...state };
         case UPDATE_EQUATION_ERROR:
             return { ...state };
         case UPDATE_EQUATION_SUCCESS:

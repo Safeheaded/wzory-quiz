@@ -1,11 +1,17 @@
 import React from 'react';
-import { FormControl, StandardTextFieldProps } from '@material-ui/core';
-import { TextField, TextFieldProps } from 'formik-material-ui';
+import {
+    FormControl,
+    StandardTextFieldProps,
+    TextField
+} from '@material-ui/core';
 
-const FormInput: React.SFC<TextFieldProps> = (props: TextFieldProps) => {
+const FormInput: React.SFC<StandardTextFieldProps> = (
+    props: StandardTextFieldProps
+) => {
+    const error = props.helperText ? true : false;
     return (
         <FormControl fullWidth={!!props.fullWidth}>
-            <TextField {...props} />
+            <TextField {...props} error={error} />
         </FormControl>
     );
 };

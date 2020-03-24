@@ -3,10 +3,11 @@ import {
     FormControl,
     InputLabel,
     MenuItem,
-    MenuItemProps
+    MenuItemProps,
+    SelectProps,
+    Select
 } from '@material-ui/core';
 import { SubjectWithId } from '../../../store/types/Subjects';
-import { Select, SelectProps } from 'formik-material-ui';
 
 interface Props extends SelectProps {
     lastItem?: React.ComponentElement<MenuItemProps, any>;

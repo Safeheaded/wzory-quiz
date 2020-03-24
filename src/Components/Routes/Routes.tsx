@@ -11,7 +11,7 @@ import isDev from '../../utils/general';
 const AdminPage = lazy(() => import('../AdminPanel/AdminPanel'));
 
 const Routes: React.SFC = () => {
-    let devSecurityOverride = true;
+    let devSecurityOverride = false;
 
     devSecurityOverride = isDev() ? devSecurityOverride : false;
 

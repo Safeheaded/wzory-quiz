@@ -7,6 +7,7 @@ export type EditValues = {
     name: string;
     subjectRef: string;
     topicRef: string;
+    explanations: string[];
 };
 
 export function loginSchema() {
@@ -23,6 +24,7 @@ export function editSchema() {
         equation: Yup.string().required(),
         name: Yup.string().required(),
         subjectRef: Yup.string().required(),
-        topicRef: Yup.string().required()
+        topicRef: Yup.string().required(),
+        explanations: Yup.array().of(Yup.string().required())
     });
 }

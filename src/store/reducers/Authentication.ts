@@ -1,12 +1,8 @@
 import { AuthState, AuthActionTypes } from '../types/Authentication';
-import {
-    LOG_IN,
-    LOG_OUT,
-    LOG_OUT_SUCCESS,
-    LOG_IN_SUCCESS
-} from '../constants/Authentication';
+import { LOG_OUT_SUCCESS, LOG_IN_SUCCESS } from '../constants/Authentication';
+import isDev from '../../utils/general';
 
-const initState = { isLoggedIn: false };
+const initState = { isLoggedIn: isDev() };
 
 const AuthorizationReducer = (
     state: AuthState = initState,

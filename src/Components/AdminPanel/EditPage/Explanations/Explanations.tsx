@@ -5,18 +5,18 @@ import {
     Button,
     List,
     ListItem,
-    IconButton
+    IconButton,
+    StandardTextFieldProps
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Latex from 'react-latex';
 import SimpleReactValidator from 'simple-react-validator';
+import { FieldArray } from 'formik';
+import FormInput from '../../FormInput/FormInput';
 
-interface Props {
-    explanations: string[];
-    addExplanationHandler: (explanation: string) => void;
-    deleteExplanationHandler: (index: number) => void;
-    changeExplanationHandler: (value: string, index: number) => void;
+interface Props extends StandardTextFieldProps {
+    values: string[];
 }
 
 interface State {
@@ -35,78 +35,64 @@ class Explanations extends Component<Props, State> {
         });
     }
 
-    onAddExplanation = () => {
-        this.props.addExplanationHandler(this.state.newExplanation);
-    };
-
-    onDeleteExplanation = (index: number) => {
-        this.props.deleteExplanationHandler(index);
-    };
-
-    onValueChange = (e: React.SyntheticEvent, index: number) => {
-        const value = (e.target as HTMLInputElement).value;
-        this.props.changeExplanationHandler(value, index);
-    };
-
     render() {
-        const explanationValidator = this.validator.message(
-            'explanation',
-            this.state.newExplanation,
-            'required'
-        );
-
-        const explanations = this.props.explanations.map(
-            (explanation, index) => (
-                <ListItem key={index}>
-                    <FormControl style={{ width: '50%' }}>
-                        <TextField
-                            onChange={e => this.onValueChange(e, index)}
-                            value={explanation}
-                        />
-                    </FormControl>
-                    <FormControl>
-                        <IconButton
-                            onClick={() => this.onDeleteExplanation(index)}
-                        >
-                            <DeleteIcon />
-                        </IconButton>
-                    </FormControl>
-                    <div>
-                        <Latex>{explanation}</Latex>
-                    </div>
-                </ListItem>
-            )
-        );
-
+        const { values, ...props } = this.props;
         return (
-            <List>
-                <ListItem>
-                    <FormControl style={{ width: '50%' }}>
-                        <TextField
-                            onChange={e => {
-                                this.validator.showMessageFor('explanation');
-                                this.setState({
-                                    newExplanation: (e.target as HTMLInputElement)
-                                        .value
-                                });
-                            }}
-                            value={this.state.newExplanation}
-                            helperText={explanationValidator}
-                            error={!!explanationValidator}
-                        />
-                    </FormControl>
-                    <FormControl>
-                        <IconButton
-                            disabled={!this.validator.allValid()}
-                            onClick={this.onAddExplanation}
-                        >
-                            <AddIcon />
-                        </IconButton>
-                    </FormControl>
-                    <Latex>{this.state.newExplanation}</Latex>
-                </ListItem>
-                {explanations}
-            </List>
+            <FieldArray name="explanations">
+                {({ insert, remove, push }) => {
+                    return (
+                        <List>
+                            <ListItem>
+                                <FormInput
+                                    value={this.state.newExplanation}
+                                    onChange={e =>
+                                        this.setState({
+                                            newExplanation: e.target.value
+                                        })
+                                    }
+                                />
+                                <FormControl>
+                                    <IconButton
+                                        onClick={e => {
+                                            push(this.state.newExplanation);
+                                            this.setState({
+                                                newExplanation: ''
+                                            });
+                                        }}
+                                    >
+                                        <AddIcon />
+                                    </IconButton>
+                                </FormControl>
+                                <div>
+                                    <Latex>{this.state.newExplanation}</Latex>
+                                </div>
+                            </ListItem>
+                            {values.length > 0 &&
+                                values.map((explanation, index) => {
+                                    return (
+                                        <ListItem key={index}>
+                                            <FormInput
+                                                {...props}
+                                                value={explanation}
+                                                name={`explanations[${index}]`}
+                                            />
+                                            <FormControl>
+                                                <IconButton
+                                                    onClick={e => remove(index)}
+                                                >
+                                                    <DeleteIcon />
+                                                </IconButton>
+                                            </FormControl>
+                                            <div>
+                                                <Latex>{explanation}</Latex>
+                                            </div>
+                                        </ListItem>
+                                    );
+                                })}
+                        </List>
+                    );
+                }}
+            </FieldArray>
         );
     }
 }
