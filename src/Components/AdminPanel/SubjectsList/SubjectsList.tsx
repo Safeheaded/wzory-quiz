@@ -11,7 +11,7 @@ import {
 import { RootReducer } from '../../../store/types/main';
 import UniversalList from '../UniversalList/UniversalList';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
-import SubjectDialog from './SubjectDialog/subject-dialog';
+import EditDialog from '../EditList/EditDialog/edit-dialog';
 import { WriteMode } from '../../../types/admin';
 import EditList from '../EditList/EditList';
 import { State } from '../EditList/EditList';
@@ -49,15 +49,6 @@ class SubjectsList extends EditList<Props, State> {
 
     render() {
         const item = this.getItem(this.state.itemId);
-        const primaryAction =
-            this.state.mode === WriteMode.Add
-                ? this.props.addSubject
-                : this.props.updateSubject;
-        const secondaryActionButton = (
-            <Button onClick={() => this.props.deleteSubject(this.state.itemId)}>
-                Usuń
-            </Button>
-        );
         const title =
             this.state.itemId.length === 0
                 ? 'Dodaj przedmiot'
@@ -69,32 +60,13 @@ class SubjectsList extends EditList<Props, State> {
                     url={this.props.match.url}
                     actionPath="/add"
                 />
-                <SubjectDialog
+                <EditDialog
                     isOpen={this.state.isDialogOpen}
                     title={title}
                     redirectPath={`${this.props.url}/subjects`}
                 >
                     <SubjectForm subject={item} />
-                </SubjectDialog>
-                {/* <SubjectDialog
-                    title={
-                        this.state.itemId.length === 0
-                            ? 'Dodaj przedmiot'
-                            : 'Edytuj przedmiot'
-                    }
-                    label="Nazwa"
-                    name="name"
-                    id={this.state.itemId}
-                    redirectPath={`${this.props.url}/subjects`}
-                    item={item}
-                    isDialogOpen={this.state.isDialogOpen}
-                    primaryAction={primaryAction}
-                    secondaryActionButton={secondaryActionButton}
-                    helperText={subjectValidator}
-                    onChange={this.onChangeHandler}
-                    validity={!this.validator.allValid()}
-                    validationSchema={subjectSchema()}
-                /> */}
+                </EditDialog>
             </Fragment>
         );
     }

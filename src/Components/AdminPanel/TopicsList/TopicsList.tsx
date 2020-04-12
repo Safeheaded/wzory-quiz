@@ -15,7 +15,6 @@ import {
 } from '../../../store/types/Topics';
 import { RouteComponentProps } from 'react-router-dom';
 import { withRouter } from 'react-router-dom';
-import TopicDialog from './TopicDialog/TopicDialog';
 import { WriteMode, SelectChangeEvent } from '../../../types/admin';
 import EditList from '../EditList/EditList';
 import { State as BaseState } from '../EditList/EditList';
@@ -26,7 +25,9 @@ import { Button } from '@material-ui/core';
 import SimpleReactValidator from 'simple-react-validator';
 import { topicSchema } from '../../../utils/validationSchemas';
 import { FormikProps } from 'formik';
-import { FormValues } from '../EditList/EditDialog/EditDialog';
+import EditDialog from '../EditList/EditDialog/edit-dialog';
+import TopicsForm from './TopicForm/topic-form';
+import TopicForm from './TopicForm/topic-form';
 
 interface Props extends RouteComponentProps {
     fetchAllTopics: typeof fetchAllTopics;
@@ -101,16 +102,11 @@ export class TopicsList extends EditList<Props, State> {
     };
 
     render() {
-        const item = this.getItem(this.state.itemId);
-        const primaryAction =
-            this.state.mode === WriteMode.Add
-                ? this.props.addTopic
-                : this.props.updateTopic;
-        const secondaryActionButton = (
-            <Button onClick={() => this.props.deleteTopic(this.state.itemId)}>
-                Usuń
-            </Button>
-        );
+        const item = this.getItem(this.state.itemId) as
+            | ExtendedTopicWithId
+            | undefined;
+        const title =
+            this.state.itemId.length === 0 ? 'Dodaj temat' : 'Edytuj temat';
         return (
             <Fragment>
                 <UniversalList
@@ -118,7 +114,14 @@ export class TopicsList extends EditList<Props, State> {
                     actionPath="/add"
                     url={this.props.match.url}
                 />
-                <TopicDialog
+                <EditDialog
+                    isOpen={this.state.isDialogOpen}
+                    redirectPath={`${this.props.url}/topics`}
+                    title={title}
+                >
+                    <TopicForm subjects={this.props.subjects} topic={item} />
+                </EditDialog>
+                {/* <TopicDialog
                     title={
                         this.state.itemId.length === 0
                             ? 'Dodaj temat'
@@ -152,7 +155,7 @@ export class TopicsList extends EditList<Props, State> {
                             error={!!errors.subjectRef}
                         />
                     )}
-                ></TopicDialog>
+                ></TopicDialog> */}
             </Fragment>
         );
     }

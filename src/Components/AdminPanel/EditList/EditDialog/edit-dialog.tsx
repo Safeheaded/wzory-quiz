@@ -9,7 +9,7 @@ type Props = {
     redirectPath: string;
 };
 
-const SubjectDialog = (props: Props) => {
+const EditDialog = (props: Props) => {
     const { isOpen, title, redirectPath, children } = props;
 
     const history = useHistory();
@@ -26,4 +26,4 @@ const SubjectDialog = (props: Props) => {
     );
 };
 
-export default SubjectDialog;
+export default EditDialog;
