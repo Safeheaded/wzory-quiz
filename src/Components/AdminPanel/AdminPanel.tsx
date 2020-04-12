@@ -30,6 +30,8 @@ const AdminPanel = (props: Props) => {
 
     const { path, url } = useRouteMatch();
 
+    console.log(url);
+
     return (
         <Fragment>
             <Switch>

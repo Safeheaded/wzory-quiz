@@ -24,6 +24,9 @@ import { fetchAllSubjects } from '../../../store/actions/Subjects';
 import { SubjectWithId } from '../../../store/types/Subjects';
 import { Button } from '@material-ui/core';
 import SimpleReactValidator from 'simple-react-validator';
+import { topicSchema } from '../../../utils/validationSchemas';
+import { FormikProps } from 'formik';
+import { FormValues } from '../EditList/EditDialog/EditDialog';
 
 interface Props extends RouteComponentProps {
     fetchAllTopics: typeof fetchAllTopics;
@@ -103,16 +106,6 @@ export class TopicsList extends EditList<Props, State> {
             this.state.mode === WriteMode.Add
                 ? this.props.addTopic
                 : this.props.updateTopic;
-        const topicValidator = this.validator.message(
-            'topic',
-            this.state.value,
-            'required|alpha'
-        );
-        const subjectValidator = this.validator.message(
-            'subjectRef',
-            this.state.subjectRef,
-            'required'
-        );
         const secondaryActionButton = (
             <Button onClick={() => this.props.deleteTopic(this.state.itemId)}>
                 Usuń
@@ -139,18 +132,27 @@ export class TopicsList extends EditList<Props, State> {
                     isDialogOpen={this.state.isDialogOpen}
                     primaryAction={primaryAction}
                     secondaryActionButton={secondaryActionButton}
-                    helperText={topicValidator}
                     onChange={this.onChangeHandler}
                     validity={!this.validator.allValid()}
-                >
-                    <FormSelect
-                        label="Przedmiot"
-                        name="subjectRef"
-                        id="topic"
-                        values={this.props.subjects}
-                        error={subjectValidator}
-                    />
-                </TopicDialog>
+                    validationSchema={topicSchema()}
+                    render={({
+                        handleChange,
+                        handleBlur,
+                        values,
+                        errors
+                    }: FormikProps<FormValues>) => (
+                        <FormSelect
+                            label="Przedmiot"
+                            name="subjectRef"
+                            id="topic"
+                            values={this.props.subjects}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            value={values.subjectRef}
+                            error={!!errors.subjectRef}
+                        />
+                    )}
+                ></TopicDialog>
             </Fragment>
         );
     }

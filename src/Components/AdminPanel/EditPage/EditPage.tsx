@@ -13,21 +13,19 @@ import {
     deleteEquation
 } from '../../../store/actions/Equations';
 import { connect } from 'react-redux';
-import styles from './MainPage.module.sass';
 import AddIcon from '@material-ui/icons/Add';
 import FormInput from '../FormInput/FormInput';
 import FormSelect from '../FormSelect/FormSelect';
-import { SelectChangeEvent, WriteMode } from '../../../types/admin';
+import { WriteMode } from '../../../types/admin';
 import AddDialog from '../AddDialog/AddDialog';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { mapEqState, EqStateProps } from '../../../utils/StatesPropsToMap';
 import FormActions from './FormActions/FormActions';
-import { SubjectWithId, Subject } from '../../../store/types/Subjects';
+import { Subject } from '../../../store/types/Subjects';
 import { ExtendedTopic } from '../../../store/types/Topics';
 import { fetchAllSubjects, addSubject } from '../../../store/actions/Subjects';
 import { addTopic, fetchTopics } from '../../../store/actions/Topics';
 import Explanations from './Explanations/Explanations';
-import SimpleReactValidator from 'simple-react-validator';
 import { Formik, FormikProps, Form } from 'formik';
 import { EditValues, editSchema } from '../../../utils/validationSchemas';
 

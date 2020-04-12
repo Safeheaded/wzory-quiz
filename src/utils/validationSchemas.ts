@@ -28,3 +28,16 @@ export function editSchema() {
         explanations: Yup.array().of(Yup.string().required())
     });
 }
+
+export function subjectSchema() {
+    return Yup.object().shape({
+        name: Yup.string().required()
+    });
+}
+
+export function topicSchema() {
+    return Yup.object().shape({
+        name: Yup.string().required(),
+        subjectRef: Yup.string().required()
+    });
+}

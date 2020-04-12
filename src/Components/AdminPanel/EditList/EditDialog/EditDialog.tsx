@@ -1,4 +1,4 @@
-import React, { Component, ComponentType } from 'react';
+import React, { Component, Fragment, ReactElement } from 'react';
 import {
     Dialog,
     DialogTitle,
@@ -7,17 +7,14 @@ import {
     Button
 } from '@material-ui/core';
 import FormInput from '../../FormInput/FormInput';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router-dom';
 import { ItemOfList } from '../../../../types/General';
 import { WriteMode } from '../../../../types/admin';
 import { SubjectWithId } from '../../../../store/types/Subjects';
-import {
-    TopicWithId,
-    ExtendedTopicWithId,
-    ExtendedTopic
-} from '../../../../store/types/Topics';
-import { BaseType } from '../../../../store/types/main';
+import { ExtendedTopicWithId } from '../../../../store/types/Topics';
 import styles from './EditDialog.module.sass';
+import { Formik, FormikProps } from 'formik';
+import { ObjectSchema } from 'yup';
 
 interface Props<T> extends RouteComponentProps {
     id?: string;
@@ -32,6 +29,9 @@ interface Props<T> extends RouteComponentProps {
     onChange?: (val: string) => void;
     helperText?: string;
     validity?: boolean;
+    validationSchema: ObjectSchema<any>;
+    children?: never;
+    render?: any;
 }
 
 interface State {
@@ -63,8 +63,8 @@ abstract class EditDialog<
         this.setState({ inputValue: event.target.value });
     };
 
-    submitHandler = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
+    submitHandler = (values: FormValues) => {
+        /* event.preventDefault();
         const form = event.target;
         const data = new FormData(form as HTMLFormElement);
         const item = { id: '', name: '', subjectRef: '' } as T;
@@ -80,7 +80,7 @@ abstract class EditDialog<
         } else {
             delete item.id;
         }
-        this.props.primaryAction(item);
+        this.props.primaryAction(item); */
     };
 
     closeHandler = () => {
@@ -93,26 +93,51 @@ abstract class EditDialog<
         return (
             <Dialog onClose={this.closeHandler} open={this.props.isDialogOpen}>
                 <DialogTitle>{this.props.title}</DialogTitle>
-                <form onSubmit={e => this.submitHandler(e)}>
-                    <DialogContent className={styles.DialogContent}>
-                        {this.props.children}
-                        <FormInput
-                            label={this.props.label}
-                            name={this.props.name}
-                        />
-                    </DialogContent>
-                    <DialogActions>
-                        <Button disabled={!!this.props.validity} type="submit">
-                            {id.length === 0 ? 'Dodaj' : 'Edytuj'}
-                        </Button>
-                        {id.length !== 0
-                            ? this.props.secondaryActionButton
-                            : null}
-                    </DialogActions>
-                </form>
+                <Formik
+                    initialValues={{ name: '' }}
+                    onSubmit={e => this.submitHandler(e)}
+                    validationSchema={this.props.validationSchema}
+                >
+                    {(formProps: FormikProps<FormValues>) => {
+                        return (
+                            <Fragment>
+                                <DialogContent className={styles.DialogContent}>
+                                    {this.props.render(formProps)}
+                                    <FormInput
+                                        label={this.props.label}
+                                        name={this.props.name}
+                                        onChange={formProps.handleChange}
+                                        onBlur={formProps.handleBlur}
+                                        value={formProps.values.name}
+                                        helperText={formProps.errors.name}
+                                        error={
+                                            formProps.errors.name ? true : false
+                                        }
+                                    />
+                                </DialogContent>
+                                <DialogActions>
+                                    <Button
+                                        disabled={!formProps.isValid}
+                                        type="submit"
+                                    >
+                                        {id.length === 0 ? 'Dodaj' : 'Edytuj'}
+                                    </Button>
+                                    {id.length !== 0
+                                        ? this.props.secondaryActionButton
+                                        : null}
+                                </DialogActions>
+                            </Fragment>
+                        );
+                    }}
+                </Formik>
             </Dialog>
         );
     }
 }
+
+export type FormValues = {
+    name: string;
+    subjectRef?: string;
+};
 
 export default EditDialog;
