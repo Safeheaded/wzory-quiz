@@ -8,36 +8,21 @@ import { fetchAllSubjects } from '../../../store/actions/Subjects';
 import { WriteMode } from '../../../types/admin';
 import { RootReducer } from '../../../store/types/main';
 import { useRouteMatch, useParams } from 'react-router-dom';
+import { useDialog } from '../../../effects/use-dialog';
+import { useSubject } from '../../../effects/use-subject';
 
 type Props = { url: string; mode?: WriteMode };
 
 const SubjectList = (props: Props) => {
     const { url, mode } = props;
-    const [isOpen, setIsOpen] = useState(false);
-    const [subject, setSubject] = useState<SubjectWithId>();
-    const dispatch = useDispatch();
     const route = useRouteMatch();
-    const params = useParams<{ id?: string }>();
     const fetchedSubjects = useSelector(
         (state: RootReducer) => state.subjectsReducer.subjects
     );
 
-    useEffect(() => {
-        const subject = fetchedSubjects.find(
-            subject => subject.id === params.id
-        );
-        if (subject) {
-            setSubject(subject);
-        } else {
-            dispatch(fetchAllSubjects());
-            setSubject(undefined);
-        }
-        if (mode !== undefined) {
-            setIsOpen(true);
-        } else {
-            setIsOpen(false);
-        }
-    }, [mode, fetchedSubjects]);
+    const subject = useSubject(mode, fetchedSubjects);
+
+    const isOpen = useDialog(mode);
 
     const title = subject?.id ? 'Edytuj przedmiot' : 'Dodaj przedmiot';
 

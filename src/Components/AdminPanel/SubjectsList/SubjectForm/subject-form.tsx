@@ -16,12 +16,15 @@ import EditDialogActions from '../../EditList/EditDialog/EditDialogActions/edit-
 type Props = { subject?: SubjectWithId };
 type FormValues = {} & typeof initialValues;
 
-let initialValues = { name: '' };
+const initialValues = { name: '' };
 
 const SubjectForm = (props: Props) => {
     const { subject } = props;
+    let values = initialValues;
     if (subject) {
-        initialValues = updateValues(initialValues, subject);
+        values = updateValues(initialValues, subject);
+    } else {
+        values = initialValues;
     }
     const id = subject?.id;
     const dispatch = useDispatch();
@@ -43,7 +46,7 @@ const SubjectForm = (props: Props) => {
         <Formik
             enableReinitialize={true}
             onSubmit={val => onSubmitHandler(val)}
-            initialValues={initialValues}
+            initialValues={values}
             validationSchema={subjectSchema()}
         >
             {({
