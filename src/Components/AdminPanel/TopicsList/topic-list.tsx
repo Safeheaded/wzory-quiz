@@ -8,7 +8,7 @@ import { WriteMode } from '../../../types/admin';
 import { useDialog } from '../../../effects/use-dialog';
 import EditDialog from '../EditList/EditDialog/edit-dialog';
 import TopicForm from './TopicForm/topic-form';
-import { useValues } from '../../../effects/use-Values';
+import { useValue } from '../../../effects/use-Value';
 import { SubjectWithId } from '../../../store/types/Subjects';
 import { fetchAllTopics } from '../../../store/actions/Topics';
 import { fetchAllSubjects } from '../../../store/actions/Subjects';
@@ -26,7 +26,7 @@ const TopicList = (props: Props) => {
         state => state.subjectsReducer.subjects
     );
     const isOpen = useDialog(mode);
-    const topic = useValues(mode, topics, fetchAllTopics);
+    const topic = useValue(mode, topics, fetchAllTopics);
     const title = topic ? 'Edytuj temat' : 'Dodaj temat';
     useEffect(() => {
         if (subjects.length === 0) {

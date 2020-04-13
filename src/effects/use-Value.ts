@@ -7,7 +7,7 @@ import { useParams } from 'react-router-dom';
 import { ExtendedTopicWithId } from '../store/types/Topics';
 import { fetchAllTopics } from '../store/actions/Topics';
 
-export const useValues = <
+export const useValue = <
     T extends { id?: string },
     K extends SubjectWithId | ExtendedTopicWithId
 >(

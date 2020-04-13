@@ -9,7 +9,7 @@ import { WriteMode } from '../../../types/admin';
 import { RootReducer } from '../../../store/types/main';
 import { useRouteMatch, useParams } from 'react-router-dom';
 import { useDialog } from '../../../effects/use-dialog';
-import { useValues } from '../../../effects/use-Values';
+import { useValue } from '../../../effects/use-Value';
 
 type Props = { url: string; mode?: WriteMode };
 
@@ -20,7 +20,7 @@ const SubjectList = (props: Props) => {
         (state: RootReducer) => state.subjectsReducer.subjects
     );
 
-    const subject = useValues(mode, fetchedSubjects, fetchAllSubjects);
+    const subject = useValue(mode, fetchedSubjects, fetchAllSubjects);
 
     const isOpen = useDialog(mode);
 

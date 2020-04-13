@@ -32,7 +32,7 @@ const useStyles = makeStyles(() =>
     })
 );
 
-const ListDisplay: React.FC<Props> = (props: Props) => {
+const ListDisplay = (props: Props) => {
     const styles = useStyles();
     const cardsList = props.items.map((item: ItemOfList) => {
         const baseUrl = props.url || '';
@@ -41,7 +41,7 @@ const ListDisplay: React.FC<Props> = (props: Props) => {
             <ListItem
                 key={item.id}
                 component={Link}
-                to={`${baseUrl}/${url}`}
+                to={`${baseUrl}/${url?.replace(' ', '-')}`}
                 className={styles.listItem}
             >
                 <Card className={styles.card}>
