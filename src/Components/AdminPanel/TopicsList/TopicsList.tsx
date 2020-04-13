@@ -121,41 +121,6 @@ export class TopicsList extends EditList<Props, State> {
                 >
                     <TopicForm subjects={this.props.subjects} topic={item} />
                 </EditDialog>
-                {/* <TopicDialog
-                    title={
-                        this.state.itemId.length === 0
-                            ? 'Dodaj temat'
-                            : 'Edytuj temat'
-                    }
-                    label="Nazwa"
-                    name="name"
-                    id={this.state.itemId}
-                    redirectPath={`${this.props.url}/topics`}
-                    item={item}
-                    isDialogOpen={this.state.isDialogOpen}
-                    primaryAction={primaryAction}
-                    secondaryActionButton={secondaryActionButton}
-                    onChange={this.onChangeHandler}
-                    validity={!this.validator.allValid()}
-                    validationSchema={topicSchema()}
-                    render={({
-                        handleChange,
-                        handleBlur,
-                        values,
-                        errors
-                    }: FormikProps<FormValues>) => (
-                        <FormSelect
-                            label="Przedmiot"
-                            name="subjectRef"
-                            id="topic"
-                            values={this.props.subjects}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            value={values.subjectRef}
-                            error={!!errors.subjectRef}
-                        />
-                    )}
-                ></TopicDialog> */}
             </Fragment>
         );
     }

@@ -19,14 +19,17 @@ import {
 type Props = { subjects: SubjectWithId[]; topic?: ExtendedTopicWithId };
 type FormValues = {} & typeof initialValues;
 
-let initialValues = { name: '', subjectRef: '' };
+const initialValues = { name: '', subjectRef: '' };
 
 const TopicForm = (props: Props) => {
     const { subjects, topic } = props;
     const id = topic?.id;
     const dispatch = useDispatch();
+    let values = initialValues;
     if (topic) {
-        initialValues = updateValues(initialValues, topic);
+        values = updateValues(initialValues, topic);
+    } else {
+        values = initialValues;
     }
 
     const onSubmitHandler = (values: FormValues) => {
@@ -45,7 +48,8 @@ const TopicForm = (props: Props) => {
 
     return (
         <Formik
-            initialValues={initialValues}
+            enableReinitialize={true}
+            initialValues={values}
             validationSchema={topicSchema()}
             onSubmit={val => onSubmitHandler(val)}
         >

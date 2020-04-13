@@ -4,12 +4,16 @@ import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { fetchAllSubjects } from '../store/actions/Subjects';
 import { useParams } from 'react-router-dom';
+import { ExtendedTopicWithId } from '../store/types/Topics';
 
-export const useSubject = <T extends { id?: string }>(
+export const useValues = <
+    T extends { id?: string },
+    K extends SubjectWithId | ExtendedTopicWithId
+>(
     mode: WriteMode | undefined,
-    fetchedSubjects: SubjectWithId[]
+    fetchedSubjects: K[]
 ) => {
-    const [subject, setSubject] = useState<SubjectWithId>();
+    const [item, setItem] = useState<K>();
     const dispatch = useDispatch();
     const params = useParams<T>();
 
@@ -18,12 +22,12 @@ export const useSubject = <T extends { id?: string }>(
             subject => subject.id === params.id
         );
         if (subject) {
-            setSubject(subject);
+            setItem(subject);
         } else {
             dispatch(fetchAllSubjects());
-            setSubject(undefined);
+            setItem(undefined);
         }
     }, [fetchedSubjects, mode]);
 
-    return subject;
+    return item;
 };
