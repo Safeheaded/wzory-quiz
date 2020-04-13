@@ -30,8 +30,6 @@ const AdminPanel = (props: Props) => {
 
     const { path, url } = useRouteMatch();
 
-    console.log(url);
-
     return (
         <Fragment>
             <Switch>
@@ -60,7 +58,7 @@ const AdminPanel = (props: Props) => {
                     <SubjectsList url={url} mode={WriteMode.Add} />
                 </Route>
                 <Route path={`${path}/subjects/:id`}>
-                    <SubjectsList url={url} />
+                    <SubjectsList url={url} mode={WriteMode.Edit} />
                 </Route>
                 <Route path={`${path}/subjects`}>
                     <SubjectsList url={url} />

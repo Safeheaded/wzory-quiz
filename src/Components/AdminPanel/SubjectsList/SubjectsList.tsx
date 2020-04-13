@@ -1,88 +1,62 @@
-import React, { Fragment } from 'react';
-import { SubjectWithId, Subject } from '../../../store/types/Subjects';
-import { connect } from 'react-redux';
-import { Dispatch } from 'redux';
-import {
-    fetchAllSubjects,
-    updateSubject,
-    addSubject,
-    deleteSubject
-} from '../../../store/actions/Subjects';
-import { RootReducer } from '../../../store/types/main';
+import React, { Fragment, useEffect, useState } from 'react';
 import UniversalList from '../UniversalList/UniversalList';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
 import EditDialog from '../EditList/EditDialog/edit-dialog';
-import { WriteMode } from '../../../types/admin';
-import EditList from '../EditList/EditList';
-import { State } from '../EditList/EditList';
-import { Button } from '@material-ui/core';
-import SimpleReactValidator from 'simple-react-validator';
-import { subjectSchema } from '../../../utils/validationSchemas';
 import SubjectForm from './SubjectForm/subject-form';
+import { useSelector, useDispatch } from 'react-redux';
+import { SubjectWithId } from '../../../store/types/Subjects';
+import { fetchAllSubjects } from '../../../store/actions/Subjects';
+import { WriteMode } from '../../../types/admin';
+import { RootReducer } from '../../../store/types/main';
+import { useRouteMatch, useParams } from 'react-router-dom';
 
-interface Props extends RouteComponentProps {
-    fetchAllSubjects: typeof fetchAllSubjects;
-    updateSubject: typeof updateSubject;
-    addSubject: typeof addSubject;
-    deleteSubject: typeof deleteSubject;
-    items: SubjectWithId[];
-    url: string;
-    mode?: WriteMode;
-}
+type Props = { url: string; mode?: WriteMode };
 
-type Params = { id: string };
+const SubjectList = (props: Props) => {
+    const { url, mode } = props;
+    const [isOpen, setIsOpen] = useState(false);
+    const [subject, setSubject] = useState<SubjectWithId>();
+    const dispatch = useDispatch();
+    const route = useRouteMatch();
+    const params = useParams<{ id?: string }>();
+    const fetchedSubjects = useSelector(
+        (state: RootReducer) => state.subjectsReducer.subjects
+    );
 
-class SubjectsList extends EditList<Props, State> {
-    componentDidMount() {
-        this.baseComponentDidMount(this.props.fetchAllSubjects);
-    }
-
-    componentDidUpdate(prevProps: Props) {
-        this.baseComponentDidUpdate(prevProps);
-        const params = this.props.match.params as Params;
-        const prevParams = prevProps.match.params as Params;
-    }
-
-    onChangeHandler = (value: string) => {
-        this.setState({ value });
-    };
-
-    render() {
-        const item = this.getItem(this.state.itemId);
-        const title =
-            this.state.itemId.length === 0
-                ? 'Dodaj przedmiot'
-                : 'Edytuj przedmiot';
-        return (
-            <Fragment>
-                <UniversalList
-                    items={this.props.items}
-                    url={this.props.match.url}
-                    actionPath="/add"
-                />
-                <EditDialog
-                    isOpen={this.state.isDialogOpen}
-                    title={title}
-                    redirectPath={`${this.props.url}/subjects`}
-                >
-                    <SubjectForm subject={item} />
-                </EditDialog>
-            </Fragment>
+    useEffect(() => {
+        const subject = fetchedSubjects.find(
+            subject => subject.id === params.id
         );
-    }
-}
+        if (subject) {
+            setSubject(subject);
+        } else {
+            dispatch(fetchAllSubjects());
+            setSubject(undefined);
+        }
+        if (mode !== undefined) {
+            setIsOpen(true);
+        } else {
+            setIsOpen(false);
+        }
+    }, [mode, fetchedSubjects]);
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-    fetchAllSubjects: () => dispatch(fetchAllSubjects()),
-    updateSubject: (subject: SubjectWithId) => dispatch(updateSubject(subject)),
-    addSubject: (subject: Subject) => dispatch(addSubject(subject)),
-    deleteSubject: (id: string) => dispatch(deleteSubject(id))
-});
+    const title = subject?.id ? 'Edytuj przedmiot' : 'Dodaj przedmiot';
 
-const mapStateToProps = (state: RootReducer) => ({
-    items: state.subjectsReducer.subjects
-});
+    return (
+        <Fragment>
+            <UniversalList
+                items={fetchedSubjects}
+                url={route.url}
+                actionPath="/add"
+            />
+            <EditDialog
+                isOpen={isOpen}
+                title={title}
+                redirectPath={`${url}/subjects`}
+            >
+                <SubjectForm subject={subject} />
+            </EditDialog>
+        </Fragment>
+    );
+};
 
-export default withRouter(
-    connect(mapStateToProps, mapDispatchToProps)(SubjectsList)
-);
+export default SubjectList;
