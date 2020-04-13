@@ -9,7 +9,7 @@ import ListDisplay from './ListDisplay/ListDisplay';
 import { withRouter } from 'react-router';
 import { RouteComponentProps, Route, Switch } from 'react-router-dom';
 import SubjectsDisplay from './SubjectsDisplay/SubjectsDisplay';
-import TopicsDisplay from './TopicsDisplay/TopicsDisplay';
+import TopicsDisplay from './TopicsDisplay/topic-display';
 import { ComponentType } from 'enzyme';
 import EquationsDisplay from './EquationsDisplay/EquationsDisplay';
 

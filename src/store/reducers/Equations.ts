@@ -52,7 +52,7 @@ const EquationsReducer = (
             return { ...state, equations: updatedEquations };
         case DELETE_EQUATION_SUCCESS:
             const equationsAfterDeletion = state.equations.filter(
-                equation => equation.id != action.payload
+                equation => equation.id !== action.payload
             );
             return { ...state, equations: equationsAfterDeletion };
         case FETCH_EQUATIONS_SUCCESS:
