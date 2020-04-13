@@ -24,6 +24,7 @@ import {
     useTopic,
     useEquations
 } from '../../../effects/use-values-of';
+import EquationsList from './EquationsList/equations-list';
 
 type Props = {};
 type Params = { subjectName: string; topicName: string };
@@ -34,7 +35,7 @@ const EquationsDisplay = (props: Props) => {
     const topic = useTopic(topicName, subject?.id);
     const equations = useEquations(topic?.id);
 
-    return <ListDisplay items={equations} />;
+    return <EquationsList equations={equations} />;
 };
 
 export default EquationsDisplay;
