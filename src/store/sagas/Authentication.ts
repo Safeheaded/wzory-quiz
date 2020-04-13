@@ -10,7 +10,6 @@ import {
     logoutError
 } from '../actions/Authentication';
 import { createBrowserHistory } from 'history';
-import { ADD_EQUATION } from '../constants/Equations';
 import isDev from '../../utils/general';
 
 const rsf = firebaseHandler.getRSF();

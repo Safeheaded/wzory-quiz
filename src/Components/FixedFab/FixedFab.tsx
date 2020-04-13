@@ -1,4 +1,3 @@
-import React from 'react';
 import { styled } from '@material-ui/styles';
 import { Fab } from '@material-ui/core';
 

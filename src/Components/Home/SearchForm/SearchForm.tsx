@@ -1,6 +1,6 @@
 import React, { FormEvent } from 'react';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
-import { TextField, Button, IconButton } from '@material-ui/core';
+import { TextField, IconButton } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import styles from './SearchForm.module.sass';
 

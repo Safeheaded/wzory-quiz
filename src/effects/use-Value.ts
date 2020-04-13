@@ -29,7 +29,7 @@ export const useValue = <
             dispatch(action());
             setItem(undefined);
         }
-    }, [fetchedSubjects, mode]);
+    }, [fetchedSubjects, mode, action, dispatch, params]);
 
     return item;
 };

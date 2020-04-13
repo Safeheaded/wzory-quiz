@@ -1,14 +1,11 @@
 import { TopicsState, TopicsActionTypes } from '../types/Topics';
 import {
     FETCH_ALL_TOPICS_SUCCESS,
-    ADD_TOPIC_ERROR,
     ADD_TOPIC_SUCCESS,
     FETCH_TOPICS_SUCCESS,
     UPDATE_TOPIC_SUCCESS,
-    DELETE_TOPIC,
     DELETE_TOPIC_SUCCESS
 } from '../constants/Topics';
-import lodash from 'lodash';
 
 const initState: TopicsState = { topics: [] };
 

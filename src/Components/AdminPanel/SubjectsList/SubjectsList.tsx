@@ -1,13 +1,12 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment } from 'react';
 import UniversalList from '../UniversalList/UniversalList';
 import EditDialog from '../EditList/EditDialog/edit-dialog';
 import SubjectForm from './SubjectForm/subject-form';
-import { useSelector, useDispatch } from 'react-redux';
-import { SubjectWithId } from '../../../store/types/Subjects';
+import { useSelector } from 'react-redux';
 import { fetchAllSubjects } from '../../../store/actions/Subjects';
 import { WriteMode } from '../../../types/admin';
 import { RootReducer } from '../../../store/types/main';
-import { useRouteMatch, useParams } from 'react-router-dom';
+import { useRouteMatch } from 'react-router-dom';
 import { useDialog } from '../../../effects/use-dialog';
 import { useValue } from '../../../effects/use-Value';
 

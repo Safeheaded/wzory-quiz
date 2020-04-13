@@ -1,13 +1,5 @@
 import React, { Fragment } from 'react';
-import { Button, AppBar, Toolbar } from '@material-ui/core';
-import {
-    Route,
-    Redirect,
-    Switch,
-    withRouter,
-    useRouteMatch,
-    useHistory
-} from 'react-router';
+import { Route, Redirect, Switch, useRouteMatch } from 'react-router';
 import { Dispatch } from 'redux';
 import { logout } from '../../store/actions/Authentication';
 import { LogoutActionType, AuthState } from '../../store/types/Authentication';
@@ -24,10 +16,6 @@ interface Props {
 }
 
 const AdminPanel = (props: Props) => {
-    const onLogout = () => {
-        props.logout();
-    };
-
     const { path, url } = useRouteMatch();
 
     return (

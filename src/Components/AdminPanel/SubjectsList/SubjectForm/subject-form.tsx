@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Formik, FormikProps, Form } from 'formik';
 import FormInput from '../../FormInput/FormInput';
 import { subjectSchema } from '../../../../utils/validationSchemas';

@@ -1,8 +1,6 @@
-import React, { Fragment, Component } from 'react';
+import React, { Component } from 'react';
 import {
-    TextField,
     FormControl,
-    Button,
     List,
     ListItem,
     IconButton,
@@ -11,7 +9,6 @@ import {
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Latex from 'react-latex';
-import SimpleReactValidator from 'simple-react-validator';
 import { FieldArray } from 'formik';
 import FormInput from '../../FormInput/FormInput';
 
@@ -25,15 +22,6 @@ interface State {
 
 class Explanations extends Component<Props, State> {
     state: State = { newExplanation: '' };
-
-    validator: SimpleReactValidator;
-
-    constructor(props: Props) {
-        super(props);
-        this.validator = new SimpleReactValidator({
-            element: (message: string) => message
-        });
-    }
 
     render() {
         const { values, ...props } = this.props;

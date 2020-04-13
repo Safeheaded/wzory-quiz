@@ -1,5 +1,5 @@
-import { Route, RouteComponentProps } from 'react-router-dom';
-import { Redirect, useRouteMatch, RouteProps } from 'react-router';
+import { Route } from 'react-router-dom';
+import { Redirect, RouteProps } from 'react-router';
 import { connect } from 'react-redux';
 import React from 'react';
 import { RootReducer } from '../../store/types/main';

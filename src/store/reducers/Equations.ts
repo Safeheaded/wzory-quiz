@@ -5,9 +5,7 @@ import {
     AddEquationSuccess
 } from '../types/Equations';
 import {
-    ADD_EQUATION,
     ADD_EQUATION_SUCCESS,
-    ADD_EQUATION_ERROR,
     FETCH_ALL_EQUATIONS_SUCCESS,
     FETCH_EQUATION_SUCCESS,
     UPDATE_EQUATION_ERROR,

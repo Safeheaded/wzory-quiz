@@ -41,10 +41,6 @@ export const classes = (theme: Theme) =>
     });
 
 class Quiz extends Component<Props, State> {
-    constructor(props: Props) {
-        super(props);
-    }
-
     componentDidMount() {
         this.questionsSetup();
     }

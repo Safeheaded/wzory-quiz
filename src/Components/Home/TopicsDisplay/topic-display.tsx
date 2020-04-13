@@ -1,12 +1,9 @@
-import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React from 'react';
+import { useSelector } from 'react-redux';
 import { useParams, useRouteMatch } from 'react-router';
 import { RootReducer } from '../../../store/types/main';
-import { fetchTopics } from '../../../store/actions/Topics';
 import ListDisplay from '../ListDisplay/ListDisplay';
 import { ExtendedTopicWithId } from '../../../store/types/Topics';
-import { fetchAllSubjects } from '../../../store/actions/Subjects';
-import { SubjectWithId } from '../../../store/types/Subjects';
 import { useSubject } from '../../../effects/use-values-of';
 
 type Params = { subjectName: string };

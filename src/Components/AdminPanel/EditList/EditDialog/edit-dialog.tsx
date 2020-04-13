@@ -1,6 +1,6 @@
 import React from 'react';
-import { Dialog, DialogTitle, DialogContent } from '@material-ui/core';
-import { useHistory, useRouteMatch } from 'react-router-dom';
+import { Dialog, DialogTitle } from '@material-ui/core';
+import { useHistory } from 'react-router-dom';
 
 type Props = {
     children?: import('react').ReactElement;

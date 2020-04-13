@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootReducer } from '../store/types/main';
 import { SubjectWithId } from '../store/types/Subjects';
@@ -23,7 +23,7 @@ export const useSubject = (subjectName: string | undefined) => {
         } else {
             dispatch(fetchAllSubjects());
         }
-    }, [subject]);
+    }, [subject, dispatch]);
     return subject;
 };
 
@@ -45,8 +45,21 @@ export const useTopic = (topicName: string | undefined, subjectId?: string) => {
         } else {
             dispatch(fetchAllTopics());
         }
-    }, [topic]);
+    }, [topic, dispatch, subjectId]);
     return topic;
+};
+
+export const useSubjects = () => {
+    const dispatch = useDispatch();
+    const subjects = useSelector<RootReducer, SubjectWithId[]>(
+        state => state.subjectsReducer.subjects
+    );
+
+    useEffect(() => {
+        dispatch(fetchAllSubjects());
+    }, [dispatch]);
+
+    return subjects;
 };
 
 export const useEquations = (topicId?: string) => {
@@ -59,9 +72,9 @@ export const useEquations = (topicId?: string) => {
     );
 
     useEffect(() => {
-        if (equations.length === 0 && topicId) {
+        if (topicId) {
             dispatch(fetchEquations(topicId));
         }
-    }, []);
+    }, [dispatch, topicId]);
     return equations;
 };

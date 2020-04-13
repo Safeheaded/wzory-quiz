@@ -3,15 +3,14 @@ import { Link } from 'react-router-dom';
 import { ListItem, List as MaterialList, Fab } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import { ItemOfList } from '../../../types/General';
-import { Equation, EquationWithId } from '../../../store/types/Equations';
 
-interface Props {
+type Props = {
     items: ItemOfList[];
     url: string;
     actionPath: string;
-}
+};
 
-const UniversalList: React.FC<Props> = (props: Props) => {
+const UniversalList = (props: Props) => {
     const listItems = props.items.map(item => (
         <ListItem
             component={Link}

@@ -1,7 +1,7 @@
 /* eslint-disable react/display-name */
 import React from 'react';
 import { Answer } from '../../../../types/General';
-import { Grid, Button, Paper, Theme, ButtonBase } from '@material-ui/core';
+import { Grid, Paper, Theme, ButtonBase } from '@material-ui/core';
 import { makeStyles, createStyles } from '@material-ui/styles';
 import { QuizMode } from '../Quiz';
 import Latex from 'react-latex';
