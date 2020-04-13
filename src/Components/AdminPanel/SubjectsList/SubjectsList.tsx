@@ -20,7 +20,7 @@ const SubjectList = (props: Props) => {
         (state: RootReducer) => state.subjectsReducer.subjects
     );
 
-    const subject = useValues(mode, fetchedSubjects);
+    const subject = useValues(mode, fetchedSubjects, fetchAllSubjects);
 
     const isOpen = useDialog(mode);
 

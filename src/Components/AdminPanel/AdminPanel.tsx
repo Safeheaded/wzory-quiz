@@ -16,7 +16,7 @@ import EditPgae from './EditPage/EditPage';
 import EquationsList from './EquationsList/EquationsList';
 import SubjectsList from './SubjectsList/SubjectsList';
 import { WriteMode } from '../../types/admin';
-import TopicsList from './TopicsList/TopicsList';
+import TopicsList from './TopicsList/topic-list';
 
 interface Props {
     logout: () => LogoutActionType;
@@ -37,7 +37,7 @@ const AdminPanel = (props: Props) => {
                     <TopicsList url={url} mode={WriteMode.Add} />
                 </Route>
                 <Route path={`${path}/topics/:id`}>
-                    <TopicsList url={url} />
+                    <TopicsList url={url} mode={WriteMode.Edit} />
                 </Route>
                 <Route path={`${path}/topics`}>
                     <TopicsList url={url} />

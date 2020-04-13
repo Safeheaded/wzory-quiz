@@ -5,13 +5,15 @@ import { useDispatch } from 'react-redux';
 import { fetchAllSubjects } from '../store/actions/Subjects';
 import { useParams } from 'react-router-dom';
 import { ExtendedTopicWithId } from '../store/types/Topics';
+import { fetchAllTopics } from '../store/actions/Topics';
 
 export const useValues = <
     T extends { id?: string },
     K extends SubjectWithId | ExtendedTopicWithId
 >(
     mode: WriteMode | undefined,
-    fetchedSubjects: K[]
+    fetchedSubjects: K[],
+    action: typeof fetchAllSubjects | typeof fetchAllTopics
 ) => {
     const [item, setItem] = useState<K>();
     const dispatch = useDispatch();
@@ -24,7 +26,7 @@ export const useValues = <
         if (subject) {
             setItem(subject);
         } else {
-            dispatch(fetchAllSubjects());
+            dispatch(action());
             setItem(undefined);
         }
     }, [fetchedSubjects, mode]);

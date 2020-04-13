@@ -1,7 +1,7 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import UniversalList from '../UniversalList/UniversalList';
 import { useRouteMatch } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootReducer } from '../../../store/types/main';
 import { ExtendedTopicWithId } from '../../../store/types/Topics';
 import { WriteMode } from '../../../types/admin';
@@ -10,12 +10,15 @@ import EditDialog from '../EditList/EditDialog/edit-dialog';
 import TopicForm from './TopicForm/topic-form';
 import { useValues } from '../../../effects/use-Values';
 import { SubjectWithId } from '../../../store/types/Subjects';
+import { fetchAllTopics } from '../../../store/actions/Topics';
+import { fetchAllSubjects } from '../../../store/actions/Subjects';
 
 type Props = { mode?: WriteMode; url: string };
 
 const TopicList = (props: Props) => {
     const { mode, url } = props;
     const route = useRouteMatch();
+    const dispatch = useDispatch();
     const topics = useSelector<RootReducer, ExtendedTopicWithId[]>(
         state => state.topicsReducer.topics
     );
@@ -23,8 +26,13 @@ const TopicList = (props: Props) => {
         state => state.subjectsReducer.subjects
     );
     const isOpen = useDialog(mode);
-    const topic = useValues(mode, topics);
+    const topic = useValues(mode, topics, fetchAllTopics);
     const title = topic ? 'Edytuj temat' : 'Dodaj temat';
+    useEffect(() => {
+        if (subjects.length === 0) {
+            dispatch(fetchAllSubjects());
+        }
+    });
     return (
         <Fragment>
             <UniversalList items={topics} actionPath="/add" url={route.url} />
