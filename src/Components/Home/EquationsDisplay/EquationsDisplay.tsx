@@ -23,7 +23,10 @@ const EquationsDisplay = () => {
             <EquationsList equations={equations} />
             <Link
                 className={styles.FabLink}
-                to={`/quiz/${subjectName}/${topicName}`}
+                to={`/quiz/${subjectName.replace(' ', '-')}/${topicName.replace(
+                    ' ',
+                    '-'
+                )}`}
             >
                 <Fab color="primary">
                     <PlayArrowIcon />

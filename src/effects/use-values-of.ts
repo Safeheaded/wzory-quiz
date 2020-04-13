@@ -8,11 +8,12 @@ import { ExtendedTopicWithId } from '../store/types/Topics';
 import { fetchEquations } from '../store/actions/Equations';
 import { ExtendedEquationWithId } from '../store/types/Equations';
 
-export const useSubject = (param: string | undefined) => {
+export const useSubject = (subjectName: string | undefined) => {
     const dispatch = useDispatch();
     const subject = useSelector<RootReducer, SubjectWithId | undefined>(state =>
         state.subjectsReducer.subjects.find(
-            subject => subject.name.toLowerCase() === param?.replace('-', ' ')
+            subject =>
+                subject.name.toLowerCase() === subjectName?.replace('-', ' ')
         )
     );
 
@@ -26,12 +27,13 @@ export const useSubject = (param: string | undefined) => {
     return subject;
 };
 
-export const useTopic = (param: string | undefined, subjectId?: string) => {
+export const useTopic = (topicName: string | undefined, subjectId?: string) => {
     const dispatch = useDispatch();
     const topic = useSelector<RootReducer, ExtendedTopicWithId | undefined>(
         state =>
             state.topicsReducer.topics.find(
-                topic => topic.name.toLowerCase() === param?.replace('-', ' ')
+                topic =>
+                    topic.name.toLowerCase() === topicName?.replace('-', ' ')
             )
     );
 

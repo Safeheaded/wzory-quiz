@@ -1,11 +1,10 @@
-import React, { lazy, Suspense } from 'react';
+import React, { lazy } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import Home from '../Home/Home';
 import GuardedRoute, { GuardMode } from '../../HOCs/GuardedRoute/GuardedRoute';
-import AdminPanel from '../AdminPanel/AdminPanel';
 import LoginForm from '../LoginForm/LoginForm';
 import NotFoundPage from '../NotFoundPage/NotFoundPage';
-import QuizHome from '../QuizHome/QuizHome';
+import QuizHome from '../QuizHome/quiz-home';
 import isDev from '../../utils/general';
 
 const AdminPage = lazy(() => import('../AdminPanel/AdminPanel'));
