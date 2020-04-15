@@ -23,7 +23,8 @@ import {
     deleteEquationError,
     fetchEquationsDone,
     fetchEquationsSuccess,
-    fetchEquationsError
+    fetchEquationsError,
+    fetchEquationDone
 } from '../actions/Equations';
 import {
     ADD_EQUATION,
@@ -34,7 +35,7 @@ import {
     FETCH_EQUATIONS
 } from '../constants/Equations';
 import { firestore } from 'firebase';
-import { collectionToArray, getEquations } from './utils';
+import { collectionToArray, getEquations, getEquation } from './utils';
 
 const rsf = firebaseHandler.getRSF();
 
@@ -58,9 +59,9 @@ function* addEquation(action: AddEquation) {
 }
 
 function* fetchAllEquations() {
-    const subjects: ExtendedEquationWithId[] = yield select(getEquations);
+    const equations: ExtendedEquationWithId[] = yield select(getEquations);
 
-    if (subjects.length !== 0) {
+    if (equations.length !== 0) {
         yield put(fetchEquationsDone());
         return;
     }
@@ -81,6 +82,13 @@ function* fetchAllEquations() {
 }
 
 function* fetchEquation(action: FetchEquation) {
+    const equation = yield select(getEquation(action.payload));
+
+    if (equation) {
+        yield put(fetchEquationDone());
+        return;
+    }
+
     try {
         const snapshot: firebase.firestore.DocumentSnapshot = yield call(
             rsf.firestore.getDocument,

@@ -21,7 +21,8 @@ import {
     FetchEquationsSuccess,
     FetchEquationsError,
     FetchEquationsDone,
-    FetchAllEquationsDone
+    FetchAllEquationsDone,
+    FetchEquationDone
 } from '../types/Equations';
 import {
     ADD_EQUATION,
@@ -43,7 +44,8 @@ import {
     FETCH_EQUATIONS_SUCCESS,
     FETCH_EQUATIONS_ERROR,
     FETCH_EQUATIONS_DONE,
-    FETCH_ALL_EQUATIONS_DONE
+    FETCH_ALL_EQUATIONS_DONE,
+    FETCH_EQUATION_DONE
 } from '../constants/Equations';
 
 export function addEquation(equation: ExtendedEquation): AddEquation {
@@ -145,4 +147,8 @@ export function fetchEquationsError(error: object): FetchEquationsError {
 
 export function fetchEquationsDone(): FetchEquationsDone {
     return { type: FETCH_EQUATIONS_DONE };
+}
+
+export function fetchEquationDone(): FetchEquationDone {
+    return { type: FETCH_EQUATION_DONE };
 }

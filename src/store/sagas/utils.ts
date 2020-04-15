@@ -16,3 +16,5 @@ export const getTopics = (state: RootReducer) => state.topicsReducer.topics;
 export const getEquations = (state: RootReducer) => state.eqReducer.equations;
 export const getSubjects = (state: RootReducer) =>
     state.subjectsReducer.subjects;
+export const getEquation = (id: string) => (state: RootReducer) =>
+    state.eqReducer.equations.find(equation => equation.id === id);

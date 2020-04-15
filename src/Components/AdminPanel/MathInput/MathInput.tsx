@@ -10,7 +10,7 @@ interface Props extends StandardTextFieldProps {
     mathValue?: string;
 }
 
-const MathInput: React.FC<Props> = (props: Props) => {
+const MathInput = (props: Props) => {
     const { ...defaultProps } = props;
     const displayValue =
         (props.value as string).length !== 0
