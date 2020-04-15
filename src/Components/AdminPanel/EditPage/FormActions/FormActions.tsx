@@ -2,13 +2,13 @@ import React, { Fragment } from 'react';
 import { WriteMode } from '../../../../types/admin';
 import { FormControl, Button } from '@material-ui/core';
 
-interface Props {
+type Props = {
     mode: WriteMode;
     secondaryButtonAction: Function;
     mainDisabled: boolean;
-}
+};
 
-const FormActions: React.FC<Props> = (props: Props) => {
+const FormActions = (props: Props) => {
     const deleteButton =
         props.mode === WriteMode.Edit ? (
             <FormControl>

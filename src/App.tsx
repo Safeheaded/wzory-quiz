@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Fragment } from 'react';
 import externalStyles from './App.module.sass';
 import {
     Container,
@@ -15,7 +15,7 @@ import Routes from './Components/Routes/Routes';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from './store/actions/Authentication';
-import { AuthState } from './store/types/Authentication';
+import { RootReducer } from './store/types/main';
 
 type Props = {};
 
@@ -35,7 +35,9 @@ const useStyles = makeStyles(
 );
 
 const App = (props: Props) => {
-    const isLoggedIn = useSelector<AuthState, boolean>(auth => auth.isLoggedIn);
+    const isLoggedIn = useSelector<RootReducer, boolean>(
+        state => state.authReducer.isLoggedIn
+    );
     const dispatch = useDispatch();
     const styles = useStyles();
 

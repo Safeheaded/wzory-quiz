@@ -16,7 +16,7 @@ interface Props {
     label: string;
 }
 
-const AddDialog: React.SFC<Props> = (props: Props) => {
+const AddDialog = (props: Props) => {
     return (
         <Dialog open={props.stateField} onClose={() => props.toggleDialog()}>
             <DialogTitle>{props.title}</DialogTitle>
