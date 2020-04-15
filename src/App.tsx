@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import styles from './App.module.sass';
+import externalStyles from './App.module.sass';
 import {
     Container,
     AppBar,
@@ -7,98 +7,80 @@ import {
     List,
     ListItem,
     Typography,
-    Link as MaterialLink
+    Link as MaterialLink,
+    makeStyles,
+    createStyles
 } from '@material-ui/core';
 import Routes from './Components/Routes/Routes';
 import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { RootReducer } from './store/types/main';
-import { Dispatch } from 'redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { logout } from './store/actions/Authentication';
-import { withStyles, WithStyles, createStyles } from '@material-ui/styles';
+import { AuthState } from './store/types/Authentication';
 
-interface Props extends WithStyles<typeof classes> {
-    isLoggedIn: boolean;
-    logout: typeof logout;
-}
+type Props = {};
 
-interface State {}
+const useStyles = makeStyles(
+    createStyles({
+        version: {
+            fontWeight: 'bold',
+            letterSpacing: '5px',
+            alignSelf: 'flex-end',
+            marginLeft: '10px'
+        },
+        mainText: {
+            color: 'white',
+            fontSize: '49px'
+        }
+    })
+);
 
-const classes = createStyles({
-    version: {
-        fontWeight: 'bold',
-        letterSpacing: '5px',
-        alignSelf: 'flex-end',
-        marginLeft: '10px'
-    },
-    mainText: {
-        color: 'white',
-        fontSize: '49px'
-    }
-});
+const App = (props: Props) => {
+    const isLoggedIn = useSelector<AuthState, boolean>(auth => auth.isLoggedIn);
+    const dispatch = useDispatch();
+    const styles = useStyles();
 
-class App extends Component<Props, State> {
-    render() {
-        const guardedContent = (
-            <AppBar position="static">
-                <Toolbar className={styles.Menu}>
-                    <List className={styles.AdminMenu}>
-                        <ListItem button component={Link} to="/admin/subjects">
-                            Przedmioty
-                        </ListItem>
-                        <ListItem button component={Link} to="/admin/topics">
-                            Tematy
-                        </ListItem>
-                        <ListItem button component={Link} to="/admin/equations">
-                            Równania
-                        </ListItem>
-                        <ListItem button onClick={() => this.props.logout()}>
-                            Wyloguj
-                        </ListItem>
-                    </List>
-                </Toolbar>
-            </AppBar>
-        );
-
-        const unguardedContent = (
-            <Toolbar>
-                <MaterialLink underline="none" component={Link} to="/">
-                    <Typography
-                        className={this.props.classes.mainText}
-                        variant="h1"
-                    >
-                        wzoryQuiz
-                    </Typography>
-                </MaterialLink>
-                <Typography
-                    variant="subtitle2"
-                    className={this.props.classes.version}
-                >
-                    alpha
-                </Typography>
+    const guardedContent = (
+        <AppBar position="static">
+            <Toolbar className={externalStyles.Menu}>
+                <List className={externalStyles.AdminMenu}>
+                    <ListItem button component={Link} to="/admin/subjects">
+                        Przedmioty
+                    </ListItem>
+                    <ListItem button component={Link} to="/admin/topics">
+                        Tematy
+                    </ListItem>
+                    <ListItem button component={Link} to="/admin/equations">
+                        Równania
+                    </ListItem>
+                    <ListItem button onClick={() => dispatch(logout())}>
+                        Wyloguj
+                    </ListItem>
+                </List>
             </Toolbar>
-        );
+        </AppBar>
+    );
 
-        return (
-            <Fragment>
-                {this.props.isLoggedIn ? guardedContent : unguardedContent}
-                <Container className={styles.Container}>
-                    <Routes />
-                </Container>
-            </Fragment>
-        );
-    }
-}
+    const unguardedContent = (
+        <Toolbar>
+            <MaterialLink underline="none" component={Link} to="/">
+                <Typography className={styles.mainText} variant="h1">
+                    wzoryQuiz
+                </Typography>
+            </MaterialLink>
+            <Typography variant="subtitle2" className={styles.version}>
+                alpha
+            </Typography>
+        </Toolbar>
+    );
 
-const mapStateToProps = (state: RootReducer) => ({
-    isLoggedIn: state.authReducer.isLoggedIn
-});
+    return (
+        <Fragment>
+            {isLoggedIn ? guardedContent : unguardedContent}
+            <Container className={externalStyles.Container}>
+                <Routes />
+            </Container>
+        </Fragment>
+    );
+};
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-    logout: () => dispatch(logout())
-});
-
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(withStyles(classes)(App));
+export default App;
