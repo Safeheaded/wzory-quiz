@@ -6,13 +6,13 @@ import { makeStyles, createStyles } from '@material-ui/styles';
 import { QuizMode } from '../Quiz';
 import Latex from 'react-latex';
 
-interface Props {
+type Props = {
     answerType?: Answer;
     answer: string;
     onClick: (id: string) => void;
     mode?: QuizMode;
     id: string;
-}
+};
 
 const xsSize = 12;
 const smSize = 6;
@@ -64,6 +64,7 @@ const QuizAnswer = (props: Props) => {
 };
 
 export default QuizAnswer;
+
 function setAdditionalStyle(
     props: Props,
     style: string[],
