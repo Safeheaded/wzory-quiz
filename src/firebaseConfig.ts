@@ -2,39 +2,22 @@ import ReduxSagaFirebase from 'redux-saga-firebase';
 import * as firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
-import isDev from './utils/general';
 
-const apiKey = isDev()
-    ? process.env.REACT_APP_DEV_apiKey
-    : process.env.REACT_APP_apiKey;
+const apiKey = process.env.REACT_APP_apiKey;
 
-const authDomain = isDev()
-    ? process.env.REACT_APP_DEV_databaseURL
-    : process.env.REACT_APP_databaseURL;
+const authDomain = process.env.REACT_APP_databaseURL;
 
-const databaseURL = isDev()
-    ? process.env.REACT_APP_DEV_databaseURL
-    : process.env.REACT_APP_databaseURL;
+const databaseURL = process.env.REACT_APP_databaseURL;
 
-const projectId = isDev()
-    ? process.env.REACT_APP_DEV_projectId
-    : process.env.REACT_APP_projectId;
+const projectId = process.env.REACT_APP_projectId;
 
-const storageBucket = isDev()
-    ? process.env.REACT_APP_DEV_storageBucket
-    : process.env.REACT_APP_storageBucket;
+const storageBucket = process.env.REACT_APP_storageBucket;
 
-const messagingSenderId = isDev()
-    ? process.env.REACT_APP_DEV_messagingSenderId
-    : process.env.REACT_APP_messagingSenderId;
+const messagingSenderId = process.env.REACT_APP_messagingSenderId;
 
-const appId = isDev()
-    ? process.env.REACT_APP_DEV_appId
-    : process.env.REACT_APP_appId;
+const appId = process.env.REACT_APP_appId;
 
-const measurementId = isDev()
-    ? process.env.REACT_APP_DEV_measurementId
-    : process.env.REACT_APP_measurementId;
+const measurementId = process.env.REACT_APP_measurementId;
 
 const firebaseConfig = {
     apiKey,

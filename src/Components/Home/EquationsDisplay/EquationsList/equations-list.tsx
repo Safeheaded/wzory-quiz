@@ -58,7 +58,6 @@ const EquationsList = (props: Props) => {
                 <Card className={styles.card}>
                     <CardContent>
                         <Typography
-                            noWrap
                             variant="h5"
                             component="h1"
                             gutterBottom

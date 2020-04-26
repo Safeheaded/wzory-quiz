@@ -59,6 +59,7 @@ sketch
 .vscode
 
 .env
+.env.*
 
 ### VisualStudioCode Patch ###
 # Ignore all local history of files
