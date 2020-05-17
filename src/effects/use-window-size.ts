@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+
 function getSize(isClient: boolean) {
     return {
         width: isClient ? window.innerWidth : undefined,

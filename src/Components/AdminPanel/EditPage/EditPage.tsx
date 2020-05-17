@@ -88,7 +88,9 @@ const EditPage = (props: Props) => {
 
     useEffect(() => {
         const equation = equations.find(eq => eq.id === id);
-        setEquation(equation);
+        if (equation) {
+            setEquation(equation);
+        }
     }, [equations, id]);
 
     useEffect(() => {
@@ -118,7 +120,6 @@ const EditPage = (props: Props) => {
                 })
             );
         }
-        actions.resetForm();
     };
 
     const changeHandler = (
