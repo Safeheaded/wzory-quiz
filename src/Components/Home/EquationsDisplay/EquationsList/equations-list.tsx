@@ -49,7 +49,6 @@ const EquationsList = (props: Props) => {
         ));
         return (
             <Card key={equation.id} className={styles.card}>
-                dup
                 <CardContent>
                     <Typography
                         variant="h5"
